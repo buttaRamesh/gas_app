@@ -1,0 +1,155 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Gold Luxury Theme - Premium & Sophisticated */
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-heading: 'Space Grotesk', 'Inter', sans-serif;
+    
+    /* Base colors */
+    --background: 0 0% 98%;
+    --foreground: 20 14% 10%;
+
+    /* Card colors */
+    --card: 0 0% 100%;
+    --card-foreground: 20 14% 10%;
+    --card-dark: 0 0% 96%;
+    --card-gradient-start: 0 0% 100%;
+    --card-gradient-end: 43 74% 49%;
+
+    /* Popover colors */
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14% 10%;
+
+    /* Primary - Gold */
+    --primary: 43 74% 49%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 43 74% 85%;
+    --primary-dark: 43 74% 35%;
+
+    /* Secondary - Warm Brown */
+    --secondary: 30 84% 26%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-light: 30 84% 85%;
+
+    /* Muted colors */
+    --muted: 0 0% 94%;
+    --muted-foreground: 20 10% 50%;
+
+    /* Accent - Lighter Gold */
+    --accent: 43 90% 60%;
+    --accent-foreground: 20 14% 10%;
+
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Border and Input */
+    --border: 43 74% 88%;
+    --input: 43 74% 88%;
+    --ring: 43 74% 49%;
+
+    --radius: 0.5rem;
+
+    /* Status colors */
+    --info: 210 50% 50%;
+    --info-foreground: 0 0% 100%;
+    --info-light: 210 50% 95%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    --success-light: 142 76% 95%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --warning-light: 38 92% 95%;
+
+    /* Sidebar - Dark Brown with Gold accents */
+    --sidebar-background: 20 14% 10%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 43 74% 49%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 30 84% 26%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 20 10% 15%;
+    --sidebar-ring: 43 74% 49%;
+  }
+
+  .dark {
+    /* Dark Mode - Gold Luxury Theme */
+    --background: 20 14% 8%;
+    --foreground: 0 0% 95%;
+
+    --card: 20 14% 12%;
+    --card-foreground: 0 0% 95%;
+    --card-dark: 20 14% 8%;
+    --card-gradient-start: 20 14% 12%;
+    --card-gradient-end: 43 74% 25%;
+
+    --popover: 20 14% 12%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 43 74% 55%;
+    --primary-foreground: 20 14% 10%;
+    --primary-light: 43 74% 75%;
+    --primary-dark: 43 74% 35%;
+
+    --secondary: 30 84% 35%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-light: 30 84% 75%;
+
+    --muted: 20 14% 18%;
+    --muted-foreground: 20 10% 65%;
+
+    --accent: 43 90% 65%;
+    --accent-foreground: 20 14% 10%;
+
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 43 74% 25%;
+    --input: 43 74% 25%;
+    --ring: 43 74% 55%;
+
+    --info: 210 50% 55%;
+    --info-foreground: 0 0% 100%;
+    --info-light: 210 50% 20%;
+
+    --success: 142 70% 45%;
+    --success-foreground: 0 0% 100%;
+    --success-light: 142 70% 20%;
+
+    --warning: 38 92% 55%;
+    --warning-foreground: 0 0% 100%;
+    --warning-light: 38 92% 20%;
+
+    --sidebar-background: 20 14% 10%;
+    --sidebar-foreground: 0 0% 90%;
+    --sidebar-primary: 43 74% 55%;
+    --sidebar-primary-foreground: 20 14% 10%;
+    --sidebar-accent: 30 84% 20%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 20 10% 12%;
+    --sidebar-ring: 43 74% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
