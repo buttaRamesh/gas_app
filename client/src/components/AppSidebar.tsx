@@ -30,6 +30,7 @@ import {
   Group,
   Inventory,
   Straighten,
+  People,
 } from '@mui/icons-material';
 
 interface AppSidebarProps {
@@ -53,6 +54,7 @@ export function AppSidebar({ collapsed = false, onToggleCollapse }: AppSidebarPr
     if (location.pathname.startsWith('/routes')) return 'routes';
     if (location.pathname.startsWith('/route-areas')) return 'route-areas';
     if (location.pathname.startsWith('/delivery-persons')) return 'delivery-persons';
+    if (location.pathname.startsWith('/consumers')) return 'consumers';
     if (location.pathname.startsWith('/products') || location.pathname.startsWith('/units') || location.pathname.startsWith('/variants')) return 'products';
     if (location.pathname.startsWith('/settings')) return 'settings';
     return 'dashboard';
@@ -229,15 +231,33 @@ export function AppSidebar({ collapsed = false, onToggleCollapse }: AppSidebarPr
               {!collapsed && <ListItemText primary={<Typography fontWeight="600">Delivery Persons</Typography>} />}
             </ListItemButton>
 
-            <ListItemButton 
-              onClick={() => navigate('/products')}
-              sx={{ 
+            <ListItemButton
+              onClick={() => navigate('/consumers')}
+              sx={{
                 mb: 1.5,
                 borderRadius: 2,
                 bgcolor: 'hsla(var(--sidebar-primary), 0.1)',
                 color: 'hsl(var(--sidebar-foreground))',
                 border: '1px solid hsla(var(--sidebar-primary), 0.3)',
-                '&:hover': { 
+                '&:hover': {
+                  bgcolor: 'hsla(var(--sidebar-primary), 0.15)',
+                  boxShadow: '0 0 20px hsla(var(--sidebar-primary), 0.2)'
+                }
+              }}
+            >
+              <ListItemIcon><People sx={{ color: 'hsl(var(--sidebar-primary))' }} /></ListItemIcon>
+              {!collapsed && <ListItemText primary={<Typography fontWeight="600">Consumers</Typography>} />}
+            </ListItemButton>
+
+            <ListItemButton
+              onClick={() => navigate('/products')}
+              sx={{
+                mb: 1.5,
+                borderRadius: 2,
+                bgcolor: 'hsla(var(--sidebar-primary), 0.1)',
+                color: 'hsl(var(--sidebar-foreground))',
+                border: '1px solid hsla(var(--sidebar-primary), 0.3)',
+                '&:hover': {
                   bgcolor: 'hsla(var(--sidebar-primary), 0.15)',
                   boxShadow: '0 0 20px hsla(var(--sidebar-primary), 0.2)'
                 }
@@ -444,6 +464,91 @@ export function AppSidebar({ collapsed = false, onToggleCollapse }: AppSidebarPr
                 color: 'hsl(var(--sidebar-foreground))',
                 border: '1px solid hsla(var(--sidebar-primary), 0.3)',
                 '&:hover': { 
+                  bgcolor: 'hsla(var(--sidebar-primary), 0.15)',
+                  boxShadow: '0 0 20px hsla(var(--sidebar-primary), 0.2)'
+                }
+              }}
+            >
+              <ListItemIcon><BarChart sx={{ color: 'hsl(var(--sidebar-primary))' }} /></ListItemIcon>
+              {!collapsed && <ListItemText primary={<Typography fontWeight="600">Statistics</Typography>} />}
+            </ListItemButton>
+          </>
+        )}
+
+        {/* Consumers Section */}
+        {currentSection === 'consumers' && (
+          <>
+            <Box sx={{ mb: 2, px: 2 }}>
+              {!collapsed && (
+                <Typography variant="h6" fontWeight="700" sx={{ color: 'hsl(var(--sidebar-primary))' }}>
+                  Consumers
+                </Typography>
+              )}
+            </Box>
+
+            <ListItemButton
+              onClick={() => navigate('/consumers')}
+              sx={{
+                mb: 1.5,
+                borderRadius: 2,
+                bgcolor: isActive('/consumers') ? 'hsla(var(--sidebar-primary), 0.15)' : 'hsla(var(--sidebar-primary), 0.1)',
+                color: 'hsl(var(--sidebar-foreground))',
+                border: '1px solid hsla(var(--sidebar-primary), 0.3)',
+                '&:hover': {
+                  bgcolor: 'hsla(var(--sidebar-primary), 0.15)',
+                  boxShadow: '0 0 20px hsla(var(--sidebar-primary), 0.2)'
+                }
+              }}
+            >
+              <ListItemIcon><People sx={{ color: 'hsl(var(--sidebar-primary))' }} /></ListItemIcon>
+              {!collapsed && <ListItemText primary={<Typography fontWeight="600">All Consumers</Typography>} />}
+            </ListItemButton>
+
+            <ListItemButton
+              onClick={() => navigate('/consumers/create')}
+              sx={{
+                mb: 1.5,
+                borderRadius: 2,
+                bgcolor: isActive('/consumers/create') ? 'hsla(var(--sidebar-primary), 0.15)' : 'hsla(var(--sidebar-primary), 0.1)',
+                color: 'hsl(var(--sidebar-foreground))',
+                border: '1px solid hsla(var(--sidebar-primary), 0.3)',
+                '&:hover': {
+                  bgcolor: 'hsla(var(--sidebar-primary), 0.15)',
+                  boxShadow: '0 0 20px hsla(var(--sidebar-primary), 0.2)'
+                }
+              }}
+            >
+              <ListItemIcon><Add sx={{ color: 'hsl(var(--sidebar-primary))' }} /></ListItemIcon>
+              {!collapsed && <ListItemText primary={<Typography fontWeight="600">Add Consumer</Typography>} />}
+            </ListItemButton>
+
+            <ListItemButton
+              onClick={() => navigate('/consumers/kyc-pending')}
+              sx={{
+                mb: 1.5,
+                borderRadius: 2,
+                bgcolor: isActive('/consumers/kyc-pending') ? 'hsla(var(--sidebar-primary), 0.15)' : 'hsla(var(--sidebar-primary), 0.1)',
+                color: 'hsl(var(--sidebar-foreground))',
+                border: '1px solid hsla(var(--sidebar-primary), 0.3)',
+                '&:hover': {
+                  bgcolor: 'hsla(var(--sidebar-primary), 0.15)',
+                  boxShadow: '0 0 20px hsla(var(--sidebar-primary), 0.2)'
+                }
+              }}
+            >
+              <ListItemIcon><Person sx={{ color: 'hsl(var(--sidebar-primary))' }} /></ListItemIcon>
+              {!collapsed && <ListItemText primary={<Typography fontWeight="600">KYC Pending</Typography>} />}
+            </ListItemButton>
+
+            <ListItemButton
+              onClick={() => navigate('/consumers/statistics')}
+              sx={{
+                mb: 1.5,
+                borderRadius: 2,
+                bgcolor: isActive('/consumers/statistics') ? 'hsla(var(--sidebar-primary), 0.15)' : 'hsla(var(--sidebar-primary), 0.1)',
+                color: 'hsl(var(--sidebar-foreground))',
+                border: '1px solid hsla(var(--sidebar-primary), 0.3)',
+                '&:hover': {
                   bgcolor: 'hsla(var(--sidebar-primary), 0.15)',
                   boxShadow: '0 0 20px hsla(var(--sidebar-primary), 0.2)'
                 }

@@ -176,4 +176,57 @@ export const variantsApi = {
   bulkCreate: (data: any[]) => api.post('/products/variants/bulk_create/', { variants: data }),
 };
 
+// Consumers API
+export const consumersApi = {
+  getAll: (filters?: {
+    category?: number;
+    consumer_type?: number;
+    opting_status?: string;
+    is_kyc_done?: boolean;
+    scheme?: number;
+    search?: string;
+    ordering?: string;
+    page?: number;
+  }) => {
+    const params = new URLSearchParams();
+    if (filters?.category) params.append('category', filters.category.toString());
+    if (filters?.consumer_type) params.append('consumer_type', filters.consumer_type.toString());
+    if (filters?.opting_status) params.append('opting_status', filters.opting_status);
+    if (filters?.is_kyc_done !== undefined) params.append('is_kyc_done', filters.is_kyc_done.toString());
+    if (filters?.scheme) params.append('scheme', filters.scheme.toString());
+    if (filters?.search?.trim()) params.append('search', filters.search.trim());
+    if (filters?.ordering) params.append('ordering', filters.ordering);
+    if (filters?.page) params.append('page', filters.page.toString());
+    return api.get(`/consumers/?${params.toString()}`);
+  },
+  getById: (id: number) => api.get(`/consumers/${id}/`),
+  create: (data: any) => api.post('/consumers/', data),
+  update: (id: number, data: any) => api.patch(`/consumers/${id}/`, data),
+  delete: (id: number) => api.delete(`/consumers/${id}/`),
+  getKycPending: () => api.get('/consumers/kyc_pending/'),
+  getByRoute: (routeCode: string) => api.get(`/consumers/by_route/?route_code=${routeCode}`),
+  getRoute: (id: number) => api.get(`/consumers/${id}/route/`),
+  updateKycStatus: (id: number, isKycDone: boolean) =>
+    api.patch(`/consumers/${id}/update_kyc_status/`, { is_kyc_done: isKycDone }),
+  getStatistics: () => api.get('/consumers/statistics/'),
+};
+
+// Lookups API (for consumer categories, types, etc.)
+export const lookupsApi = {
+  getConsumerCategories: () => api.get('/lookups/consumer-categories/'),
+  getConsumerTypes: () => api.get('/lookups/consumer-types/'),
+  getBPLTypes: () => api.get('/lookups/bpl-types/'),
+  getDCTTypes: () => api.get('/lookups/dct-types/'),
+};
+
+// Schemes API
+export const schemesApi = {
+  getAll: (search?: string) => {
+    const params = new URLSearchParams();
+    if (search?.trim()) params.append('search', search.trim());
+    return api.get(`/schemes/?${params.toString()}`);
+  },
+  getById: (id: number) => api.get(`/schemes/${id}/`),
+};
+
 export default api;

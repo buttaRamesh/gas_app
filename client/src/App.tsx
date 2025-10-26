@@ -30,6 +30,11 @@ import ProductStatistics from "./pages/ProductStatistics";
 import Units from "./pages/Units";
 import UnitCreate from "./pages/UnitCreate";
 import VariantCreate from "./pages/VariantCreate";
+import Consumers from "./pages/Consumers";
+import ConsumerDetail from "./pages/ConsumerDetail";
+import ConsumerForm from "./pages/ConsumerForm";
+import ConsumerStatistics from "./pages/ConsumerStatistics";
+import ConsumerKycPending from "./pages/ConsumerKycPending";
 
 const queryClient = new QueryClient();
 
@@ -68,6 +73,12 @@ const App = () => (
             <Route path="/units" element={<AppLayout><Units /></AppLayout>} />
             <Route path="/units/create" element={<AppLayout><UnitCreate /></AppLayout>} />
             <Route path="/variants/create" element={<AppLayout><VariantCreate /></AppLayout>} />
+            <Route path="/consumers" element={<AppLayout><Consumers /></AppLayout>} />
+            <Route path="/consumers/create" element={<AppLayout><ConsumerForm /></AppLayout>} />
+            <Route path="/consumers/statistics" element={<AppLayout><ConsumerStatistics /></AppLayout>} />
+            <Route path="/consumers/kyc-pending" element={<AppLayout><ConsumerKycPending /></AppLayout>} />
+            <Route path="/consumers/:id" element={<AppLayout><ConsumerDetail /></AppLayout>} />
+            <Route path="/consumers/:id/edit" element={<AppLayout><ConsumerForm /></AppLayout>} />
             <Route path="/settings" element={<AppLayout><Settings /></AppLayout>} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
