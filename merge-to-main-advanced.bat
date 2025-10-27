@@ -75,9 +75,13 @@ echo [Step 3/7] Switching to Claude branch...
 echo ----------------------------------------
 git checkout %CLAUDE_BRANCH%
 if errorlevel 1 (
-    echo ERROR: Failed to checkout %CLAUDE_BRANCH%
-    pause
-    exit /b 1
+    echo Branch doesn't exist locally, creating it...
+    git checkout -b %CLAUDE_BRANCH% %REMOTE%/%CLAUDE_BRANCH%
+    if errorlevel 1 (
+        echo ERROR: Failed to checkout %CLAUDE_BRANCH%
+        pause
+        exit /b 1
+    )
 )
 echo ✓ Switched to %CLAUDE_BRANCH%
 

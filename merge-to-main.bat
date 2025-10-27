@@ -11,7 +11,7 @@ echo.
 REM Set the Claude branch name
 set CLAUDE_BRANCH=claude/swf-011CUXJPdZbEdDyjL5FcyUBX
 
-echo [1/6] Fetching latest changes from remote...
+echo [1/7] Fetching latest changes from remote...
 git fetch origin
 if errorlevel 1 (
     echo ERROR: Failed to fetch from remote
@@ -19,7 +19,19 @@ if errorlevel 1 (
     exit /b 1
 )
 
-echo [2/6] Pulling latest changes from Claude branch...
+echo [2/7] Checking out Claude branch locally...
+git checkout %CLAUDE_BRANCH%
+if errorlevel 1 (
+    echo Branch doesn't exist locally, creating it...
+    git checkout -b %CLAUDE_BRANCH% origin/%CLAUDE_BRANCH%
+    if errorlevel 1 (
+        echo ERROR: Failed to checkout %CLAUDE_BRANCH%
+        pause
+        exit /b 1
+    )
+)
+
+echo [3/7] Pulling latest changes from Claude branch...
 git pull origin %CLAUDE_BRANCH%
 if errorlevel 1 (
     echo ERROR: Failed to pull from %CLAUDE_BRANCH%
@@ -27,7 +39,7 @@ if errorlevel 1 (
     exit /b 1
 )
 
-echo [3/6] Switching to main branch...
+echo [4/7] Switching to main branch...
 git checkout main
 if errorlevel 1 (
     echo ERROR: Failed to checkout main branch
@@ -35,7 +47,7 @@ if errorlevel 1 (
     exit /b 1
 )
 
-echo [4/6] Pulling latest changes from main...
+echo [5/7] Pulling latest changes from main...
 git pull origin main
 if errorlevel 1 (
     echo ERROR: Failed to pull from main
@@ -43,7 +55,7 @@ if errorlevel 1 (
     exit /b 1
 )
 
-echo [5/6] Merging %CLAUDE_BRANCH% into main...
+echo [6/7] Merging %CLAUDE_BRANCH% into main...
 git merge %CLAUDE_BRANCH% --no-ff -m "Merge %CLAUDE_BRANCH% into main"
 if errorlevel 1 (
     echo ERROR: Merge conflict detected!
@@ -54,7 +66,7 @@ if errorlevel 1 (
     exit /b 1
 )
 
-echo [6/6] Pushing merged changes to remote main...
+echo [7/7] Pushing merged changes to remote main...
 git push origin main
 if errorlevel 1 (
     echo ERROR: Failed to push to remote main
