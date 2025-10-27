@@ -286,28 +286,28 @@ const Consumers = () => {
             <Table size="small">
               <TableHead>
                 <TableRow sx={{ backgroundColor: "primary.main" }}>
-                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold" }}>
+                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold", py: 0.7 }}>
                     Consumer Number
                   </TableCell>
-                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold" }}>
+                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold", py: 0.7 }}>
                     Name
                   </TableCell>
-                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold" }}>
+                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold", py: 0.7 }}>
                     Category
                   </TableCell>
-                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold" }}>
+                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold", py: 0.7 }}>
                     Type
                   </TableCell>
-                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold" }}>
+                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold", py: 0.7 }}>
                     Opting Status
                   </TableCell>
-                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold" }}>
+                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold", py: 0.7 }}>
                     KYC Status
                   </TableCell>
-                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold" }}>
+                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold", py: 0.7 }}>
                     Mobile
                   </TableCell>
-                  <TableCell align="right" sx={{ color: "primary.contrastText", fontWeight: "bold" }}>
+                  <TableCell align="right" sx={{ color: "primary.contrastText", fontWeight: "bold", py: 0.7 }}>
                     Actions
                   </TableCell>
                 </TableRow>
@@ -333,26 +333,26 @@ const Consumers = () => {
                         },
                       }}
                     >
-                      <TableCell sx={{ py: 1 }}>{consumer.consumer_number}</TableCell>
-                      <TableCell sx={{ py: 1 }}>{consumer.consumer_name}</TableCell>
-                      <TableCell sx={{ py: 1 }}>{consumer.category_name || "-"}</TableCell>
-                      <TableCell sx={{ py: 1 }}>{consumer.type_name || "-"}</TableCell>
-                      <TableCell sx={{ py: 1 }}>
+                      <TableCell sx={{ py: 0.7 }}>{consumer.consumer_number}</TableCell>
+                      <TableCell sx={{ py: 0.7 }}>{consumer.consumer_name}</TableCell>
+                      <TableCell sx={{ py: 0.7 }}>{consumer.category_name || "-"}</TableCell>
+                      <TableCell sx={{ py: 0.7 }}>{consumer.type_name || "-"}</TableCell>
+                      <TableCell sx={{ py: 0.7 }}>
                         <Chip
                           label={consumer.opting_status_display || consumer.opting_status}
                           color={getOptingStatusColor(consumer.opting_status)}
                           size="small"
                         />
                       </TableCell>
-                      <TableCell sx={{ py: 1 }}>
+                      <TableCell sx={{ py: 0.7 }}>
                         {consumer.is_kyc_done ? (
                           <CheckIcon color="success" fontSize="small" />
                         ) : (
                           <CancelIcon color="error" fontSize="small" />
                         )}
                       </TableCell>
-                      <TableCell sx={{ py: 1 }}>{consumer.mobile_number || "-"}</TableCell>
-                      <TableCell align="right" sx={{ py: 1 }}>
+                      <TableCell sx={{ py: 0.7 }}>{consumer.mobile_number || "-"}</TableCell>
+                      <TableCell align="right" sx={{ py: 0.7 }}>
                         <IconButton
                           size="small"
                           onClick={() => navigate(`/consumers/${consumer.id}`)}
