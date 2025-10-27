@@ -211,12 +211,82 @@ export const consumersApi = {
   getStatistics: () => api.get('/consumers/statistics/'),
 };
 
-// Lookups API (for consumer categories, types, etc.)
-export const lookupsApi = {
-  getConsumerCategories: () => api.get('/lookups/consumer-categories/'),
-  getConsumerTypes: () => api.get('/lookups/consumer-types/'),
-  getBPLTypes: () => api.get('/lookups/bpl-types/'),
-  getDCTTypes: () => api.get('/lookups/dct-types/'),
+// Consumer Categories API
+export const consumerCategoriesApi = {
+  getAll: (search?: string) => {
+    const params = new URLSearchParams();
+    if (search?.trim()) params.append('search', search.trim());
+    return api.get(`/lookups/consumer-categories/?${params.toString()}`);
+  },
+  getById: (id: number) => api.get(`/lookups/consumer-categories/${id}/`),
+  create: (data: any) => api.post('/lookups/consumer-categories/', data),
+  update: (id: number, data: any) => api.patch(`/lookups/consumer-categories/${id}/`, data),
+  delete: (id: number) => api.delete(`/lookups/consumer-categories/${id}/`),
+};
+
+// Consumer Types API
+export const consumerTypesApi = {
+  getAll: (search?: string) => {
+    const params = new URLSearchParams();
+    if (search?.trim()) params.append('search', search.trim());
+    return api.get(`/lookups/consumer-types/?${params.toString()}`);
+  },
+  getById: (id: number) => api.get(`/lookups/consumer-types/${id}/`),
+  create: (data: any) => api.post('/lookups/consumer-types/', data),
+  update: (id: number, data: any) => api.patch(`/lookups/consumer-types/${id}/`, data),
+  delete: (id: number) => api.delete(`/lookups/consumer-types/${id}/`),
+};
+
+// BPL Types API
+export const bplTypesApi = {
+  getAll: (search?: string) => {
+    const params = new URLSearchParams();
+    if (search?.trim()) params.append('search', search.trim());
+    return api.get(`/lookups/bpl-types/?${params.toString()}`);
+  },
+  getById: (id: number) => api.get(`/lookups/bpl-types/${id}/`),
+  create: (data: any) => api.post('/lookups/bpl-types/', data),
+  update: (id: number, data: any) => api.patch(`/lookups/bpl-types/${id}/`, data),
+  delete: (id: number) => api.delete(`/lookups/bpl-types/${id}/`),
+};
+
+// DCT Types API
+export const dctTypesApi = {
+  getAll: (search?: string) => {
+    const params = new URLSearchParams();
+    if (search?.trim()) params.append('search', search.trim());
+    return api.get(`/lookups/dct-types/?${params.toString()}`);
+  },
+  getById: (id: number) => api.get(`/lookups/dct-types/${id}/`),
+  create: (data: any) => api.post('/lookups/dct-types/', data),
+  update: (id: number, data: any) => api.patch(`/lookups/dct-types/${id}/`, data),
+  delete: (id: number) => api.delete(`/lookups/dct-types/${id}/`),
+};
+
+// Market Types API
+export const marketTypesApi = {
+  getAll: (search?: string) => {
+    const params = new URLSearchParams();
+    if (search?.trim()) params.append('search', search.trim());
+    return api.get(`/lookups/market-types/?${params.toString()}`);
+  },
+  getById: (id: number) => api.get(`/lookups/market-types/${id}/`),
+  create: (data: any) => api.post('/lookups/market-types/', data),
+  update: (id: number, data: any) => api.patch(`/lookups/market-types/${id}/`, data),
+  delete: (id: number) => api.delete(`/lookups/market-types/${id}/`),
+};
+
+// Connection Types API
+export const connectionTypesApi = {
+  getAll: (search?: string) => {
+    const params = new URLSearchParams();
+    if (search?.trim()) params.append('search', search.trim());
+    return api.get(`/lookups/connection-types/?${params.toString()}`);
+  },
+  getById: (id: number) => api.get(`/lookups/connection-types/${id}/`),
+  create: (data: any) => api.post('/lookups/connection-types/', data),
+  update: (id: number, data: any) => api.patch(`/lookups/connection-types/${id}/`, data),
+  delete: (id: number) => api.delete(`/lookups/connection-types/${id}/`),
 };
 
 // Schemes API
@@ -227,6 +297,31 @@ export const schemesApi = {
     return api.get(`/schemes/?${params.toString()}`);
   },
   getById: (id: number) => api.get(`/schemes/${id}/`),
+  create: (data: any) => api.post('/schemes/', data),
+  update: (id: number, data: any) => api.patch(`/schemes/${id}/`, data),
+  delete: (id: number) => api.delete(`/schemes/${id}/`),
+};
+
+// Subsidy Details API
+export const subsidyDetailsApi = {
+  getAll: (search?: string, year?: number) => {
+    const params = new URLSearchParams();
+    if (search?.trim()) params.append('search', search.trim());
+    if (year) params.append('year', year.toString());
+    return api.get(`/subsidy-details/?${params.toString()}`);
+  },
+  getById: (id: number) => api.get(`/subsidy-details/${id}/`),
+  create: (data: any) => api.post('/subsidy-details/', data),
+  update: (id: number, data: any) => api.patch(`/subsidy-details/${id}/`, data),
+  delete: (id: number) => api.delete(`/subsidy-details/${id}/`),
+};
+
+// Legacy Lookups API (for backward compatibility)
+export const lookupsApi = {
+  getConsumerCategories: () => api.get('/lookups/consumer-categories/'),
+  getConsumerTypes: () => api.get('/lookups/consumer-types/'),
+  getBPLTypes: () => api.get('/lookups/bpl-types/'),
+  getDCTTypes: () => api.get('/lookups/dct-types/'),
 };
 
 // Addresses API

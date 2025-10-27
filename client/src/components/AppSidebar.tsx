@@ -32,6 +32,7 @@ import {
   Straighten,
   People,
   HomeWork,
+  Category,
 } from '@mui/icons-material';
 
 interface AppSidebarProps {
@@ -57,6 +58,7 @@ export function AppSidebar({ collapsed = false, onToggleCollapse }: AppSidebarPr
     if (location.pathname.startsWith('/delivery-persons')) return 'delivery-persons';
     if (location.pathname.startsWith('/consumers')) return 'consumers';
     if (location.pathname.startsWith('/products') || location.pathname.startsWith('/units') || location.pathname.startsWith('/variants')) return 'products';
+    if (location.pathname.startsWith('/lookups')) return 'lookups';
     if (location.pathname.startsWith('/settings')) return 'settings';
     return 'dashboard';
   };
@@ -266,6 +268,24 @@ export function AppSidebar({ collapsed = false, onToggleCollapse }: AppSidebarPr
             >
               <ListItemIcon><Inventory sx={{ color: 'hsl(var(--sidebar-primary))' }} /></ListItemIcon>
               {!collapsed && <ListItemText primary={<Typography fontWeight="600">Products</Typography>} />}
+            </ListItemButton>
+
+            <ListItemButton
+              onClick={() => navigate('/lookups/consumer-categories')}
+              sx={{
+                mb: 1.5,
+                borderRadius: 2,
+                bgcolor: 'hsla(var(--sidebar-primary), 0.1)',
+                color: 'hsl(var(--sidebar-foreground))',
+                border: '1px solid hsla(var(--sidebar-primary), 0.3)',
+                '&:hover': {
+                  bgcolor: 'hsla(var(--sidebar-primary), 0.15)',
+                  boxShadow: '0 0 20px hsla(var(--sidebar-primary), 0.2)'
+                }
+              }}
+            >
+              <ListItemIcon><Category sx={{ color: 'hsl(var(--sidebar-primary))' }} /></ListItemIcon>
+              {!collapsed && <ListItemText primary={<Typography fontWeight="600">Lookups</Typography>} />}
             </ListItemButton>
 
             <ListItemButton
@@ -773,6 +793,131 @@ export function AppSidebar({ collapsed = false, onToggleCollapse }: AppSidebarPr
                 </ListItemButton>
               </List>
             </Collapse>
+          </>
+        )}
+
+        {/* Lookups Section */}
+        {currentSection === 'lookups' && (
+          <>
+            <Box sx={{ mb: 2, px: 2 }}>
+              {!collapsed && (
+                <Typography variant="h6" fontWeight="700" sx={{ color: 'hsl(var(--sidebar-primary))' }}>
+                  Lookups & Master Data
+                </Typography>
+              )}
+            </Box>
+
+            <ListItemButton
+              onClick={() => navigate('/lookups/consumer-categories')}
+              sx={{
+                mb: 1,
+                borderRadius: 2,
+                bgcolor: isActive('/lookups/consumer-categories') ? 'hsla(var(--sidebar-primary), 0.15)' : 'transparent',
+                color: 'hsl(var(--sidebar-foreground))',
+                '&:hover': { bgcolor: 'hsla(var(--sidebar-primary), 0.1)' }
+              }}
+            >
+              <ListItemIcon><Category sx={{ color: 'hsl(var(--sidebar-primary))', fontSize: 20 }} /></ListItemIcon>
+              <ListItemText primary={<Typography fontSize="0.9rem">Consumer Categories</Typography>} />
+            </ListItemButton>
+
+            <ListItemButton
+              onClick={() => navigate('/lookups/consumer-types')}
+              sx={{
+                mb: 1,
+                borderRadius: 2,
+                bgcolor: isActive('/lookups/consumer-types') ? 'hsla(var(--sidebar-primary), 0.15)' : 'transparent',
+                color: 'hsl(var(--sidebar-foreground))',
+                '&:hover': { bgcolor: 'hsla(var(--sidebar-primary), 0.1)' }
+              }}
+            >
+              <ListItemIcon><Category sx={{ color: 'hsl(var(--sidebar-primary))', fontSize: 20 }} /></ListItemIcon>
+              <ListItemText primary={<Typography fontSize="0.9rem">Consumer Types</Typography>} />
+            </ListItemButton>
+
+            <ListItemButton
+              onClick={() => navigate('/lookups/bpl-types')}
+              sx={{
+                mb: 1,
+                borderRadius: 2,
+                bgcolor: isActive('/lookups/bpl-types') ? 'hsla(var(--sidebar-primary), 0.15)' : 'transparent',
+                color: 'hsl(var(--sidebar-foreground))',
+                '&:hover': { bgcolor: 'hsla(var(--sidebar-primary), 0.1)' }
+              }}
+            >
+              <ListItemIcon><Category sx={{ color: 'hsl(var(--sidebar-primary))', fontSize: 20 }} /></ListItemIcon>
+              <ListItemText primary={<Typography fontSize="0.9rem">BPL Types</Typography>} />
+            </ListItemButton>
+
+            <ListItemButton
+              onClick={() => navigate('/lookups/dct-types')}
+              sx={{
+                mb: 1,
+                borderRadius: 2,
+                bgcolor: isActive('/lookups/dct-types') ? 'hsla(var(--sidebar-primary), 0.15)' : 'transparent',
+                color: 'hsl(var(--sidebar-foreground))',
+                '&:hover': { bgcolor: 'hsla(var(--sidebar-primary), 0.1)' }
+              }}
+            >
+              <ListItemIcon><Category sx={{ color: 'hsl(var(--sidebar-primary))', fontSize: 20 }} /></ListItemIcon>
+              <ListItemText primary={<Typography fontSize="0.9rem">DCT Types</Typography>} />
+            </ListItemButton>
+
+            <ListItemButton
+              onClick={() => navigate('/lookups/schemes')}
+              sx={{
+                mb: 1,
+                borderRadius: 2,
+                bgcolor: isActive('/lookups/schemes') ? 'hsla(var(--sidebar-primary), 0.15)' : 'transparent',
+                color: 'hsl(var(--sidebar-foreground))',
+                '&:hover': { bgcolor: 'hsla(var(--sidebar-primary), 0.1)' }
+              }}
+            >
+              <ListItemIcon><Category sx={{ color: 'hsl(var(--sidebar-primary))', fontSize: 20 }} /></ListItemIcon>
+              <ListItemText primary={<Typography fontSize="0.9rem">Schemes</Typography>} />
+            </ListItemButton>
+
+            <ListItemButton
+              onClick={() => navigate('/lookups/market-types')}
+              sx={{
+                mb: 1,
+                borderRadius: 2,
+                bgcolor: isActive('/lookups/market-types') ? 'hsla(var(--sidebar-primary), 0.15)' : 'transparent',
+                color: 'hsl(var(--sidebar-foreground))',
+                '&:hover': { bgcolor: 'hsla(var(--sidebar-primary), 0.1)' }
+              }}
+            >
+              <ListItemIcon><Category sx={{ color: 'hsl(var(--sidebar-primary))', fontSize: 20 }} /></ListItemIcon>
+              <ListItemText primary={<Typography fontSize="0.9rem">Market Types</Typography>} />
+            </ListItemButton>
+
+            <ListItemButton
+              onClick={() => navigate('/lookups/connection-types')}
+              sx={{
+                mb: 1,
+                borderRadius: 2,
+                bgcolor: isActive('/lookups/connection-types') ? 'hsla(var(--sidebar-primary), 0.15)' : 'transparent',
+                color: 'hsl(var(--sidebar-foreground))',
+                '&:hover': { bgcolor: 'hsla(var(--sidebar-primary), 0.1)' }
+              }}
+            >
+              <ListItemIcon><Category sx={{ color: 'hsl(var(--sidebar-primary))', fontSize: 20 }} /></ListItemIcon>
+              <ListItemText primary={<Typography fontSize="0.9rem">Connection Types</Typography>} />
+            </ListItemButton>
+
+            <ListItemButton
+              onClick={() => navigate('/lookups/subsidy-details')}
+              sx={{
+                mb: 1,
+                borderRadius: 2,
+                bgcolor: isActive('/lookups/subsidy-details') ? 'hsla(var(--sidebar-primary), 0.15)' : 'transparent',
+                color: 'hsl(var(--sidebar-foreground))',
+                '&:hover': { bgcolor: 'hsla(var(--sidebar-primary), 0.1)' }
+              }}
+            >
+              <ListItemIcon><Category sx={{ color: 'hsl(var(--sidebar-primary))', fontSize: 20 }} /></ListItemIcon>
+              <ListItemText primary={<Typography fontSize="0.9rem">Subsidy Details</Typography>} />
+            </ListItemButton>
           </>
         )}
 

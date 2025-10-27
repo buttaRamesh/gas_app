@@ -36,6 +36,14 @@ import ConsumerForm from "./pages/ConsumerForm";
 import ConsumerStatistics from "./pages/ConsumerStatistics";
 import ConsumerKycPending from "./pages/ConsumerKycPending";
 import ConsumerCreateStepper from "./pages/ConsumerCreateStepper";
+import ConsumerCategories from "./pages/ConsumerCategories";
+import ConsumerTypes from "./pages/ConsumerTypes";
+import BPLTypes from "./pages/BPLTypes";
+import DCTTypes from "./pages/DCTTypes";
+import Schemes from "./pages/Schemes";
+import MarketTypes from "./pages/MarketTypes";
+import ConnectionTypes from "./pages/ConnectionTypes";
+import SubsidyDetails from "./pages/SubsidyDetails";
 
 const queryClient = new QueryClient();
 
@@ -80,6 +88,17 @@ const App = () => (
             <Route path="/consumers/kyc-pending" element={<AppLayout><ConsumerKycPending /></AppLayout>} />
             <Route path="/consumers/:id" element={<AppLayout><ConsumerDetail /></AppLayout>} />
             <Route path="/consumers/:id/edit" element={<AppLayout><ConsumerForm /></AppLayout>} />
+
+            {/* Lookup tables */}
+            <Route path="/lookups/consumer-categories" element={<AppLayout><ConsumerCategories /></AppLayout>} />
+            <Route path="/lookups/consumer-types" element={<AppLayout><ConsumerTypes /></AppLayout>} />
+            <Route path="/lookups/bpl-types" element={<AppLayout><BPLTypes /></AppLayout>} />
+            <Route path="/lookups/dct-types" element={<AppLayout><DCTTypes /></AppLayout>} />
+            <Route path="/lookups/schemes" element={<AppLayout><Schemes /></AppLayout>} />
+            <Route path="/lookups/market-types" element={<AppLayout><MarketTypes /></AppLayout>} />
+            <Route path="/lookups/connection-types" element={<AppLayout><ConnectionTypes /></AppLayout>} />
+            <Route path="/lookups/subsidy-details" element={<AppLayout><SubsidyDetails /></AppLayout>} />
+
             <Route path="/settings" element={<AppLayout><Settings /></AppLayout>} />
 
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
