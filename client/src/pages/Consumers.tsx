@@ -247,15 +247,31 @@ const Consumers = () => {
           <TableContainer component={Paper}>
             <Table size="small">
               <TableHead>
-                <TableRow>
-                  <TableCell>Consumer Number</TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Category</TableCell>
-                  <TableCell>Type</TableCell>
-                  <TableCell>Opting Status</TableCell>
-                  <TableCell>KYC Status</TableCell>
-                  <TableCell>Mobile</TableCell>
-                  <TableCell align="right">Actions</TableCell>
+                <TableRow sx={{ backgroundColor: "primary.main" }}>
+                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold" }}>
+                    Consumer Number
+                  </TableCell>
+                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold" }}>
+                    Name
+                  </TableCell>
+                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold" }}>
+                    Category
+                  </TableCell>
+                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold" }}>
+                    Type
+                  </TableCell>
+                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold" }}>
+                    Opting Status
+                  </TableCell>
+                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold" }}>
+                    KYC Status
+                  </TableCell>
+                  <TableCell sx={{ color: "primary.contrastText", fontWeight: "bold" }}>
+                    Mobile
+                  </TableCell>
+                  <TableCell align="right" sx={{ color: "primary.contrastText", fontWeight: "bold" }}>
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
