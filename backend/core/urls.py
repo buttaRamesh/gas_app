@@ -24,4 +24,5 @@ urlpatterns = [
     path('api/', include('routes.urls')),  # Include routes URLs
     path('api/', include('delivery.urls')),  # Include delivey URLs
     path('api/products/', include('products.urls')),  # Include products URLs
+    path('api/', include('address.urls')),  # Include address and contact URLs
 ]

@@ -35,6 +35,10 @@ import ConsumerDetail from "./pages/ConsumerDetail";
 import ConsumerForm from "./pages/ConsumerForm";
 import ConsumerStatistics from "./pages/ConsumerStatistics";
 import ConsumerKycPending from "./pages/ConsumerKycPending";
+import Addresses from "./pages/Addresses";
+import AddressDetail from "./pages/AddressDetail";
+import AddressForm from "./pages/AddressForm";
+import AddressStatistics from "./pages/AddressStatistics";
 
 const queryClient = new QueryClient();
 
@@ -79,8 +83,13 @@ const App = () => (
             <Route path="/consumers/kyc-pending" element={<AppLayout><ConsumerKycPending /></AppLayout>} />
             <Route path="/consumers/:id" element={<AppLayout><ConsumerDetail /></AppLayout>} />
             <Route path="/consumers/:id/edit" element={<AppLayout><ConsumerForm /></AppLayout>} />
+            <Route path="/addresses" element={<AppLayout><Addresses /></AppLayout>} />
+            <Route path="/addresses/create" element={<AppLayout><AddressForm /></AppLayout>} />
+            <Route path="/addresses/statistics" element={<AppLayout><AddressStatistics /></AppLayout>} />
+            <Route path="/addresses/:id" element={<AppLayout><AddressDetail /></AppLayout>} />
+            <Route path="/addresses/:id/edit" element={<AppLayout><AddressForm /></AppLayout>} />
             <Route path="/settings" element={<AppLayout><Settings /></AppLayout>} />
-            
+
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

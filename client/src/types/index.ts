@@ -10,3 +10,6 @@ export interface ApiResponse<T> {
   message?: string;
   success: boolean;
 }
+
+// Re-export address and contact types
+export * from './address';

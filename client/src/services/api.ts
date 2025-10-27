@@ -229,4 +229,62 @@ export const schemesApi = {
   getById: (id: number) => api.get(`/schemes/${id}/`),
 };
 
+// Addresses API
+export const addressesApi = {
+  getAll: (filters?: {
+    content_type?: number;
+    content_type_model?: string;
+    object_id?: number;
+    city_town_village?: string;
+    district?: string;
+    pin_code?: string;
+    search?: string;
+    ordering?: string;
+    page?: number;
+  }) => {
+    const params = new URLSearchParams();
+    if (filters?.content_type) params.append('content_type', filters.content_type.toString());
+    if (filters?.content_type_model) params.append('content_type_model', filters.content_type_model);
+    if (filters?.object_id) params.append('object_id', filters.object_id.toString());
+    if (filters?.city_town_village) params.append('city_town_village', filters.city_town_village);
+    if (filters?.district) params.append('district', filters.district);
+    if (filters?.pin_code) params.append('pin_code', filters.pin_code);
+    if (filters?.search?.trim()) params.append('search', filters.search.trim());
+    if (filters?.ordering) params.append('ordering', filters.ordering);
+    if (filters?.page) params.append('page', filters.page.toString());
+    return api.get(`/addresses/?${params.toString()}`);
+  },
+  getById: (id: number) => api.get(`/addresses/${id}/`),
+  create: (data: any) => api.post('/addresses/', data),
+  update: (id: number, data: any) => api.patch(`/addresses/${id}/`, data),
+  delete: (id: number) => api.delete(`/addresses/${id}/`),
+  getStatistics: () => api.get('/addresses/statistics/'),
+};
+
+// Contacts API
+export const contactsApi = {
+  getAll: (filters?: {
+    content_type?: number;
+    content_type_model?: string;
+    object_id?: number;
+    search?: string;
+    ordering?: string;
+    page?: number;
+  }) => {
+    const params = new URLSearchParams();
+    if (filters?.content_type) params.append('content_type', filters.content_type.toString());
+    if (filters?.content_type_model) params.append('content_type_model', filters.content_type_model);
+    if (filters?.object_id) params.append('object_id', filters.object_id.toString());
+    if (filters?.search?.trim()) params.append('search', filters.search.trim());
+    if (filters?.ordering) params.append('ordering', filters.ordering);
+    if (filters?.page) params.append('page', filters.page.toString());
+    return api.get(`/contacts/?${params.toString()}`);
+  },
+  getById: (id: number) => api.get(`/contacts/${id}/`),
+  create: (data: any) => api.post('/contacts/', data),
+  update: (id: number, data: any) => api.patch(`/contacts/${id}/`, data),
+  delete: (id: number) => api.delete(`/contacts/${id}/`),
+  getStatistics: () => api.get('/contacts/statistics/'),
+};
+
 export default api;
