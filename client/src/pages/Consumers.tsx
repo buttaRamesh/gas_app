@@ -159,21 +159,34 @@ const Consumers = () => {
       />
 
       {/* Filters */}
-      <Paper sx={{ p: 2, mb: 3 }}>
-        <Typography variant="h6" gutterBottom>
+      <Paper sx={{ p: 1.5, mb: 3 }}>
+        <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600, mb: 1 }}>
           Filters
         </Typography>
-        <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", alignItems: "center" }}>
+        <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap", alignItems: "center" }}>
           <TextField
             label="Search"
             placeholder="Consumer number, name, ration card, LPG ID..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             size="small"
-            sx={{ minWidth: 300 }}
+            sx={{
+              minWidth: 270,
+              '& .MuiInputBase-root': {
+                height: 36,
+              }
+            }}
           />
 
-          <FormControl size="small" sx={{ minWidth: 200 }}>
+          <FormControl
+            size="small"
+            sx={{
+              minWidth: 180,
+              '& .MuiInputBase-root': {
+                height: 36,
+              }
+            }}
+          >
             <InputLabel>Category</InputLabel>
             <Select
               value={categoryFilter}
@@ -189,7 +202,15 @@ const Consumers = () => {
             </Select>
           </FormControl>
 
-          <FormControl size="small" sx={{ minWidth: 200 }}>
+          <FormControl
+            size="small"
+            sx={{
+              minWidth: 180,
+              '& .MuiInputBase-root': {
+                height: 36,
+              }
+            }}
+          >
             <InputLabel>Consumer Type</InputLabel>
             <Select
               value={typeFilter}
@@ -205,7 +226,15 @@ const Consumers = () => {
             </Select>
           </FormControl>
 
-          <FormControl size="small" sx={{ minWidth: 180 }}>
+          <FormControl
+            size="small"
+            sx={{
+              minWidth: 162,
+              '& .MuiInputBase-root': {
+                height: 36,
+              }
+            }}
+          >
             <InputLabel>Opting Status</InputLabel>
             <Select
               value={optingStatusFilter}
@@ -219,7 +248,15 @@ const Consumers = () => {
             </Select>
           </FormControl>
 
-          <FormControl size="small" sx={{ minWidth: 150 }}>
+          <FormControl
+            size="small"
+            sx={{
+              minWidth: 135,
+              '& .MuiInputBase-root': {
+                height: 36,
+              }
+            }}
+          >
             <InputLabel>KYC Status</InputLabel>
             <Select
               value={kycFilter}
@@ -232,7 +269,11 @@ const Consumers = () => {
             </Select>
           </FormControl>
 
-          <Button variant="outlined" onClick={clearFilters}>
+          <Button
+            variant="outlined"
+            onClick={clearFilters}
+            sx={{ height: 36 }}
+          >
             Clear Filters
           </Button>
         </Box>
