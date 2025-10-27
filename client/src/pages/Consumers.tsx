@@ -160,9 +160,6 @@ const Consumers = () => {
 
       {/* Filters */}
       <Paper sx={{ p: 1.5, mb: 3 }}>
-        <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600, mb: 1 }}>
-          Filters
-        </Typography>
         <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap", alignItems: "center" }}>
           <TextField
             label="Search"
