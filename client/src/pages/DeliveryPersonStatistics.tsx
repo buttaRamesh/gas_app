@@ -28,10 +28,10 @@ import { PageHeader } from "@/components/PageHeader";
 interface PersonStatistics {
   id: number;
   name: string;
-  route_count: number;
-  consumer_count: number;
-  area_count: number;
-  workload_percentage: number;
+  routes_assigned: number;
+  total_consumers: number;
+  total_areas: number;
+  // workload_percentage: number;
 }
 
 export default function DeliveryPersonStatistics() {
@@ -40,28 +40,32 @@ export default function DeliveryPersonStatistics() {
   const [loading, setLoading] = useState(true);
   const [statistics, setStatistics] = useState<PersonStatistics[]>([]);
   const [totalStats, setTotalStats] = useState({
-    total_persons: 0,
-    total_routes: 0,
-    total_consumers: 0,
-    unassigned_persons: 0,
+    total_delivery_persons: 0,
+    with_route_assignments:0,
+    without_route_assignments:0,
+    total_routes_assigned: 0,
+    average_routes_per_person:0,
+    // total_consumers: 0,
   });
 
   useEffect(() => {
     fetchStatistics();
   }, []);
 
+  
   const fetchStatistics = async () => {
     try {
       setLoading(true);
       const response = await deliveryPersonsApi.getStatistics();
       const data = response.data;
-      
-      setStatistics(data.person_statistics || []);
+      setStatistics(data.top_performers || []);
       setTotalStats({
-        total_persons: data.total_persons || 0,
-        total_routes: data.total_routes || 0,
-        total_consumers: data.total_consumers || 0,
-        unassigned_persons: data.unassigned_persons || 0,
+        total_delivery_persons: data.total_delivery_persons || 0,
+        with_route_assignments: data.with_route_assignments || 0,
+        without_route_assignments: data.without_route_assignments || 0,
+        total_routes_assigned: data.total_routes_assigned || 0,
+        average_routes_per_person: data.average_routes_per_person || 0,
+        // total_consumers: data.total_consumers || 0,
       });
     } catch (err: any) {
       console.error("Failed to fetch statistics:", err);
@@ -102,16 +106,16 @@ export default function DeliveryPersonStatistics() {
                 </Box>
                 <Box>
                   <Typography variant="h4" sx={{ fontWeight: 600 }}>
-                    {totalStats.total_persons}
+                    {totalStats.total_delivery_persons}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Total Persons
                   </Typography>
                 </Box>
               </Box>
-              {totalStats.unassigned_persons > 0 && (
+              {totalStats.without_route_assignments > 0 && (
                 <Chip 
-                  label={`${totalStats.unassigned_persons} Unassigned`} 
+                  label={`${totalStats.without_route_assignments} Unassigned`} 
                   size="small" 
                   color="warning"
                   sx={{ mt: 1 }}
@@ -137,10 +141,10 @@ export default function DeliveryPersonStatistics() {
                 </Box>
                 <Box>
                   <Typography variant="h4" sx={{ fontWeight: 600 }}>
-                    {totalStats.total_routes}
+                    {totalStats.with_route_assignments}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Total Routes
+                    Persons Assigned To Routes
                   </Typography>
                 </Box>
               </Box>
@@ -164,10 +168,10 @@ export default function DeliveryPersonStatistics() {
                 </Box>
                 <Box>
                   <Typography variant="h4" sx={{ fontWeight: 600 }}>
-                    {totalStats.total_consumers}
+                    {totalStats.without_route_assignments}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Total Consumers
+                    Persons Not Assigned To Routes
                   </Typography>
                 </Box>
               </Box>
@@ -191,9 +195,7 @@ export default function DeliveryPersonStatistics() {
                 </Box>
                 <Box>
                   <Typography variant="h4" sx={{ fontWeight: 600 }}>
-                    {totalStats.total_persons > 0 
-                      ? (totalStats.total_routes / totalStats.total_persons).toFixed(1)
-                      : "0"}
+                    {totalStats.average_routes_per_person}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Avg Routes/Person
@@ -207,7 +209,7 @@ export default function DeliveryPersonStatistics() {
         <Card elevation={3} sx={{ bgcolor: "background.paper" }}>
           <CardContent>
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 3 }}>
-              Workload Distribution
+              Top Performers
             </Typography>
 
             {statistics.length === 0 ? (
@@ -227,7 +229,7 @@ export default function DeliveryPersonStatistics() {
                       <TableCell sx={{ fontWeight: 600 }} align="center">Routes</TableCell>
                       <TableCell sx={{ fontWeight: 600 }} align="center">Areas</TableCell>
                       <TableCell sx={{ fontWeight: 600 }} align="center">Consumers</TableCell>
-                      <TableCell sx={{ fontWeight: 600 }} align="center">Workload</TableCell>
+                      {/* <TableCell sx={{ fontWeight: 600 }} align="center">Workload</TableCell> */}
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -249,14 +251,14 @@ export default function DeliveryPersonStatistics() {
                         </TableCell>
                         <TableCell align="center">
                           <Chip 
-                            label={person.route_count} 
+                            label={person.routes_assigned} 
                             size="small" 
                             color="info"
                           />
                         </TableCell>
-                        <TableCell align="center">{person.area_count}</TableCell>
-                        <TableCell align="center">{person.consumer_count}</TableCell>
-                        <TableCell align="center">
+                        <TableCell align="center">{person.total_areas}</TableCell>
+                        <TableCell align="center">{person.total_consumers}</TableCell>
+                        {/* <TableCell align="center">
                           <Chip 
                             label={`${person.workload_percentage}%`}
                             size="small"
@@ -267,7 +269,7 @@ export default function DeliveryPersonStatistics() {
                             }
                             sx={{ fontWeight: 600 }}
                           />
-                        </TableCell>
+                        </TableCell> */}
                       </TableRow>
                     ))}
                   </TableBody>

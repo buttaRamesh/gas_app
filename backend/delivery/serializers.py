@@ -105,7 +105,7 @@ class DeliveryPersonCreateUpdateSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = DeliveryPerson
-        fields = ['name']
+        fields = ["id",'name']
     
     def validate_name(self, value):
         """Basic validation for name"""

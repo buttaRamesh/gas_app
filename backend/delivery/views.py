@@ -160,12 +160,18 @@ class DeliveryPersonViewSet(viewsets.ModelViewSet):
             route_count = dp.route_assignments.count()
             if route_count > 0:
                 top_performers.append({
+                    'id':dp.id,
                     'name': dp.name,
                     'routes_assigned': route_count,
                     'total_consumers': sum(
                         assignment.route.consumer_assignments.count() 
                         for assignment in dp.route_assignments.all()
-                    )
+                    ),
+                    'total_areas': sum(
+                        assignment.route.areas.count() 
+                        for assignment in dp.route_assignments.all()
+                    ),
+                     
                 })
         
         # Sort by routes assigned
