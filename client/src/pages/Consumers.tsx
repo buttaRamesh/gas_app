@@ -25,9 +25,9 @@ import {
   FormControl,
   InputLabel,
   Select,
+  Pagination,
 } from "@mui/material";
 import {
-  Add as AddIcon,
   Visibility as ViewIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
@@ -48,6 +48,11 @@ const Consumers = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [consumerToDelete, setConsumerToDelete] = useState<number | null>(null);
 
+  // Pagination
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+
   // Filters
   const [categoryFilter, setCategoryFilter] = useState<number | "">("");
   const [typeFilter, setTypeFilter] = useState<number | "">("");
@@ -61,7 +66,7 @@ const Consumers = () => {
   useEffect(() => {
     fetchConsumers();
     fetchLookups();
-  }, [searchQuery, categoryFilter, typeFilter, optingStatusFilter, kycFilter]);
+  }, [searchQuery, categoryFilter, typeFilter, optingStatusFilter, kycFilter, page]);
 
   const fetchLookups = async () => {
     try {
@@ -79,7 +84,7 @@ const Consumers = () => {
   const fetchConsumers = async () => {
     try {
       setLoading(true);
-      const filters: any = {};
+      const filters: any = { page };
       if (searchQuery.trim()) filters.search = searchQuery.trim();
       if (categoryFilter) filters.category = categoryFilter;
       if (typeFilter) filters.consumer_type = typeFilter;
@@ -87,7 +92,16 @@ const Consumers = () => {
       if (kycFilter) filters.is_kyc_done = kycFilter === "true";
 
       const response = await consumersApi.getAll(filters);
-      setConsumers(response.data.results || response.data);
+      const data = response.data;
+
+      setConsumers(data.results || data);
+
+      // Handle pagination data
+      if (data.count) {
+        setTotalCount(data.count);
+        // Assuming page size is 10 (default in Django REST framework)
+        setTotalPages(Math.ceil(data.count / 10));
+      }
     } catch (error) {
       showSnackbar("Failed to fetch consumers", "error");
       console.error(error);
@@ -130,6 +144,11 @@ const Consumers = () => {
     setTypeFilter("");
     setOptingStatusFilter("");
     setKycFilter("");
+    setPage(1);
+  };
+
+  const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
   };
 
   return (
@@ -137,29 +156,6 @@ const Consumers = () => {
       <PageHeader
         title="Consumers"
         description="Manage gas consumers and their information"
-        actions={
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <Button
-              variant="outlined"
-              onClick={() => navigate("/consumers/kyc-pending")}
-            >
-              KYC Pending
-            </Button>
-            <Button
-              variant="outlined"
-              onClick={() => navigate("/consumers/statistics")}
-            >
-              Statistics
-            </Button>
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={() => navigate("/consumers/create")}
-            >
-              Add Consumer
-            </Button>
-          </Box>
-        }
       />
 
       {/* Filters */}
@@ -247,83 +243,108 @@ const Consumers = () => {
           <CircularProgress />
         </Box>
       ) : (
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Consumer Number</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Opting Status</TableCell>
-                <TableCell>KYC Status</TableCell>
-                <TableCell>Mobile</TableCell>
-                <TableCell align="right">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {consumers.length === 0 ? (
+        <>
+          <TableContainer component={Paper}>
+            <Table size="small">
+              <TableHead>
                 <TableRow>
-                  <TableCell colSpan={8} align="center">
-                    <Typography variant="body2" color="text.secondary" py={4}>
-                      No consumers found
-                    </Typography>
-                  </TableCell>
+                  <TableCell>Consumer Number</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Category</TableCell>
+                  <TableCell>Type</TableCell>
+                  <TableCell>Opting Status</TableCell>
+                  <TableCell>KYC Status</TableCell>
+                  <TableCell>Mobile</TableCell>
+                  <TableCell align="right">Actions</TableCell>
                 </TableRow>
-              ) : (
-                consumers.map((consumer) => (
-                  <TableRow key={consumer.id} hover>
-                    <TableCell>{consumer.consumer_number}</TableCell>
-                    <TableCell>{consumer.consumer_name}</TableCell>
-                    <TableCell>{consumer.category_name || "-"}</TableCell>
-                    <TableCell>{consumer.type_name || "-"}</TableCell>
-                    <TableCell>
-                      <Chip
-                        label={consumer.opting_status_display || consumer.opting_status}
-                        color={getOptingStatusColor(consumer.opting_status)}
-                        size="small"
-                      />
-                    </TableCell>
-                    <TableCell>
-                      {consumer.is_kyc_done ? (
-                        <CheckIcon color="success" />
-                      ) : (
-                        <CancelIcon color="error" />
-                      )}
-                    </TableCell>
-                    <TableCell>{consumer.mobile_number || "-"}</TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        size="small"
-                        onClick={() => navigate(`/consumers/${consumer.id}`)}
-                        title="View Details"
-                      >
-                        <ViewIcon />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        onClick={() => navigate(`/consumers/${consumer.id}/edit`)}
-                        title="Edit"
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        onClick={() => {
-                          setConsumerToDelete(consumer.id);
-                          setDeleteDialogOpen(true);
-                        }}
-                        title="Delete"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
+              </TableHead>
+              <TableBody>
+                {consumers.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={8} align="center">
+                      <Typography variant="body2" color="text.secondary" py={4}>
+                        No consumers found
+                      </Typography>
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                ) : (
+                  consumers.map((consumer, index) => (
+                    <TableRow
+                      key={consumer.id}
+                      hover
+                      sx={{
+                        backgroundColor: index % 2 === 0 ? "action.hover" : "inherit",
+                        "&:hover": {
+                          backgroundColor: "action.selected",
+                        },
+                      }}
+                    >
+                      <TableCell sx={{ py: 1 }}>{consumer.consumer_number}</TableCell>
+                      <TableCell sx={{ py: 1 }}>{consumer.consumer_name}</TableCell>
+                      <TableCell sx={{ py: 1 }}>{consumer.category_name || "-"}</TableCell>
+                      <TableCell sx={{ py: 1 }}>{consumer.type_name || "-"}</TableCell>
+                      <TableCell sx={{ py: 1 }}>
+                        <Chip
+                          label={consumer.opting_status_display || consumer.opting_status}
+                          color={getOptingStatusColor(consumer.opting_status)}
+                          size="small"
+                        />
+                      </TableCell>
+                      <TableCell sx={{ py: 1 }}>
+                        {consumer.is_kyc_done ? (
+                          <CheckIcon color="success" fontSize="small" />
+                        ) : (
+                          <CancelIcon color="error" fontSize="small" />
+                        )}
+                      </TableCell>
+                      <TableCell sx={{ py: 1 }}>{consumer.mobile_number || "-"}</TableCell>
+                      <TableCell align="right" sx={{ py: 1 }}>
+                        <IconButton
+                          size="small"
+                          onClick={() => navigate(`/consumers/${consumer.id}`)}
+                          title="View Details"
+                        >
+                          <ViewIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          onClick={() => navigate(`/consumers/${consumer.id}/edit`)}
+                          title="Edit"
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          size="small"
+                          onClick={() => {
+                            setConsumerToDelete(consumer.id);
+                            setDeleteDialogOpen(true);
+                          }}
+                          title="Delete"
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+              <Pagination
+                count={totalPages}
+                page={page}
+                onChange={handlePageChange}
+                color="primary"
+                showFirstButton
+                showLastButton
+              />
+            </Box>
+          )}
+        </>
       )}
 
       {/* Delete Confirmation Dialog */}
