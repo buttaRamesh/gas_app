@@ -69,8 +69,8 @@ const Consumers = () => {
         lookupsApi.getConsumerCategories(),
         lookupsApi.getConsumerTypes(),
       ]);
-      setCategories(categoriesRes.data);
-      setTypes(typesRes.data);
+      setCategories(categoriesRes.data.results || categoriesRes.data);
+      setTypes(typesRes.data.results || typesRes.data);
     } catch (error) {
       console.error("Failed to fetch lookups:", error);
     }

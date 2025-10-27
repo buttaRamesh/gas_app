@@ -153,10 +153,10 @@ const ConsumerCreateStepper = () => {
         lookupsApi.getDCTTypes(),
         schemesApi.getAll(),
       ]);
-      setCategories(categoriesRes.data);
-      setTypes(typesRes.data);
-      setBplTypes(bplTypesRes.data);
-      setDctTypes(dctTypesRes.data);
+      setCategories(categoriesRes.data.results || categoriesRes.data);
+      setTypes(typesRes.data.results || typesRes.data);
+      setBplTypes(bplTypesRes.data.results || bplTypesRes.data);
+      setDctTypes(dctTypesRes.data.results || dctTypesRes.data);
       setSchemes(schemesRes.data.results || schemesRes.data);
     } catch (error) {
       showSnackbar("Failed to fetch lookup data", "error");
