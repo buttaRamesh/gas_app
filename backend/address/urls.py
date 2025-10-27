@@ -1,7 +1,7 @@
 # File: address/urls.py
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import AddressViewSet, ContactViewSet
+from .views import AddressViewSet, ContactViewSet, get_content_types
 
 router = DefaultRouter()
 router.register(r'addresses', AddressViewSet, basename='address')
@@ -9,6 +9,7 @@ router.register(r'contacts', ContactViewSet, basename='contact')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('content-types/', get_content_types, name='content-types'),
 ]
 
 """

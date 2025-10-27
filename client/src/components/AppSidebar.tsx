@@ -56,7 +56,6 @@ export function AppSidebar({ collapsed = false, onToggleCollapse }: AppSidebarPr
     if (location.pathname.startsWith('/route-areas')) return 'route-areas';
     if (location.pathname.startsWith('/delivery-persons')) return 'delivery-persons';
     if (location.pathname.startsWith('/consumers')) return 'consumers';
-    if (location.pathname.startsWith('/addresses')) return 'addresses';
     if (location.pathname.startsWith('/products') || location.pathname.startsWith('/units') || location.pathname.startsWith('/variants')) return 'products';
     if (location.pathname.startsWith('/settings')) return 'settings';
     return 'dashboard';
@@ -267,24 +266,6 @@ export function AppSidebar({ collapsed = false, onToggleCollapse }: AppSidebarPr
             >
               <ListItemIcon><Inventory sx={{ color: 'hsl(var(--sidebar-primary))' }} /></ListItemIcon>
               {!collapsed && <ListItemText primary={<Typography fontWeight="600">Products</Typography>} />}
-            </ListItemButton>
-
-            <ListItemButton
-              onClick={() => navigate('/addresses')}
-              sx={{
-                mb: 1.5,
-                borderRadius: 2,
-                bgcolor: 'hsla(var(--sidebar-primary), 0.1)',
-                color: 'hsl(var(--sidebar-foreground))',
-                border: '1px solid hsla(var(--sidebar-primary), 0.3)',
-                '&:hover': {
-                  bgcolor: 'hsla(var(--sidebar-primary), 0.15)',
-                  boxShadow: '0 0 20px hsla(var(--sidebar-primary), 0.2)'
-                }
-              }}
-            >
-              <ListItemIcon><HomeWork sx={{ color: 'hsl(var(--sidebar-primary))' }} /></ListItemIcon>
-              {!collapsed && <ListItemText primary={<Typography fontWeight="600">Addresses</Typography>} />}
             </ListItemButton>
 
             <ListItemButton
@@ -792,73 +773,6 @@ export function AppSidebar({ collapsed = false, onToggleCollapse }: AppSidebarPr
                 </ListItemButton>
               </List>
             </Collapse>
-          </>
-        )}
-
-        {/* Addresses Section */}
-        {currentSection === 'addresses' && (
-          <>
-            <Box sx={{ mb: 2, px: 2 }}>
-              {!collapsed && (
-                <Typography variant="h6" fontWeight="700" sx={{ color: 'hsl(var(--sidebar-primary))' }}>
-                  Addresses
-                </Typography>
-              )}
-            </Box>
-
-            <ListItemButton
-              onClick={() => navigate('/addresses')}
-              sx={{
-                mb: 1.5,
-                borderRadius: 2,
-                bgcolor: isActive('/addresses') ? 'hsla(var(--sidebar-primary), 0.15)' : 'hsla(var(--sidebar-primary), 0.1)',
-                color: 'hsl(var(--sidebar-foreground))',
-                border: '1px solid hsla(var(--sidebar-primary), 0.3)',
-                '&:hover': {
-                  bgcolor: 'hsla(var(--sidebar-primary), 0.15)',
-                  boxShadow: '0 0 20px hsla(var(--sidebar-primary), 0.2)'
-                }
-              }}
-            >
-              <ListItemIcon><HomeWork sx={{ color: 'hsl(var(--sidebar-primary))' }} /></ListItemIcon>
-              {!collapsed && <ListItemText primary={<Typography fontWeight="600">All Addresses</Typography>} />}
-            </ListItemButton>
-
-            <ListItemButton
-              onClick={() => navigate('/addresses/create')}
-              sx={{
-                mb: 1.5,
-                borderRadius: 2,
-                bgcolor: isActive('/addresses/create') ? 'hsla(var(--sidebar-primary), 0.15)' : 'hsla(var(--sidebar-primary), 0.1)',
-                color: 'hsl(var(--sidebar-foreground))',
-                border: '1px solid hsla(var(--sidebar-primary), 0.3)',
-                '&:hover': {
-                  bgcolor: 'hsla(var(--sidebar-primary), 0.15)',
-                  boxShadow: '0 0 20px hsla(var(--sidebar-primary), 0.2)'
-                }
-              }}
-            >
-              <ListItemIcon><Add sx={{ color: 'hsl(var(--sidebar-primary))' }} /></ListItemIcon>
-              {!collapsed && <ListItemText primary={<Typography fontWeight="600">Add Address</Typography>} />}
-            </ListItemButton>
-
-            <ListItemButton
-              onClick={() => navigate('/addresses/statistics')}
-              sx={{
-                mb: 1.5,
-                borderRadius: 2,
-                bgcolor: isActive('/addresses/statistics') ? 'hsla(var(--sidebar-primary), 0.15)' : 'hsla(var(--sidebar-primary), 0.1)',
-                color: 'hsl(var(--sidebar-foreground))',
-                border: '1px solid hsla(var(--sidebar-primary), 0.3)',
-                '&:hover': {
-                  bgcolor: 'hsla(var(--sidebar-primary), 0.15)',
-                  boxShadow: '0 0 20px hsla(var(--sidebar-primary), 0.2)'
-                }
-              }}
-            >
-              <ListItemIcon><BarChart sx={{ color: 'hsl(var(--sidebar-primary))' }} /></ListItemIcon>
-              {!collapsed && <ListItemText primary={<Typography fontWeight="600">Statistics</Typography>} />}
-            </ListItemButton>
           </>
         )}
 

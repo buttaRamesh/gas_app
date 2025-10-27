@@ -287,4 +287,10 @@ export const contactsApi = {
   getStatistics: () => api.get('/contacts/statistics/'),
 };
 
+// Content Types API
+export const contentTypesApi = {
+  getAll: () => api.get('/content-types/'),
+  getByModel: (modelName: string) => api.get(`/content-types/?model=${modelName}`),
+};
+
 export default api;

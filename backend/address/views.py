@@ -1,6 +1,6 @@
 # File: address/views.py
 from rest_framework import viewsets, filters, status
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count
@@ -12,6 +12,7 @@ from .serializers import (
     ContactSerializer,
     ContactListSerializer
 )
+from .utils import get_content_type_for_model, get_all_content_types
 
 
 class AddressViewSet(viewsets.ModelViewSet):
@@ -180,3 +181,34 @@ class ContactViewSet(viewsets.ModelViewSet):
             'with_phone': with_phone,
             'by_content_type': list(by_content_type),
         })
+
+
+@api_view(['GET'])
+def get_content_types(request):
+    """
+    Get all content types or specific content type by model name.
+
+    Query Parameters:
+    - model: Filter by model name (e.g., 'consumer', 'deliveryperson')
+
+    Returns:
+    - List of content types or single content type details
+    """
+    model_name = request.query_params.get('model', None)
+
+    if model_name:
+        try:
+            content_type_id = get_content_type_for_model(model_name)
+            return Response({
+                'model': model_name.lower(),
+                'content_type_id': content_type_id
+            })
+        except ValueError as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+    # Return all content types
+    all_content_types = get_all_content_types()
+    return Response(all_content_types)
