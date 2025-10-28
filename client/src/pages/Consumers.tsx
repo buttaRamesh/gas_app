@@ -162,70 +162,86 @@ const Consumers = () => {
       flex: 0.8,
       minWidth: 90,
       renderCell: (params: GridRenderCellParams) => (
-        <Typography sx={{ fontWeight: 600, color: "#667eea", fontSize: "0.875rem" }}>
-          {params.value}
-        </Typography>
+        <Box sx={{ display: "flex", alignItems: "center", height: "100%" }}>
+          <Typography sx={{ fontWeight: 600, color: "#667eea", fontSize: "0.875rem" }}>
+            {params.value}
+          </Typography>
+        </Box>
       ),
     },
     {
       field: "consumer_name",
       headerName: "Name",
-      flex: 1.2,
+      flex: 1.5,
       minWidth: 110,
       renderCell: (params: GridRenderCellParams) => (
-        <Typography sx={{ fontWeight: 500, fontSize: "0.875rem" }}>{params.value}</Typography>
+        <Box sx={{ display: "flex", alignItems: "center", height: "100%" }}>
+          <Typography sx={{ fontWeight: 500, fontSize: "0.875rem" }}>{params.value}</Typography>
+        </Box>
       ),
     },
     {
       field: "category_name",
       headerName: "Category",
-      flex: 0.8,
+      flex: 0.6,
       minWidth: 80,
+      align: "center",
+      headerAlign: "center",
       renderCell: (params: GridRenderCellParams) => (
-        <Chip
-          label={params.value || "-"}
-          size="small"
-          sx={{
-            background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-            color: "white",
-            fontWeight: 600,
-            fontSize: "0.75rem",
-            height: 24,
-          }}
-        />
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+          <Chip
+            label={params.value || "-"}
+            size="small"
+            sx={{
+              background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+              color: "white",
+              fontWeight: 600,
+              fontSize: "0.75rem",
+              height: 24,
+            }}
+          />
+        </Box>
       ),
     },
     {
       field: "type_name",
       headerName: "Type",
-      flex: 0.8,
+      flex: 0.6,
       minWidth: 80,
+      align: "center",
+      headerAlign: "center",
       renderCell: (params: GridRenderCellParams) => (
-        <Chip
-          label={params.value || "-"}
-          size="small"
-          sx={{
-            background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
-            color: "white",
-            fontWeight: 600,
-            fontSize: "0.75rem",
-            height: 24,
-          }}
-        />
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+          <Chip
+            label={params.value || "-"}
+            size="small"
+            sx={{
+              background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+              color: "white",
+              fontWeight: 600,
+              fontSize: "0.75rem",
+              height: 24,
+            }}
+          />
+        </Box>
       ),
     },
     {
       field: "opting_status",
       headerName: "Status",
-      flex: 0.8,
+      flex: 0.6,
       minWidth: 80,
+      align: "center",
+      headerAlign: "center",
       renderCell: (params: GridRenderCellParams) => (
-        <Chip
-          label={params.row.opting_status_display || params.value}
-          color={getOptingStatusColor(params.value)}
-          size="small"
-          sx={{ fontWeight: 600, fontSize: "0.75rem", height: 24 }}
-        />
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+          <Chip
+            label={params.row.opting_status_display || params.value}
+            color={getOptingStatusColor(params.value)}
+            size="small"
+            sx={{ fontWeight: 600, fontSize: "0.75rem", height: 24 }}
+          />
+        </Box>
       ),
     },
     {
