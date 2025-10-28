@@ -357,7 +357,7 @@ const Consumers = () => {
   );
 
   return (
-    <Container maxWidth="lg" sx={{ py: 3, px: { xs: 2, sm: 3 } }}>
+    <Container maxWidth={false} sx={{ py: 3, px: { xs: 2, sm: 3 }, maxWidth: "1260px" }}>
       {/* Title and Action Buttons Row */}
       <Box sx={{ mb: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <Typography variant="h5" sx={{ fontWeight: 700, color: "primary.main" }}>
