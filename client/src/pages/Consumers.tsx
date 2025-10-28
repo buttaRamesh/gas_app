@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -16,6 +16,9 @@ import {
   Paper,
   Grid,
   Divider,
+  Menu,
+  MenuItem,
+  Tooltip,
 } from "@mui/material";
 import {
   DataGrid,
@@ -38,6 +41,7 @@ import {
   ViewColumn as ViewColumnIcon,
   FilterList as FilterListIcon,
   Search as SearchIcon,
+  FileDownload as FileDownloadIcon,
 } from "@mui/icons-material";
 import { consumersApi } from "../services/api";
 import { useSnackbar } from "../contexts/SnackbarContext";
@@ -56,7 +60,7 @@ const Consumers = () => {
   });
   const [totalRows, setTotalRows] = useState(0);
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
-  const [searchText, setSearchText] = useState("");
+  const [exportMenuAnchor, setExportMenuAnchor] = useState<null | HTMLElement>(null);
 
   useEffect(() => {
     fetchConsumers();
@@ -117,23 +121,99 @@ const Consumers = () => {
     setExpandedRows(newExpanded);
   };
 
+  const handleExportCSV = () => {
+    const headers = ["Consumer #", "Name", "Category", "Type", "Status", "KYC", "Mobile"];
+    const rows = consumers.map(c => [
+      c.consumer_number,
+      c.consumer_name,
+      c.category_name || "",
+      c.type_name || "",
+      c.opting_status_display || c.opting_status,
+      c.is_kyc_done ? "Yes" : "No",
+      c.mobile_number || ""
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(","))
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "consumers.csv";
+    link.click();
+    URL.revokeObjectURL(url);
+    setExportMenuAnchor(null);
+  };
+
+  const handlePrint = () => {
+    window.print();
+    setExportMenuAnchor(null);
+  };
+
   const CustomToolbar = () => {
+    const columnsButtonRef = useRef<HTMLButtonElement>(null);
+    const filterButtonRef = useRef<HTMLButtonElement>(null);
+
     return (
       <GridToolbarContainer
         sx={{
           p: 1,
           borderBottom: "1px solid #e0e0e0",
+          display: "flex",
+          justifyContent: "flex-end",
         }}
       >
-        <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap", width: "100%", alignItems: "center" }}>
-          <GridToolbarColumnsButton />
-          <GridToolbarFilterButton />
-          <GridToolbarQuickFilter
-            sx={{
-              ml: "auto",
-              minWidth: 200,
-            }}
-          />
+        <Box sx={{ display: "flex", gap: 0.5, alignItems: "center" }}>
+          <Tooltip title="Show/Hide Columns">
+            <IconButton
+              size="small"
+              onClick={() => columnsButtonRef.current?.click()}
+            >
+              <ViewColumnIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+
+          <Box sx={{ display: "none" }}>
+            <GridToolbarColumnsButton ref={columnsButtonRef} />
+          </Box>
+
+          <Tooltip title="Filter">
+            <IconButton
+              size="small"
+              onClick={() => filterButtonRef.current?.click()}
+            >
+              <FilterListIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+
+          <Box sx={{ display: "none" }}>
+            <GridToolbarFilterButton ref={filterButtonRef} />
+          </Box>
+
+          <Tooltip title="Export">
+            <IconButton
+              size="small"
+              onClick={(e) => setExportMenuAnchor(e.currentTarget)}
+            >
+              <FileDownloadIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Search">
+            <Box>
+              <GridToolbarQuickFilter
+                size="small"
+                sx={{
+                  "& .MuiInput-root": {
+                    fontSize: "0.875rem",
+                  },
+                }}
+              />
+            </Box>
+          </Tooltip>
         </Box>
       </GridToolbarContainer>
     );
@@ -329,19 +409,6 @@ const Consumers = () => {
     return params.indexRelativeToCurrentPage % 2 === 0 ? "even-row" : "odd-row";
   };
 
-  // Filter consumers based on search text
-  const filteredConsumers = consumers.filter((consumer) => {
-    if (!searchText) return true;
-    const search = searchText.toLowerCase();
-    return (
-      consumer.consumer_name?.toLowerCase().includes(search) ||
-      consumer.consumer_number?.toLowerCase().includes(search) ||
-      consumer.mobile_number?.toLowerCase().includes(search) ||
-      consumer.category_name?.toLowerCase().includes(search) ||
-      consumer.type_name?.toLowerCase().includes(search)
-    );
-  });
-
   const DetailPanel = ({ row }: { row: ConsumerListItem }) => (
     <Box sx={{ p: 3, bgcolor: "#f8f9fa" }}>
       <Grid container spacing={2}>
@@ -399,68 +466,25 @@ const Consumers = () => {
 
   return (
     <Container maxWidth={false} sx={{ py: 3, px: { xs: 2, sm: 3 }, maxWidth: "1260px" }}>
-      {/* Enhanced Toolbar Above Table */}
-      <Paper
-        elevation={0}
-        sx={{
-          mb: 2,
-          p: 2,
-          borderRadius: 2,
-          border: "1px solid #e0e0e0",
-          bgcolor: "#fafafa",
-        }}
-      >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, flexWrap: "wrap" }}>
-          {/* Title */}
-          <Typography variant="h5" sx={{ fontWeight: 700, color: "primary.main", mr: "auto" }}>
-            Consumers
-          </Typography>
-
-          {/* Search Field */}
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              bgcolor: "white",
-              borderRadius: 1,
-              px: 1.5,
-              py: 0.5,
-              border: "1px solid #e0e0e0",
-              minWidth: 250,
-            }}
-          >
-            <SearchIcon sx={{ color: "text.secondary", mr: 1, fontSize: 20 }} />
-            <input
-              type="text"
-              placeholder="Search consumers..."
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              style={{
-                border: "none",
-                outline: "none",
-                fontSize: "0.875rem",
-                width: "100%",
-                background: "transparent",
-              }}
-            />
-          </Box>
-
-          {/* Add Consumer Button */}
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => navigate("/consumers/create")}
-            sx={{
-              bgcolor: "#667eea",
-              "&:hover": { bgcolor: "#5568d3" },
-              textTransform: "none",
-              fontWeight: 600,
-            }}
-          >
-            Add Consumer
-          </Button>
-        </Box>
-      </Paper>
+      {/* Title and Add Button */}
+      <Box sx={{ mb: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Typography variant="h5" sx={{ fontWeight: 700, color: "primary.main" }}>
+          Consumers
+        </Typography>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => navigate("/consumers/create")}
+          sx={{
+            bgcolor: "#667eea",
+            "&:hover": { bgcolor: "#5568d3" },
+            textTransform: "none",
+            fontWeight: 600,
+          }}
+        >
+          Add Consumer
+        </Button>
+      </Box>
 
       <Paper
         elevation={0}
@@ -472,13 +496,13 @@ const Consumers = () => {
         }}
       >
         <DataGrid
-          rows={filteredConsumers}
+          rows={consumers}
           columns={columns}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           pageSizeOptions={[5, 10, 25, 50]}
-          paginationMode="client"
-          rowCount={filteredConsumers.length}
+          paginationMode="server"
+          rowCount={totalRows}
           loading={loading}
           slots={{
             toolbar: CustomToolbar,
@@ -533,7 +557,7 @@ const Consumers = () => {
         />
 
         {/* Expandable Detail Rows */}
-        {filteredConsumers.map((row) => (
+        {consumers.map((row) => (
           <Collapse key={row.id} in={expandedRows.has(row.id)} timeout="auto" unmountOnExit>
             <DetailPanel row={row} />
             <Divider />
@@ -556,6 +580,24 @@ const Consumers = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Export Menu */}
+      <Menu
+        anchorEl={exportMenuAnchor}
+        open={Boolean(exportMenuAnchor)}
+        onClose={() => setExportMenuAnchor(null)}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <MenuItem onClick={handlePrint}>Print</MenuItem>
+        <MenuItem onClick={handleExportCSV}>Download as CSV</MenuItem>
+      </Menu>
     </Container>
   );
 };
