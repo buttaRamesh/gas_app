@@ -159,8 +159,8 @@ const Consumers = () => {
     {
       field: "consumer_number",
       headerName: "Consumer #",
-      flex: 0.8,
-      minWidth: 90,
+      flex: 0.7,
+      minWidth: 85,
       renderCell: (params: GridRenderCellParams) => (
         <Box sx={{ display: "flex", alignItems: "center", height: "100%" }}>
           <Typography sx={{ fontWeight: 600, color: "#667eea", fontSize: "0.875rem" }}>
@@ -172,7 +172,7 @@ const Consumers = () => {
     {
       field: "consumer_name",
       headerName: "Name",
-      flex: 1.5,
+      flex: 1.8,
       minWidth: 110,
       renderCell: (params: GridRenderCellParams) => (
         <Box sx={{ display: "flex", alignItems: "center", height: "100%" }}>
@@ -249,18 +249,23 @@ const Consumers = () => {
       headerName: "KYC",
       width: 60,
       resizable: false,
-      renderCell: (params: GridRenderCellParams) =>
-        params.value ? (
-          <CheckIcon sx={{ color: "#4caf50", fontSize: 20 }} />
-        ) : (
-          <CancelIcon sx={{ color: "#f44336", fontSize: 20 }} />
-        ),
+      align: "center",
+      headerAlign: "center",
+      renderCell: (params: GridRenderCellParams) => (
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+          {params.value ? (
+            <CheckIcon sx={{ color: "#4caf50", fontSize: 20 }} />
+          ) : (
+            <CancelIcon sx={{ color: "#f44336", fontSize: 20 }} />
+          )}
+        </Box>
+      ),
     },
     {
       field: "mobile_number",
       headerName: "Mobile",
-      flex: 0.9,
-      minWidth: 95,
+      flex: 0.75,
+      minWidth: 90,
     },
     {
       field: "actions",
@@ -270,8 +275,10 @@ const Consumers = () => {
       filterable: false,
       disableColumnMenu: true,
       resizable: false,
+      align: "center",
+      headerAlign: "center",
       renderCell: (params: GridRenderCellParams) => (
-        <Box sx={{ display: "flex", gap: 0.3 }}>
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 0.3, width: "100%", height: "100%" }}>
           <IconButton
             size="small"
             onClick={() => navigate(`/consumers/${params.row.id}`)}
