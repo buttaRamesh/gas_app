@@ -142,6 +142,7 @@ const Consumers = () => {
       sortable: false,
       filterable: false,
       disableColumnMenu: true,
+      resizable: false,
       renderCell: (params: GridRenderCellParams) => (
         <IconButton
           size="small"
@@ -158,8 +159,8 @@ const Consumers = () => {
     {
       field: "consumer_number",
       headerName: "Consumer #",
-      flex: 0.8,
-      minWidth: 120,
+      flex: 1,
+      minWidth: 100,
       renderCell: (params: GridRenderCellParams) => (
         <Typography sx={{ fontWeight: 600, color: "#667eea" }}>
           {params.value}
@@ -169,8 +170,8 @@ const Consumers = () => {
     {
       field: "consumer_name",
       headerName: "Name",
-      flex: 1.2,
-      minWidth: 150,
+      flex: 1.5,
+      minWidth: 120,
       renderCell: (params: GridRenderCellParams) => (
         <Typography sx={{ fontWeight: 500 }}>{params.value}</Typography>
       ),
@@ -178,8 +179,8 @@ const Consumers = () => {
     {
       field: "category_name",
       headerName: "Category",
-      flex: 0.9,
-      minWidth: 120,
+      flex: 1,
+      minWidth: 90,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
           label={params.value || "-"}
@@ -195,8 +196,8 @@ const Consumers = () => {
     {
       field: "type_name",
       headerName: "Type",
-      flex: 0.9,
-      minWidth: 120,
+      flex: 1,
+      minWidth: 90,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
           label={params.value || "-"}
@@ -211,9 +212,9 @@ const Consumers = () => {
     },
     {
       field: "opting_status",
-      headerName: "Opting Status",
-      flex: 0.9,
-      minWidth: 120,
+      headerName: "Status",
+      flex: 1,
+      minWidth: 90,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
           label={params.row.opting_status_display || params.value}
@@ -226,27 +227,29 @@ const Consumers = () => {
     {
       field: "is_kyc_done",
       headerName: "KYC",
-      width: 80,
+      width: 70,
+      resizable: false,
       renderCell: (params: GridRenderCellParams) =>
         params.value ? (
-          <CheckIcon sx={{ color: "#4caf50", fontSize: 28 }} />
+          <CheckIcon sx={{ color: "#4caf50", fontSize: 24 }} />
         ) : (
-          <CancelIcon sx={{ color: "#f44336", fontSize: 28 }} />
+          <CancelIcon sx={{ color: "#f44336", fontSize: 24 }} />
         ),
     },
     {
       field: "mobile_number",
       headerName: "Mobile",
-      flex: 0.9,
-      minWidth: 120,
+      flex: 1,
+      minWidth: 100,
     },
     {
       field: "actions",
       headerName: "Actions",
-      width: 140,
+      width: 130,
       sortable: false,
       filterable: false,
       disableColumnMenu: true,
+      resizable: false,
       renderCell: (params: GridRenderCellParams) => (
         <Box sx={{ display: "flex", gap: 0.5 }}>
           <IconButton
@@ -347,7 +350,7 @@ const Consumers = () => {
   );
 
   return (
-    <Container maxWidth="xl" sx={{ py: 3 }}>
+    <Container maxWidth="xl" sx={{ py: 3, px: { xs: 2, sm: 3 } }}>
       {/* Title and Action Buttons Row */}
       <Box sx={{ mb: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <Typography variant="h5" sx={{ fontWeight: 700, color: "primary.main" }}>
@@ -368,8 +371,9 @@ const Consumers = () => {
         elevation={0}
         sx={{
           borderRadius: 3,
-          overflow: "hidden",
+          overflow: "auto",
           border: "1px solid #e0e0e0",
+          width: "100%",
         }}
       >
         <DataGrid
@@ -387,8 +391,12 @@ const Consumers = () => {
           getRowClassName={getRowClassName}
           disableRowSelectionOnClick
           autoHeight
+          disableColumnResize={false}
+          columnHeaderHeight={48}
+          rowHeight={52}
           sx={{
             border: "none",
+            width: "100%",
             "& .MuiDataGrid-main": {
               borderRadius: 0,
             },
@@ -415,6 +423,9 @@ const Consumers = () => {
             "& .MuiDataGrid-footerContainer": {
               borderTop: "2px solid #667eea",
               bgcolor: "#f5f5f5",
+            },
+            "& .MuiDataGrid-virtualScroller": {
+              overflowX: "auto",
             },
           }}
           initialState={{
