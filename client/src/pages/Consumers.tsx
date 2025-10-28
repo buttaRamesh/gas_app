@@ -116,17 +116,17 @@ const Consumers = () => {
     return (
       <GridToolbarContainer
         sx={{
-          p: 1.5,
+          p: 1,
           borderBottom: "1px solid #e0e0e0",
         }}
       >
-        <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", width: "100%", alignItems: "center" }}>
+        <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap", width: "100%", alignItems: "center" }}>
           <GridToolbarColumnsButton />
           <GridToolbarFilterButton />
           <GridToolbarQuickFilter
             sx={{
               ml: "auto",
-              minWidth: 250,
+              minWidth: 200,
             }}
           />
         </Box>
@@ -138,7 +138,7 @@ const Consumers = () => {
     {
       field: "expand",
       headerName: "",
-      width: 50,
+      width: 45,
       sortable: false,
       filterable: false,
       disableColumnMenu: true,
@@ -152,17 +152,17 @@ const Consumers = () => {
             transition: "transform 0.3s",
           }}
         >
-          <ExpandMoreIcon />
+          <ExpandMoreIcon fontSize="small" />
         </IconButton>
       ),
     },
     {
       field: "consumer_number",
       headerName: "Consumer #",
-      flex: 1,
-      minWidth: 100,
+      flex: 0.8,
+      minWidth: 90,
       renderCell: (params: GridRenderCellParams) => (
-        <Typography sx={{ fontWeight: 600, color: "#667eea" }}>
+        <Typography sx={{ fontWeight: 600, color: "#667eea", fontSize: "0.875rem" }}>
           {params.value}
         </Typography>
       ),
@@ -170,17 +170,17 @@ const Consumers = () => {
     {
       field: "consumer_name",
       headerName: "Name",
-      flex: 1.5,
-      minWidth: 120,
+      flex: 1.2,
+      minWidth: 110,
       renderCell: (params: GridRenderCellParams) => (
-        <Typography sx={{ fontWeight: 500 }}>{params.value}</Typography>
+        <Typography sx={{ fontWeight: 500, fontSize: "0.875rem" }}>{params.value}</Typography>
       ),
     },
     {
       field: "category_name",
       headerName: "Category",
-      flex: 1,
-      minWidth: 90,
+      flex: 0.8,
+      minWidth: 80,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
           label={params.value || "-"}
@@ -189,6 +189,8 @@ const Consumers = () => {
             background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
             color: "white",
             fontWeight: 600,
+            fontSize: "0.75rem",
+            height: 24,
           }}
         />
       ),
@@ -196,8 +198,8 @@ const Consumers = () => {
     {
       field: "type_name",
       headerName: "Type",
-      flex: 1,
-      minWidth: 90,
+      flex: 0.8,
+      minWidth: 80,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
           label={params.value || "-"}
@@ -206,6 +208,8 @@ const Consumers = () => {
             background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
             color: "white",
             fontWeight: 600,
+            fontSize: "0.75rem",
+            height: 24,
           }}
         />
       ),
@@ -213,54 +217,55 @@ const Consumers = () => {
     {
       field: "opting_status",
       headerName: "Status",
-      flex: 1,
-      minWidth: 90,
+      flex: 0.8,
+      minWidth: 80,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
           label={params.row.opting_status_display || params.value}
           color={getOptingStatusColor(params.value)}
           size="small"
-          sx={{ fontWeight: 600 }}
+          sx={{ fontWeight: 600, fontSize: "0.75rem", height: 24 }}
         />
       ),
     },
     {
       field: "is_kyc_done",
       headerName: "KYC",
-      width: 70,
+      width: 60,
       resizable: false,
       renderCell: (params: GridRenderCellParams) =>
         params.value ? (
-          <CheckIcon sx={{ color: "#4caf50", fontSize: 24 }} />
+          <CheckIcon sx={{ color: "#4caf50", fontSize: 20 }} />
         ) : (
-          <CancelIcon sx={{ color: "#f44336", fontSize: 24 }} />
+          <CancelIcon sx={{ color: "#f44336", fontSize: 20 }} />
         ),
     },
     {
       field: "mobile_number",
       headerName: "Mobile",
-      flex: 1,
-      minWidth: 100,
+      flex: 0.9,
+      minWidth: 95,
     },
     {
       field: "actions",
       headerName: "Actions",
-      width: 130,
+      width: 110,
       sortable: false,
       filterable: false,
       disableColumnMenu: true,
       resizable: false,
       renderCell: (params: GridRenderCellParams) => (
-        <Box sx={{ display: "flex", gap: 0.5 }}>
+        <Box sx={{ display: "flex", gap: 0.3 }}>
           <IconButton
             size="small"
             onClick={() => navigate(`/consumers/${params.row.id}`)}
             sx={{
               bgcolor: "rgba(103, 126, 234, 0.1)",
               "&:hover": { bgcolor: "rgba(103, 126, 234, 0.2)" },
+              padding: "4px",
             }}
           >
-            <ViewIcon fontSize="small" sx={{ color: "#667eea" }} />
+            <ViewIcon sx={{ fontSize: 18, color: "#667eea" }} />
           </IconButton>
           <IconButton
             size="small"
@@ -268,9 +273,10 @@ const Consumers = () => {
             sx={{
               bgcolor: "rgba(79, 172, 254, 0.1)",
               "&:hover": { bgcolor: "rgba(79, 172, 254, 0.2)" },
+              padding: "4px",
             }}
           >
-            <EditIcon fontSize="small" sx={{ color: "#4facfe" }} />
+            <EditIcon sx={{ fontSize: 18, color: "#4facfe" }} />
           </IconButton>
           <IconButton
             size="small"
@@ -281,9 +287,10 @@ const Consumers = () => {
             sx={{
               bgcolor: "rgba(244, 67, 54, 0.1)",
               "&:hover": { bgcolor: "rgba(244, 67, 54, 0.2)" },
+              padding: "4px",
             }}
           >
-            <DeleteIcon fontSize="small" sx={{ color: "#f44336" }} />
+            <DeleteIcon sx={{ fontSize: 18, color: "#f44336" }} />
           </IconButton>
         </Box>
       ),
@@ -350,7 +357,7 @@ const Consumers = () => {
   );
 
   return (
-    <Container maxWidth="xl" sx={{ py: 3, px: { xs: 2, sm: 3 } }}>
+    <Container maxWidth="lg" sx={{ py: 3, px: { xs: 2, sm: 3 } }}>
       {/* Title and Action Buttons Row */}
       <Box sx={{ mb: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <Typography variant="h5" sx={{ fontWeight: 700, color: "primary.main" }}>
@@ -392,8 +399,8 @@ const Consumers = () => {
           disableRowSelectionOnClick
           autoHeight
           disableColumnResize={false}
-          columnHeaderHeight={48}
-          rowHeight={52}
+          columnHeaderHeight={40}
+          rowHeight={40}
           sx={{
             border: "none",
             width: "100%",
