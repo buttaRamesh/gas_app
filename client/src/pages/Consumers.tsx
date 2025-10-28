@@ -157,69 +157,41 @@ const Consumers = () => {
     return (
       <GridToolbarContainer
         sx={{
-          p: 1.5,
-          borderBottom: "1px solid #e0e0e0",
-          display: "flex",
-          justifyContent: "flex-end",
-          bgcolor: "#fafafa",
+          p: 2,
+          borderBottom: "2px solid #667eea",
+          bgcolor: "#f0f7ff",
+          minHeight: "60px",
         }}
       >
-        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-          <Tooltip title="Show/Hide Columns">
-            <IconButton size="small" sx={{ bgcolor: "white", "&:hover": { bgcolor: "#f0f0f0" } }}>
-              <ViewColumnIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-
-          <GridToolbarColumnsButton
-            slotProps={{
-              button: {
-                sx: { display: "none" }
-              }
-            }}
-          />
-
-          <Tooltip title="Filter">
-            <IconButton size="small" sx={{ bgcolor: "white", "&:hover": { bgcolor: "#f0f0f0" } }}>
-              <FilterListIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-
-          <GridToolbarFilterButton
-            slotProps={{
-              button: {
-                sx: { display: "none" }
-              }
-            }}
-          />
+        <Box sx={{ display: "flex", gap: 1, alignItems: "center", width: "100%", justifyContent: "flex-end" }}>
+          <GridToolbarColumnsButton />
+          <GridToolbarFilterButton />
 
           <Tooltip title="Export">
             <IconButton
               size="small"
               onClick={(e) => setExportMenuAnchor(e.currentTarget)}
-              sx={{ bgcolor: "white", "&:hover": { bgcolor: "#f0f0f0" } }}
+              sx={{
+                bgcolor: "white",
+                border: "1px solid #667eea",
+                "&:hover": { bgcolor: "#667eea", color: "white" }
+              }}
             >
               <FileDownloadIcon fontSize="small" />
             </IconButton>
           </Tooltip>
 
-          <Tooltip title="Search">
-            <Box>
-              <GridToolbarQuickFilter
-                sx={{
-                  bgcolor: "white",
-                  borderRadius: 1,
-                  px: 1,
-                  "& .MuiInput-root": {
-                    fontSize: "0.875rem",
-                  },
-                  "& .MuiInput-root:before": {
-                    borderBottom: "none",
-                  },
-                }}
-              />
-            </Box>
-          </Tooltip>
+          <GridToolbarQuickFilter
+            sx={{
+              bgcolor: "white",
+              borderRadius: 1,
+              px: 1,
+              border: "1px solid #e0e0e0",
+              "& .MuiInput-root": {
+                fontSize: "0.875rem",
+              },
+            }}
+          />
         </Box>
       </GridToolbarContainer>
     );
