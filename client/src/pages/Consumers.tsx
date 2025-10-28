@@ -154,49 +154,50 @@ const Consumers = () => {
   };
 
   const CustomToolbar = () => {
-    const columnsButtonRef = useRef<HTMLButtonElement>(null);
-    const filterButtonRef = useRef<HTMLButtonElement>(null);
-
     return (
       <GridToolbarContainer
         sx={{
-          p: 1,
+          p: 1.5,
           borderBottom: "1px solid #e0e0e0",
           display: "flex",
           justifyContent: "flex-end",
+          bgcolor: "#fafafa",
         }}
       >
-        <Box sx={{ display: "flex", gap: 0.5, alignItems: "center" }}>
+        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
           <Tooltip title="Show/Hide Columns">
-            <IconButton
-              size="small"
-              onClick={() => columnsButtonRef.current?.click()}
-            >
+            <IconButton size="small" sx={{ bgcolor: "white", "&:hover": { bgcolor: "#f0f0f0" } }}>
               <ViewColumnIcon fontSize="small" />
             </IconButton>
           </Tooltip>
 
-          <Box sx={{ display: "none" }}>
-            <GridToolbarColumnsButton ref={columnsButtonRef} />
-          </Box>
+          <GridToolbarColumnsButton
+            slotProps={{
+              button: {
+                sx: { display: "none" }
+              }
+            }}
+          />
 
           <Tooltip title="Filter">
-            <IconButton
-              size="small"
-              onClick={() => filterButtonRef.current?.click()}
-            >
+            <IconButton size="small" sx={{ bgcolor: "white", "&:hover": { bgcolor: "#f0f0f0" } }}>
               <FilterListIcon fontSize="small" />
             </IconButton>
           </Tooltip>
 
-          <Box sx={{ display: "none" }}>
-            <GridToolbarFilterButton ref={filterButtonRef} />
-          </Box>
+          <GridToolbarFilterButton
+            slotProps={{
+              button: {
+                sx: { display: "none" }
+              }
+            }}
+          />
 
           <Tooltip title="Export">
             <IconButton
               size="small"
               onClick={(e) => setExportMenuAnchor(e.currentTarget)}
+              sx={{ bgcolor: "white", "&:hover": { bgcolor: "#f0f0f0" } }}
             >
               <FileDownloadIcon fontSize="small" />
             </IconButton>
@@ -205,10 +206,15 @@ const Consumers = () => {
           <Tooltip title="Search">
             <Box>
               <GridToolbarQuickFilter
-                size="small"
                 sx={{
+                  bgcolor: "white",
+                  borderRadius: 1,
+                  px: 1,
                   "& .MuiInput-root": {
                     fontSize: "0.875rem",
+                  },
+                  "& .MuiInput-root:before": {
+                    borderBottom: "none",
                   },
                 }}
               />
