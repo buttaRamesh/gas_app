@@ -116,36 +116,17 @@ const Consumers = () => {
     return (
       <GridToolbarContainer
         sx={{
-          p: 2,
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          color: "white",
-          borderRadius: "12px 12px 0 0",
+          p: 1.5,
+          borderBottom: "1px solid #e0e0e0",
         }}
       >
         <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", width: "100%", alignItems: "center" }}>
-          <Typography variant="h6" sx={{ fontWeight: 700, color: "white", flexGrow: 1 }}>
-            🔥 Consumers
-          </Typography>
-          <GridToolbarColumnsButton sx={{ color: "white" }} />
-          <GridToolbarFilterButton sx={{ color: "white" }} />
+          <GridToolbarColumnsButton />
+          <GridToolbarFilterButton />
           <GridToolbarQuickFilter
             sx={{
-              flex: { xs: 1, sm: "initial" },
+              ml: "auto",
               minWidth: 250,
-              "& .MuiInputBase-root": {
-                bgcolor: "rgba(255,255,255,0.2)",
-                borderRadius: 2,
-                color: "white",
-                "&:hover": {
-                  bgcolor: "rgba(255,255,255,0.3)",
-                },
-                "& input": {
-                  color: "white",
-                  "&::placeholder": {
-                    color: "rgba(255,255,255,0.7)",
-                  },
-                },
-              },
             }}
           />
         </Box>
@@ -160,6 +141,7 @@ const Consumers = () => {
       width: 50,
       sortable: false,
       filterable: false,
+      disableColumnMenu: true,
       renderCell: (params: GridRenderCellParams) => (
         <IconButton
           size="small"
@@ -176,7 +158,8 @@ const Consumers = () => {
     {
       field: "consumer_number",
       headerName: "Consumer #",
-      width: 130,
+      flex: 0.8,
+      minWidth: 120,
       renderCell: (params: GridRenderCellParams) => (
         <Typography sx={{ fontWeight: 600, color: "#667eea" }}>
           {params.value}
@@ -186,7 +169,8 @@ const Consumers = () => {
     {
       field: "consumer_name",
       headerName: "Name",
-      width: 200,
+      flex: 1.2,
+      minWidth: 150,
       renderCell: (params: GridRenderCellParams) => (
         <Typography sx={{ fontWeight: 500 }}>{params.value}</Typography>
       ),
@@ -194,7 +178,8 @@ const Consumers = () => {
     {
       field: "category_name",
       headerName: "Category",
-      width: 150,
+      flex: 0.9,
+      minWidth: 120,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
           label={params.value || "-"}
@@ -210,7 +195,8 @@ const Consumers = () => {
     {
       field: "type_name",
       headerName: "Type",
-      width: 150,
+      flex: 0.9,
+      minWidth: 120,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
           label={params.value || "-"}
@@ -226,7 +212,8 @@ const Consumers = () => {
     {
       field: "opting_status",
       headerName: "Opting Status",
-      width: 140,
+      flex: 0.9,
+      minWidth: 120,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
           label={params.row.opting_status_display || params.value}
@@ -250,7 +237,8 @@ const Consumers = () => {
     {
       field: "mobile_number",
       headerName: "Mobile",
-      width: 140,
+      flex: 0.9,
+      minWidth: 120,
     },
     {
       field: "actions",
@@ -258,6 +246,7 @@ const Consumers = () => {
       width: 140,
       sortable: false,
       filterable: false,
+      disableColumnMenu: true,
       renderCell: (params: GridRenderCellParams) => (
         <Box sx={{ display: "flex", gap: 0.5 }}>
           <IconButton
@@ -359,6 +348,22 @@ const Consumers = () => {
 
   return (
     <Container maxWidth="xl" sx={{ py: 3 }}>
+      {/* Title and Action Buttons Row */}
+      <Box sx={{ mb: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Typography variant="h5" sx={{ fontWeight: 700, color: "primary.main" }}>
+          Consumers
+        </Typography>
+        <Box sx={{ display: "flex", gap: 1 }}>
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => navigate("/consumers/create")}
+          >
+            Add Consumer
+          </Button>
+        </Box>
+      </Box>
+
       <Paper
         elevation={0}
         sx={{
@@ -381,6 +386,7 @@ const Consumers = () => {
           }}
           getRowClassName={getRowClassName}
           disableRowSelectionOnClick
+          autoHeight
           sx={{
             border: "none",
             "& .MuiDataGrid-main": {
