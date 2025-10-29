@@ -241,7 +241,7 @@ const Consumers = () => {
               border: '1px solid',
               borderColor: 'divider',
               borderRadius: '4px',
-              padding: '6px 8px',
+              padding: '10px 8px',
               height: '48px',
               backgroundColor: 'background.default',
               margin: 0,
