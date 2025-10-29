@@ -766,7 +766,12 @@ const Consumers = () => {
 
         {/* Expandable Detail Rows */}
         {filteredConsumers.map((row) => (
-          <Collapse key={row.id} in={expandedRows.has(row.id)} timeout="auto" unmountOnExit">
+          <Collapse
+            key={row.id}
+            in={expandedRows.has(row.id)}
+            timeout="auto"
+            unmountOnExit={true}
+          >
             <DetailPanel row={row} />
             <Divider />
           </Collapse>
