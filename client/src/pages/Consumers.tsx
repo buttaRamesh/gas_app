@@ -14,7 +14,7 @@ import {
   Typography,
   Collapse,
   Paper,
-  Grid2,
+  Grid,
   Divider,
   Tooltip,
   Badge,
@@ -135,6 +135,7 @@ const Consumers = () => {
 
   const CustomToolbar = () => {
     return (
+      // @ts-expect-error - Toolbar supports sx prop but type definitions are incomplete
       <Toolbar
         sx={{
           p: 2,
@@ -166,6 +167,7 @@ const Consumers = () => {
                 <QuickFilterTrigger
                   render={(triggerProps) => (
                     <Tooltip title="Search" arrow>
+                      {/* @ts-expect-error - ToolbarButton supports sx prop but type definitions are incomplete */}
                       <ToolbarButton
                         {...triggerProps}
                         sx={{
@@ -220,6 +222,7 @@ const Consumers = () => {
                       slotProps={{
                         input: {
                           endAdornment: state.value ? (
+                            // @ts-expect-error - QuickFilterClear supports sx prop but type definitions are incomplete
                             <QuickFilterClear
                               edge="end"
                               size="small"
@@ -397,6 +400,7 @@ const Consumers = () => {
             <Tooltip title="Filters" arrow>
               <FilterPanelTrigger
                 render={(props, state) => (
+                  // @ts-expect-error - ToolbarButton ref type incompatibility with Tooltip
                   <ToolbarButton {...props}>
                     <Badge badgeContent={state.filterCount} color="primary" variant="dot">
                       <FilterListIcon sx={{ fontSize: '20px' }} />
@@ -647,56 +651,56 @@ const Consumers = () => {
 
   const DetailPanel = ({ row }: { row: ConsumerListItem }) => (
     <Box sx={{ p: 3, bgcolor: "#f8f9fa" }}>
-      <Grid2 container spacing={2}>
-        <Grid2 size={{ xs: 12, md: 6 }}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
             Consumer ID
           </Typography>
           <Typography variant="body1" sx={{ fontWeight: 500 }}>
             {row.id || "-"}
           </Typography>
-        </Grid2>
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        </Grid>
+        <Grid item xs={12} md={6}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
             Category
           </Typography>
           <Typography variant="body1" sx={{ fontWeight: 500 }}>
             {row.category_name || "-"}
           </Typography>
-        </Grid2>
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        </Grid>
+        <Grid item xs={12} md={6}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
             Type
           </Typography>
           <Typography variant="body1" sx={{ fontWeight: 500 }}>
             {row.type_name || "-"}
           </Typography>
-        </Grid2>
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        </Grid>
+        <Grid item xs={12} md={6}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
             Mobile Number
           </Typography>
           <Typography variant="body1" sx={{ fontWeight: 500 }}>
             {row.mobile_number || "-"}
           </Typography>
-        </Grid2>
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        </Grid>
+        <Grid item xs={12} md={6}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
             Opting Status
           </Typography>
           <Typography variant="body1" sx={{ fontWeight: 500 }}>
             {row.opting_status_display || row.opting_status || "-"}
           </Typography>
-        </Grid2>
-        <Grid2 size={{ xs: 12, md: 6 }}>
+        </Grid>
+        <Grid item xs={12} md={6}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
             KYC Status
           </Typography>
           <Typography variant="body1" sx={{ fontWeight: 500 }}>
             {row.is_kyc_done ? "Done" : "Pending"}
           </Typography>
-        </Grid2>
-      </Grid2>
+        </Grid>
+      </Grid>
     </Box>
   );
 
