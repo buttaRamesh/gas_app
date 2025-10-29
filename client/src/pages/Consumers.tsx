@@ -151,7 +151,7 @@ const Consumers = () => {
           </Typography>
         </Box>
 
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           {/* Expandable Search */}
           <QuickFilter
             render={(props, state) => (
@@ -159,7 +159,7 @@ const Consumers = () => {
                 sx={{
                   display: 'grid',
                   alignItems: 'center',
-                  width: state.expanded ? '375px' : '40px',
+                  width: state.expanded ? '375px' : '44px',
                   transition: 'width 0.3s',
                 }}
               >
@@ -170,9 +170,9 @@ const Consumers = () => {
                         {...triggerProps}
                         sx={{
                           gridArea: '1 / 1',
-                          width: '40px',
-                          height: '40px',
-                          minWidth: '40px',
+                          width: '44px',
+                          height: '44px',
+                          minWidth: '44px',
                           zIndex: 1,
                           opacity: state.expanded ? 0 : 1,
                           pointerEvents: state.expanded ? 'none' : 'auto',
@@ -198,7 +198,7 @@ const Consumers = () => {
                       sx={{
                         gridArea: '1 / 1',
                         width: '100%',
-                        height: '40px',
+                        height: '44px',
                         opacity: state.expanded ? 1 : 0,
                         transition: 'opacity 0.3s',
                         pointerEvents: state.expanded ? 'auto' : 'none',
@@ -241,8 +241,8 @@ const Consumers = () => {
               border: '1px solid',
               borderColor: 'divider',
               borderRadius: '4px',
-              padding: '4px 8px',
-              height: '40px',
+              padding: '6px 8px',
+              height: '44px',
               backgroundColor: 'background.default',
               margin: 0,
               position: 'relative',
@@ -421,7 +421,7 @@ const Consumers = () => {
                 border: '1px solid',
                 borderColor: '#667eea',
                 borderRadius: '20px',
-                height: '40px',
+                height: '44px',
                 width: '56px',
                 backgroundColor: '#667eea',
                 color: 'white',
