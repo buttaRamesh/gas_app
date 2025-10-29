@@ -14,18 +14,14 @@ import {
   Typography,
   Collapse,
   Paper,
-  Grid,
+  Grid2,
   Divider,
   Tooltip,
   Badge,
-  InputAdornment,
   TextField,
 } from "@mui/material";
 import {
   DataGrid,
-  GridColDef,
-  GridRenderCellParams,
-  GridRowParams,
   Toolbar,
   ToolbarButton,
   ColumnsPanelTrigger,
@@ -36,6 +32,11 @@ import {
   QuickFilterControl,
   QuickFilterClear,
   QuickFilterTrigger,
+} from "@mui/x-data-grid";
+import type {
+  GridColDef,
+  GridRenderCellParams,
+  GridRowParams,
 } from "@mui/x-data-grid";
 import {
   Visibility as ViewIcon,
@@ -67,7 +68,6 @@ const Consumers = () => {
     page: 0,
     pageSize: 10,
   });
-  const [totalRows, setTotalRows] = useState(0);
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
   const [kycFilter, setKycFilter] = useState<'all' | 'pending' | 'done'>('all');
 
@@ -83,7 +83,6 @@ const Consumers = () => {
       });
       const data = response.data;
       setConsumers(data.results || data);
-      setTotalRows(data.count || 0);
     } catch (error) {
       showSnackbar("Failed to fetch consumers", "error");
       console.error(error);
@@ -155,7 +154,7 @@ const Consumers = () => {
         <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1 }}>
           {/* Expandable Search */}
           <QuickFilter
-            render={(props, state) => (
+            render={(_filterProps, state) => (
               <Box
                 sx={{
                   display: 'grid',
@@ -193,10 +192,12 @@ const Consumers = () => {
                 <QuickFilterControl
                   render={({ ref, ...controlProps }) => (
                     <TextField
-                      inputRef={ref}
                       {...controlProps}
+                      inputRef={ref}
                       variant="standard"
                       placeholder="Search..."
+                      aria-label="Search"
+                      size="small"
                       sx={{
                         gridArea: '1 / 1',
                         width: '100%',
@@ -216,22 +217,23 @@ const Consumers = () => {
                           borderBottomColor: 'primary.main',
                         },
                       }}
+                      slotProps={{
+                        input: {
+                          endAdornment: state.value ? (
+                            <QuickFilterClear
+                              edge="end"
+                              size="small"
+                              aria-label="Clear search"
+                              sx={{ marginRight: -0.75 }}
+                            >
+                              <CloseIcon sx={{ fontSize: '18px' }} />
+                            </QuickFilterClear>
+                          ) : null,
+                        },
+                      }}
                     />
                   )}
                 />
-                {state.value && state.expanded && (
-                  <QuickFilterClear
-                    sx={{
-                      gridArea: '1 / 1',
-                      justifySelf: 'end',
-                      marginRight: 1,
-                      zIndex: 2,
-                      marginBottom: '6px',
-                    }}
-                  >
-                    <CloseIcon sx={{ fontSize: '18px' }} />
-                  </QuickFilterClear>
-                )}
               </Box>
             )}
           />
@@ -631,7 +633,8 @@ const Consumers = () => {
   ];
 
   const getRowClassName = (params: GridRowParams) => {
-    return params.indexRelativeToCurrentPage % 2 === 0 ? "even-row" : "odd-row";
+    const index = consumers.findIndex(consumer => consumer.id === params.id);
+    return index % 2 === 0 ? "even-row" : "odd-row";
   };
 
   // Filter consumers by KYC status
@@ -644,56 +647,56 @@ const Consumers = () => {
 
   const DetailPanel = ({ row }: { row: ConsumerListItem }) => (
     <Box sx={{ p: 3, bgcolor: "#f8f9fa" }}>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+      <Grid2 container spacing={2}>
+        <Grid2 size={{ xs: 12, md: 6 }}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-            Father's Name
+            Consumer ID
           </Typography>
           <Typography variant="body1" sx={{ fontWeight: 500 }}>
-            {row.father_name || "-"}
+            {row.id || "-"}
           </Typography>
-        </Grid>
-        <Grid item xs={12} md={6}>
+        </Grid2>
+        <Grid2 size={{ xs: 12, md: 6 }}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-            Mother's Name
+            Category
           </Typography>
           <Typography variant="body1" sx={{ fontWeight: 500 }}>
-            {row.mother_name || "-"}
+            {row.category_name || "-"}
           </Typography>
-        </Grid>
-        <Grid item xs={12} md={6}>
+        </Grid2>
+        <Grid2 size={{ xs: 12, md: 6 }}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-            Spouse Name
+            Type
           </Typography>
           <Typography variant="body1" sx={{ fontWeight: 500 }}>
-            {row.spouse_name || "-"}
+            {row.type_name || "-"}
           </Typography>
-        </Grid>
-        <Grid item xs={12} md={6}>
+        </Grid2>
+        <Grid2 size={{ xs: 12, md: 6 }}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-            Ration Card Number
+            Mobile Number
           </Typography>
           <Typography variant="body1" sx={{ fontWeight: 500 }}>
-            {row.ration_card_num || "-"}
+            {row.mobile_number || "-"}
           </Typography>
-        </Grid>
-        <Grid item xs={12} md={6}>
+        </Grid2>
+        <Grid2 size={{ xs: 12, md: 6 }}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-            Blue Book
+            Opting Status
           </Typography>
           <Typography variant="body1" sx={{ fontWeight: 500 }}>
-            {row.blue_book || "-"}
+            {row.opting_status_display || row.opting_status || "-"}
           </Typography>
-        </Grid>
-        <Grid item xs={12} md={6}>
+        </Grid2>
+        <Grid2 size={{ xs: 12, md: 6 }}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-            LPG ID
+            KYC Status
           </Typography>
           <Typography variant="body1" sx={{ fontWeight: 500 }}>
-            {row.lpg_id || "-"}
+            {row.is_kyc_done ? "Done" : "Pending"}
           </Typography>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
     </Box>
   );
 
