@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -16,19 +16,25 @@ import {
   Paper,
   Grid,
   Divider,
-  Menu,
-  MenuItem,
   Tooltip,
+  Badge,
+  InputAdornment,
 } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
-  GridToolbarContainer,
-  GridToolbarColumnsButton,
-  GridToolbarFilterButton,
-  GridToolbarQuickFilter,
   GridRenderCellParams,
   GridRowParams,
+  Toolbar,
+  ToolbarButton,
+  ColumnsPanelTrigger,
+  FilterPanelTrigger,
+  ExportCsv,
+  ExportPrint,
+  QuickFilter,
+  QuickFilterControl,
+  QuickFilterClear,
+  QuickFilterTrigger,
 } from "@mui/x-data-grid";
 import {
   Visibility as ViewIcon,
@@ -42,6 +48,8 @@ import {
   FilterList as FilterListIcon,
   Search as SearchIcon,
   FileDownload as FileDownloadIcon,
+  Print as PrintIcon,
+  Close as CloseIcon,
 } from "@mui/icons-material";
 import { consumersApi } from "../services/api";
 import { useSnackbar } from "../contexts/SnackbarContext";
@@ -60,7 +68,7 @@ const Consumers = () => {
   });
   const [totalRows, setTotalRows] = useState(0);
   const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
-  const [exportMenuAnchor, setExportMenuAnchor] = useState<null | HTMLElement>(null);
+  const [kycFilter, setKycFilter] = useState<'all' | 'pending' | 'done'>('all');
 
   useEffect(() => {
     fetchConsumers();
@@ -121,79 +129,313 @@ const Consumers = () => {
     setExpandedRows(newExpanded);
   };
 
-  const handleExportCSV = () => {
-    const headers = ["Consumer #", "Name", "Category", "Type", "Status", "KYC", "Mobile"];
-    const rows = consumers.map(c => [
-      c.consumer_number,
-      c.consumer_name,
-      c.category_name || "",
-      c.type_name || "",
-      c.opting_status_display || c.opting_status,
-      c.is_kyc_done ? "Yes" : "No",
-      c.mobile_number || ""
-    ]);
-
-    const csvContent = [
-      headers.join(","),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(","))
-    ].join("\n");
-
-    const blob = new Blob([csvContent], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "consumers.csv";
-    link.click();
-    URL.revokeObjectURL(url);
-    setExportMenuAnchor(null);
-  };
-
-  const handlePrint = () => {
-    window.print();
-    setExportMenuAnchor(null);
+  const handleKycFilterChange = (filter: 'all' | 'pending' | 'done') => {
+    setKycFilter(filter);
   };
 
   const CustomToolbar = () => {
     return (
-      <GridToolbarContainer
+      <Toolbar
         sx={{
           p: 2,
-          borderBottom: "2px solid #667eea",
-          bgcolor: "#f0f7ff",
-          minHeight: "60px",
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          minHeight: '64px',
+          flexWrap: 'nowrap',
         }}
       >
-        <Box sx={{ display: "flex", gap: 1, alignItems: "center", width: "100%", justifyContent: "flex-end" }}>
-          <GridToolbarColumnsButton />
-          <GridToolbarFilterButton />
+        <Box>
+          <Typography variant="h6" sx={{ color: 'primary.main', fontWeight: 600 }}>
+            Consumers
+          </Typography>
+        </Box>
 
-          <Tooltip title="Export">
-            <IconButton
-              size="small"
-              onClick={(e) => setExportMenuAnchor(e.currentTarget)}
+        <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1 }}>
+          {/* Expandable Search */}
+          <QuickFilter
+            render={(props, state) => (
+              <Box
+                sx={{
+                  display: 'grid',
+                  alignItems: 'center',
+                  width: state.expanded ? '375px' : '40px',
+                  transition: 'width 0.3s',
+                }}
+              >
+                <QuickFilterTrigger
+                  render={(triggerProps) => (
+                    <Tooltip title="Search" arrow>
+                      <ToolbarButton
+                        {...triggerProps}
+                        sx={{
+                          gridArea: '1 / 1',
+                          width: '40px',
+                          height: '40px',
+                          minWidth: '40px',
+                          zIndex: 1,
+                          opacity: state.expanded ? 0 : 1,
+                          pointerEvents: state.expanded ? 'none' : 'auto',
+                          transition: 'opacity 0.3s',
+                          border: '1px solid',
+                          borderColor: 'divider',
+                          borderRadius: '4px',
+                        }}
+                        aria-disabled={state.expanded}
+                      >
+                        <SearchIcon sx={{ fontSize: '20px' }} />
+                      </ToolbarButton>
+                    </Tooltip>
+                  )}
+                />
+                <QuickFilterControl
+                  render={({ ref, ...controlProps }) => (
+                    <Box
+                      component="input"
+                      ref={ref}
+                      {...controlProps}
+                      placeholder="Search..."
+                      sx={{
+                        gridArea: '1 / 1',
+                        width: '100%',
+                        height: '40px',
+                        opacity: state.expanded ? 1 : 0,
+                        transition: 'opacity 0.3s',
+                        pointerEvents: state.expanded ? 'auto' : 'none',
+                        border: '1px solid',
+                        borderColor: 'divider',
+                        borderRadius: '4px',
+                        px: 2,
+                        fontSize: '0.875rem',
+                        outline: 'none',
+                        '&:focus': {
+                          borderColor: 'primary.main',
+                        },
+                      }}
+                    />
+                  )}
+                />
+                {state.value && state.expanded && (
+                  <QuickFilterClear
+                    sx={{
+                      gridArea: '1 / 1',
+                      justifySelf: 'end',
+                      marginRight: 1,
+                      zIndex: 2,
+                    }}
+                  >
+                    <CloseIcon sx={{ fontSize: '18px' }} />
+                  </QuickFilterClear>
+                )}
+              </Box>
+            )}
+          />
+
+          {/* KYC Status Filters */}
+          <Box
+            component="fieldset"
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.5,
+              border: '1px solid',
+              borderColor: 'divider',
+              borderRadius: '4px',
+              padding: '4px 8px',
+              height: '40px',
+              backgroundColor: 'background.default',
+              margin: 0,
+              position: 'relative',
+            }}
+          >
+            <Box
+              component="legend"
               sx={{
-                bgcolor: "white",
-                border: "1px solid #667eea",
-                "&:hover": { bgcolor: "#667eea", color: "white" }
+                fontSize: '11px',
+                color: 'text.secondary',
+                padding: '0 4px',
+                fontWeight: 500,
               }}
             >
-              <FileDownloadIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
+              KYC
+            </Box>
 
-          <GridToolbarQuickFilter
+            <Tooltip title="All" arrow>
+              <IconButton
+                size="small"
+                onClick={() => handleKycFilterChange('all')}
+                aria-label="All KYC"
+                sx={{
+                  width: '28px',
+                  height: '28px',
+                  padding: 0,
+                  backgroundColor: kycFilter === 'all' ? 'primary.main' : 'transparent',
+                  border: kycFilter === 'all' ? 'none' : '2px solid',
+                  borderColor: kycFilter === 'all' ? 'transparent' : 'divider',
+                  borderRadius: '50%',
+                  boxShadow: kycFilter === 'all' ? (theme) => `0 0 12px 3px ${theme.palette.primary.main}40, inset 0 0 8px rgba(255, 255, 255, 0.3)` : 'none',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    backgroundColor: kycFilter === 'all' ? 'primary.dark' : 'action.hover',
+                    transform: 'scale(1.1)',
+                  },
+                }}
+              >
+                {kycFilter === 'all' && (
+                  <Box
+                    sx={{
+                      width: '10px',
+                      height: '10px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                      boxShadow: '0 0 4px rgba(255, 255, 255, 0.8)',
+                    }}
+                  />
+                )}
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Pending" arrow>
+              <IconButton
+                size="small"
+                onClick={() => handleKycFilterChange('pending')}
+                aria-label="KYC Pending"
+                sx={{
+                  width: '28px',
+                  height: '28px',
+                  padding: 0,
+                  backgroundColor: kycFilter === 'pending' ? 'error.main' : 'transparent',
+                  border: kycFilter === 'pending' ? 'none' : '2px solid',
+                  borderColor: kycFilter === 'pending' ? 'transparent' : 'divider',
+                  borderRadius: '50%',
+                  boxShadow: kycFilter === 'pending' ? (theme) => `0 0 12px 3px ${theme.palette.error.main}40, inset 0 0 8px rgba(255, 255, 255, 0.3)` : 'none',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    backgroundColor: kycFilter === 'pending' ? 'error.dark' : 'action.hover',
+                    transform: 'scale(1.1)',
+                  },
+                }}
+              >
+                {kycFilter === 'pending' && (
+                  <Box
+                    sx={{
+                      width: '10px',
+                      height: '10px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                      boxShadow: '0 0 4px rgba(255, 255, 255, 0.8)',
+                    }}
+                  />
+                )}
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Done" arrow>
+              <IconButton
+                size="small"
+                onClick={() => handleKycFilterChange('done')}
+                aria-label="KYC Done"
+                sx={{
+                  width: '28px',
+                  height: '28px',
+                  padding: 0,
+                  backgroundColor: kycFilter === 'done' ? 'success.main' : 'transparent',
+                  border: kycFilter === 'done' ? 'none' : '2px solid',
+                  borderColor: kycFilter === 'done' ? 'transparent' : 'divider',
+                  borderRadius: '50%',
+                  boxShadow: kycFilter === 'done' ? (theme) => `0 0 12px 3px ${theme.palette.success.main}40, inset 0 0 8px rgba(255, 255, 255, 0.3)` : 'none',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    backgroundColor: kycFilter === 'done' ? 'success.dark' : 'action.hover',
+                    transform: 'scale(1.1)',
+                  },
+                }}
+              >
+                {kycFilter === 'done' && (
+                  <Box
+                    sx={{
+                      width: '10px',
+                      height: '10px',
+                      borderRadius: '50%',
+                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                      boxShadow: '0 0 4px rgba(255, 255, 255, 0.8)',
+                    }}
+                  />
+                )}
+              </IconButton>
+            </Tooltip>
+          </Box>
+
+          {/* Toolbar Action Buttons */}
+          <Box
             sx={{
-              bgcolor: "white",
-              borderRadius: 1,
-              px: 1,
-              border: "1px solid #e0e0e0",
-              "& .MuiInput-root": {
-                fontSize: "0.875rem",
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+              '& .MuiButtonBase-root': {
+                color: 'primary.main',
+                '&:hover': {
+                  color: 'primary.dark',
+                  backgroundColor: 'action.hover',
+                },
               },
             }}
-          />
+          >
+            <Tooltip title="Columns" arrow>
+              <ColumnsPanelTrigger render={<ToolbarButton />}>
+                <ViewColumnIcon sx={{ fontSize: '20px' }} />
+              </ColumnsPanelTrigger>
+            </Tooltip>
+
+            <Tooltip title="Filters" arrow>
+              <FilterPanelTrigger
+                render={(props, state) => (
+                  <ToolbarButton {...props}>
+                    <Badge badgeContent={state.filterCount} color="primary" variant="dot">
+                      <FilterListIcon sx={{ fontSize: '20px' }} />
+                    </Badge>
+                  </ToolbarButton>
+                )}
+              />
+            </Tooltip>
+
+            <Tooltip title="Download as CSV" arrow>
+              <ExportCsv render={<ToolbarButton />}>
+                <FileDownloadIcon sx={{ fontSize: '20px' }} />
+              </ExportCsv>
+            </Tooltip>
+
+            <Tooltip title="Print" arrow>
+              <ExportPrint render={<ToolbarButton />}>
+                <PrintIcon sx={{ fontSize: '20px' }} />
+              </ExportPrint>
+            </Tooltip>
+          </Box>
+
+          {/* Add Consumer Button */}
+          <Tooltip title="Add Consumer" arrow>
+            <IconButton
+              size="medium"
+              onClick={() => navigate("/consumers/create")}
+              sx={{
+                border: '1px solid',
+                borderColor: '#667eea',
+                borderRadius: '20px',
+                height: '40px',
+                width: '56px',
+                backgroundColor: '#667eea',
+                color: 'white',
+                '&:hover': {
+                  backgroundColor: '#5568d3',
+                  borderColor: '#5568d3',
+                },
+              }}
+            >
+              <AddIcon sx={{ fontSize: '20px' }} />
+            </IconButton>
+          </Tooltip>
         </Box>
-      </GridToolbarContainer>
+      </Toolbar>
     );
   };
 
@@ -387,6 +629,14 @@ const Consumers = () => {
     return params.indexRelativeToCurrentPage % 2 === 0 ? "even-row" : "odd-row";
   };
 
+  // Filter consumers by KYC status
+  const filteredConsumers = consumers.filter((consumer) => {
+    if (kycFilter === 'all') return true;
+    if (kycFilter === 'pending') return !consumer.is_kyc_done;
+    if (kycFilter === 'done') return consumer.is_kyc_done;
+    return true;
+  });
+
   const DetailPanel = ({ row }: { row: ConsumerListItem }) => (
     <Box sx={{ p: 3, bgcolor: "#f8f9fa" }}>
       <Grid container spacing={2}>
@@ -444,26 +694,6 @@ const Consumers = () => {
 
   return (
     <Container maxWidth={false} sx={{ py: 3, px: { xs: 2, sm: 3 }, maxWidth: "1260px" }}>
-      {/* Title and Add Button */}
-      <Box sx={{ mb: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Typography variant="h5" sx={{ fontWeight: 700, color: "primary.main" }}>
-          Consumers
-        </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => navigate("/consumers/create")}
-          sx={{
-            bgcolor: "#667eea",
-            "&:hover": { bgcolor: "#5568d3" },
-            textTransform: "none",
-            fontWeight: 600,
-          }}
-        >
-          Add Consumer
-        </Button>
-      </Box>
-
       <Paper
         elevation={0}
         sx={{
@@ -474,14 +704,14 @@ const Consumers = () => {
         }}
       >
         <DataGrid
-          rows={consumers}
+          rows={filteredConsumers}
           columns={columns}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           pageSizeOptions={[5, 10, 25, 50]}
-          paginationMode="server"
-          rowCount={totalRows}
+          paginationMode="client"
           loading={loading}
+          showToolbar
           slots={{
             toolbar: CustomToolbar,
           }}
@@ -535,8 +765,8 @@ const Consumers = () => {
         />
 
         {/* Expandable Detail Rows */}
-        {consumers.map((row) => (
-          <Collapse key={row.id} in={expandedRows.has(row.id)} timeout="auto" unmountOnExit>
+        {filteredConsumers.map((row) => (
+          <Collapse key={row.id} in={expandedRows.has(row.id)} timeout="auto" unmountOnExit">
             <DetailPanel row={row} />
             <Divider />
           </Collapse>
@@ -558,24 +788,6 @@ const Consumers = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
-      {/* Export Menu */}
-      <Menu
-        anchorEl={exportMenuAnchor}
-        open={Boolean(exportMenuAnchor)}
-        onClose={() => setExportMenuAnchor(null)}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-      >
-        <MenuItem onClick={handlePrint}>Print</MenuItem>
-        <MenuItem onClick={handleExportCSV}>Download as CSV</MenuItem>
-      </Menu>
     </Container>
   );
 };
