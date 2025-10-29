@@ -159,7 +159,7 @@ const Consumers = () => {
                 sx={{
                   display: 'grid',
                   alignItems: 'center',
-                  width: state.expanded ? '375px' : '48px',
+                  width: state.expanded ? '375px' : '50px',
                   transition: 'width 0.3s',
                 }}
               >
@@ -170,9 +170,9 @@ const Consumers = () => {
                         {...triggerProps}
                         sx={{
                           gridArea: '1 / 1',
-                          width: '48px',
-                          height: '48px',
-                          minWidth: '48px',
+                          width: '50px',
+                          height: '50px',
+                          minWidth: '50px',
                           zIndex: 1,
                           opacity: state.expanded ? 0 : 1,
                           pointerEvents: state.expanded ? 'none' : 'auto',
@@ -198,7 +198,7 @@ const Consumers = () => {
                       sx={{
                         gridArea: '1 / 1',
                         width: '100%',
-                        height: '48px',
+                        height: '50px',
                         opacity: state.expanded ? 1 : 0,
                         transition: 'opacity 0.3s',
                         pointerEvents: state.expanded ? 'auto' : 'none',
@@ -242,7 +242,6 @@ const Consumers = () => {
               borderColor: 'divider',
               borderRadius: '4px',
               padding: '10px 8px',
-              height: '48px',
               backgroundColor: 'background.default',
               margin: 0,
               position: 'relative',
@@ -421,7 +420,7 @@ const Consumers = () => {
                 border: '1px solid',
                 borderColor: '#667eea',
                 borderRadius: '20px',
-                height: '48px',
+                height: '50px',
                 width: '56px',
                 backgroundColor: '#667eea',
                 color: 'white',
