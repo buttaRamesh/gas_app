@@ -19,6 +19,7 @@ import {
   Tooltip,
   Badge,
   InputAdornment,
+  TextField,
 } from "@mui/material";
 import {
   DataGrid,
@@ -151,15 +152,15 @@ const Consumers = () => {
           </Typography>
         </Box>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1 }}>
           {/* Expandable Search */}
           <QuickFilter
             render={(props, state) => (
               <Box
                 sx={{
                   display: 'grid',
-                  alignItems: 'center',
-                  width: state.expanded ? '375px' : '50px',
+                  alignItems: 'flex-end',
+                  width: state.expanded ? '375px' : '40px',
                   transition: 'width 0.3s',
                 }}
               >
@@ -170,16 +171,17 @@ const Consumers = () => {
                         {...triggerProps}
                         sx={{
                           gridArea: '1 / 1',
-                          width: '50px',
-                          height: '50px',
-                          minWidth: '50px',
+                          width: '40px',
+                          height: '40px',
+                          minWidth: '40px',
                           zIndex: 1,
                           opacity: state.expanded ? 0 : 1,
                           pointerEvents: state.expanded ? 'none' : 'auto',
                           transition: 'opacity 0.3s',
-                          border: '1px solid',
+                          border: 'none',
+                          borderBottom: '1px solid',
                           borderColor: 'divider',
-                          borderRadius: '4px',
+                          borderRadius: 0,
                         }}
                         aria-disabled={state.expanded}
                       >
@@ -190,26 +192,28 @@ const Consumers = () => {
                 />
                 <QuickFilterControl
                   render={({ ref, ...controlProps }) => (
-                    <Box
-                      component="input"
-                      ref={ref}
+                    <TextField
+                      inputRef={ref}
                       {...controlProps}
+                      variant="standard"
                       placeholder="Search..."
                       sx={{
                         gridArea: '1 / 1',
                         width: '100%',
-                        height: '50px',
                         opacity: state.expanded ? 1 : 0,
                         transition: 'opacity 0.3s',
                         pointerEvents: state.expanded ? 'auto' : 'none',
-                        border: '1px solid',
-                        borderColor: 'divider',
-                        borderRadius: '4px',
-                        px: 2,
-                        fontSize: '0.875rem',
-                        outline: 'none',
-                        '&:focus': {
-                          borderColor: 'primary.main',
+                        '& .MuiInput-root': {
+                          fontSize: '0.875rem',
+                        },
+                        '& .MuiInput-root:before': {
+                          borderBottomColor: 'divider',
+                        },
+                        '& .MuiInput-root:hover:not(.Mui-disabled):before': {
+                          borderBottomColor: 'text.secondary',
+                        },
+                        '& .MuiInput-root:after': {
+                          borderBottomColor: 'primary.main',
                         },
                       }}
                     />
@@ -222,6 +226,7 @@ const Consumers = () => {
                       justifySelf: 'end',
                       marginRight: 1,
                       zIndex: 2,
+                      marginBottom: '6px',
                     }}
                   >
                     <CloseIcon sx={{ fontSize: '18px' }} />
@@ -238,11 +243,12 @@ const Consumers = () => {
               display: 'flex',
               alignItems: 'center',
               gap: 0.5,
-              border: '1px solid',
+              border: 'none',
+              borderBottom: '1px solid',
               borderColor: 'divider',
-              borderRadius: '4px',
-              padding: '10px 8px',
-              backgroundColor: 'background.default',
+              borderRadius: 0,
+              padding: '4px 6px 5px 6px',
+              backgroundColor: 'transparent',
               margin: 0,
               position: 'relative',
             }}
@@ -250,7 +256,7 @@ const Consumers = () => {
             <Box
               component="legend"
               sx={{
-                fontSize: '11px',
+                fontSize: '10px',
                 color: 'text.secondary',
                 padding: '0 4px',
                 fontWeight: 500,
@@ -265,29 +271,29 @@ const Consumers = () => {
                 onClick={() => handleKycFilterChange('all')}
                 aria-label="All KYC"
                 sx={{
-                  width: '28px',
-                  height: '28px',
+                  width: '20px',
+                  height: '20px',
                   padding: 0,
                   backgroundColor: kycFilter === 'all' ? 'primary.main' : 'transparent',
-                  border: kycFilter === 'all' ? 'none' : '2px solid',
+                  border: kycFilter === 'all' ? 'none' : '1.5px solid',
                   borderColor: kycFilter === 'all' ? 'transparent' : 'divider',
                   borderRadius: '50%',
-                  boxShadow: kycFilter === 'all' ? (theme) => `0 0 12px 3px ${theme.palette.primary.main}40, inset 0 0 8px rgba(255, 255, 255, 0.3)` : 'none',
+                  boxShadow: kycFilter === 'all' ? (theme) => `0 0 20px 8px ${theme.palette.primary.main}50, 0 0 30px 12px ${theme.palette.primary.main}30, inset 0 0 10px rgba(255, 255, 255, 0.4)` : 'none',
                   transition: 'all 0.3s ease',
                   '&:hover': {
                     backgroundColor: kycFilter === 'all' ? 'primary.dark' : 'action.hover',
-                    transform: 'scale(1.1)',
+                    transform: 'scale(1.15)',
                   },
                 }}
               >
                 {kycFilter === 'all' && (
                   <Box
                     sx={{
-                      width: '10px',
-                      height: '10px',
+                      width: '8px',
+                      height: '8px',
                       borderRadius: '50%',
-                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                      boxShadow: '0 0 4px rgba(255, 255, 255, 0.8)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                      boxShadow: '0 0 6px rgba(255, 255, 255, 0.9)',
                     }}
                   />
                 )}
@@ -300,29 +306,29 @@ const Consumers = () => {
                 onClick={() => handleKycFilterChange('pending')}
                 aria-label="KYC Pending"
                 sx={{
-                  width: '28px',
-                  height: '28px',
+                  width: '20px',
+                  height: '20px',
                   padding: 0,
                   backgroundColor: kycFilter === 'pending' ? 'error.main' : 'transparent',
-                  border: kycFilter === 'pending' ? 'none' : '2px solid',
+                  border: kycFilter === 'pending' ? 'none' : '1.5px solid',
                   borderColor: kycFilter === 'pending' ? 'transparent' : 'divider',
                   borderRadius: '50%',
-                  boxShadow: kycFilter === 'pending' ? (theme) => `0 0 12px 3px ${theme.palette.error.main}40, inset 0 0 8px rgba(255, 255, 255, 0.3)` : 'none',
+                  boxShadow: kycFilter === 'pending' ? (theme) => `0 0 20px 8px ${theme.palette.error.main}50, 0 0 30px 12px ${theme.palette.error.main}30, inset 0 0 10px rgba(255, 255, 255, 0.4)` : 'none',
                   transition: 'all 0.3s ease',
                   '&:hover': {
                     backgroundColor: kycFilter === 'pending' ? 'error.dark' : 'action.hover',
-                    transform: 'scale(1.1)',
+                    transform: 'scale(1.15)',
                   },
                 }}
               >
                 {kycFilter === 'pending' && (
                   <Box
                     sx={{
-                      width: '10px',
-                      height: '10px',
+                      width: '8px',
+                      height: '8px',
                       borderRadius: '50%',
-                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                      boxShadow: '0 0 4px rgba(255, 255, 255, 0.8)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                      boxShadow: '0 0 6px rgba(255, 255, 255, 0.9)',
                     }}
                   />
                 )}
@@ -335,29 +341,29 @@ const Consumers = () => {
                 onClick={() => handleKycFilterChange('done')}
                 aria-label="KYC Done"
                 sx={{
-                  width: '28px',
-                  height: '28px',
+                  width: '20px',
+                  height: '20px',
                   padding: 0,
                   backgroundColor: kycFilter === 'done' ? 'success.main' : 'transparent',
-                  border: kycFilter === 'done' ? 'none' : '2px solid',
+                  border: kycFilter === 'done' ? 'none' : '1.5px solid',
                   borderColor: kycFilter === 'done' ? 'transparent' : 'divider',
                   borderRadius: '50%',
-                  boxShadow: kycFilter === 'done' ? (theme) => `0 0 12px 3px ${theme.palette.success.main}40, inset 0 0 8px rgba(255, 255, 255, 0.3)` : 'none',
+                  boxShadow: kycFilter === 'done' ? (theme) => `0 0 20px 8px ${theme.palette.success.main}50, 0 0 30px 12px ${theme.palette.success.main}30, inset 0 0 10px rgba(255, 255, 255, 0.4)` : 'none',
                   transition: 'all 0.3s ease',
                   '&:hover': {
                     backgroundColor: kycFilter === 'done' ? 'success.dark' : 'action.hover',
-                    transform: 'scale(1.1)',
+                    transform: 'scale(1.15)',
                   },
                 }}
               >
                 {kycFilter === 'done' && (
                   <Box
                     sx={{
-                      width: '10px',
-                      height: '10px',
+                      width: '8px',
+                      height: '8px',
                       borderRadius: '50%',
-                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                      boxShadow: '0 0 4px rgba(255, 255, 255, 0.8)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                      boxShadow: '0 0 6px rgba(255, 255, 255, 0.9)',
                     }}
                   />
                 )}
@@ -419,9 +425,9 @@ const Consumers = () => {
               sx={{
                 border: '1px solid',
                 borderColor: '#667eea',
-                borderRadius: '20px',
-                height: '50px',
-                width: '56px',
+                borderRadius: '16px',
+                height: '36px',
+                width: '48px',
                 backgroundColor: '#667eea',
                 color: 'white',
                 '&:hover': {
@@ -430,7 +436,7 @@ const Consumers = () => {
                 },
               }}
             >
-              <AddIcon sx={{ fontSize: '20px' }} />
+              <AddIcon sx={{ fontSize: '18px' }} />
             </IconButton>
           </Tooltip>
         </Box>
