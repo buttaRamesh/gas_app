@@ -12,10 +12,8 @@ import {
   DialogActions,
   Button,
   Typography,
-  Collapse,
   Paper,
   Grid,
-  Divider,
   Tooltip,
   Badge,
   TextField,
@@ -44,7 +42,6 @@ import {
   Delete as DeleteIcon,
   CheckCircle as CheckIcon,
   Cancel as CancelIcon,
-  ExpandMore as ExpandMoreIcon,
   Add as AddIcon,
   ViewColumn as ViewColumnIcon,
   FilterList as FilterListIcon,
@@ -52,10 +49,11 @@ import {
   FileDownload as FileDownloadIcon,
   Print as PrintIcon,
   Close as CloseIcon,
+  Info as InfoIcon,
 } from "@mui/icons-material";
 import { consumersApi } from "../services/api";
 import { useSnackbar } from "../contexts/SnackbarContext";
-import type { ConsumerListItem, OptingStatus } from "../types/consumers";
+import type { ConsumerListItem, ConsumerDetail, OptingStatus } from "../types/consumers";
 
 const Consumers = () => {
   const navigate = useNavigate();
@@ -68,8 +66,10 @@ const Consumers = () => {
     page: 0,
     pageSize: 10,
   });
-  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
   const [kycFilter, setKycFilter] = useState<'all' | 'pending' | 'done'>('all');
+  const [openInfoDialog, setOpenInfoDialog] = useState(false);
+  const [selectedConsumer, setSelectedConsumer] = useState<ConsumerDetail | null>(null);
+  const [loadingDetails, setLoadingDetails] = useState(false);
 
   useEffect(() => {
     fetchConsumers();
@@ -119,14 +119,18 @@ const Consumers = () => {
     }
   };
 
-  const toggleRowExpansion = (id: number) => {
-    const newExpanded = new Set(expandedRows);
-    if (newExpanded.has(id)) {
-      newExpanded.delete(id);
-    } else {
-      newExpanded.add(id);
+  const handleViewInfo = async (consumerId: number) => {
+    try {
+      setLoadingDetails(true);
+      const response = await consumersApi.getById(consumerId);
+      setSelectedConsumer(response.data);
+      setOpenInfoDialog(true);
+    } catch (error) {
+      showSnackbar("Failed to fetch consumer details", "error");
+      console.error(error);
+    } finally {
+      setLoadingDetails(false);
     }
-    setExpandedRows(newExpanded);
   };
 
   const handleKycFilterChange = (filter: 'all' | 'pending' | 'done') => {
@@ -448,24 +452,26 @@ const Consumers = () => {
 
   const columns: GridColDef[] = [
     {
-      field: "expand",
+      field: "info",
       headerName: "",
-      width: 45,
+      width: 60,
       sortable: false,
       filterable: false,
       disableColumnMenu: true,
       resizable: false,
+      align: "center",
+      headerAlign: "center",
       renderCell: (params: GridRenderCellParams) => (
-        <IconButton
-          size="small"
-          onClick={() => toggleRowExpansion(params.row.id)}
-          sx={{
-            transform: expandedRows.has(params.row.id) ? "rotate(180deg)" : "rotate(0deg)",
-            transition: "transform 0.3s",
-          }}
-        >
-          <ExpandMoreIcon fontSize="small" />
-        </IconButton>
+        <Tooltip title="View Connection Info" arrow>
+          <IconButton
+            size="small"
+            onClick={() => handleViewInfo(params.row.id)}
+            color="info"
+            disabled={loadingDetails}
+          >
+            <InfoIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
       ),
     },
     {
@@ -645,68 +651,6 @@ const Consumers = () => {
     return true;
   });
 
-  const DetailPanel = ({ row }: { row: ConsumerListItem }) => (
-    <Box sx={{ p: 3, bgcolor: "#f8f9fa" }}>
-      {/* @ts-expect-error - Grid container/item props work but type definitions are incomplete in MUI v7 */}
-      <Grid container spacing={2}>
-        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
-        <Grid item xs={12} md={6}>
-          <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-            Consumer ID
-          </Typography>
-          <Typography variant="body1" sx={{ fontWeight: 500 }}>
-            {row.id || "-"}
-          </Typography>
-        </Grid>
-        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
-        <Grid item xs={12} md={6}>
-          <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-            Category
-          </Typography>
-          <Typography variant="body1" sx={{ fontWeight: 500 }}>
-            {row.category_name || "-"}
-          </Typography>
-        </Grid>
-        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
-        <Grid item xs={12} md={6}>
-          <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-            Type
-          </Typography>
-          <Typography variant="body1" sx={{ fontWeight: 500 }}>
-            {row.type_name || "-"}
-          </Typography>
-        </Grid>
-        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
-        <Grid item xs={12} md={6}>
-          <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-            Mobile Number
-          </Typography>
-          <Typography variant="body1" sx={{ fontWeight: 500 }}>
-            {row.mobile_number || "-"}
-          </Typography>
-        </Grid>
-        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
-        <Grid item xs={12} md={6}>
-          <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-            Opting Status
-          </Typography>
-          <Typography variant="body1" sx={{ fontWeight: 500 }}>
-            {row.opting_status_display || row.opting_status || "-"}
-          </Typography>
-        </Grid>
-        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
-        <Grid item xs={12} md={6}>
-          <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-            KYC Status
-          </Typography>
-          <Typography variant="body1" sx={{ fontWeight: 500 }}>
-            {row.is_kyc_done ? "Done" : "Pending"}
-          </Typography>
-        </Grid>
-      </Grid>
-    </Box>
-  );
-
   return (
     <Container maxWidth={false} sx={{ py: 3, px: { xs: 2, sm: 3 }, maxWidth: "1260px" }}>
       <Paper
@@ -778,20 +722,130 @@ const Consumers = () => {
             },
           }}
         />
-
-        {/* Expandable Detail Rows */}
-        {filteredConsumers.map((row) => (
-          <Collapse
-            key={row.id}
-            in={expandedRows.has(row.id)}
-            timeout="auto"
-            unmountOnExit={true}
-          >
-            <DetailPanel row={row} />
-            <Divider />
-          </Collapse>
-        ))}
       </Paper>
+
+      {/* Consumer Info Dialog */}
+      <Dialog
+        open={openInfoDialog}
+        onClose={() => setOpenInfoDialog(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle sx={{ pb: 1 }}>
+          <Box>
+            <Typography variant="h6" component="div">
+              Connection Information
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {selectedConsumer?.consumer_name} - {selectedConsumer?.consumer_number}
+            </Typography>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          {selectedConsumer && (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              {/* Addresses Section */}
+              <Box>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: 'primary.main' }}>
+                  Addresses
+                </Typography>
+                {selectedConsumer.addresses && selectedConsumer.addresses.length > 0 ? (
+                  selectedConsumer.addresses.map((address, index) => (
+                    <Paper key={address.id} elevation={0} sx={{ p: 2, mb: 2, border: '1px solid', borderColor: 'divider' }}>
+                      {/* @ts-expect-error - Grid container props work but type definitions are incomplete in MUI v7 */}
+                      <Grid container spacing={2}>
+                        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
+                        <Grid item xs={12} md={6}>
+                          <Typography variant="caption" color="text.secondary">
+                            Address {index + 1}
+                          </Typography>
+                          <Typography variant="body2" sx={{ mt: 0.5 }}>
+                            {address.address_text || "-"}
+                          </Typography>
+                        </Grid>
+                        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
+                        <Grid item xs={6} md={3}>
+                          <Typography variant="caption" color="text.secondary">
+                            City
+                          </Typography>
+                          <Typography variant="body2" sx={{ mt: 0.5 }}>
+                            {address.city || "-"}
+                          </Typography>
+                        </Grid>
+                        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
+                        <Grid item xs={6} md={3}>
+                          <Typography variant="caption" color="text.secondary">
+                            PIN Code
+                          </Typography>
+                          <Typography variant="body2" sx={{ mt: 0.5 }}>
+                            {address.pin_code || "-"}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Paper>
+                  ))
+                ) : (
+                  <Typography variant="body2" color="text.secondary">
+                    No addresses available
+                  </Typography>
+                )}
+              </Box>
+
+              {/* Contacts Section */}
+              <Box>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: 'primary.main' }}>
+                  Contacts
+                </Typography>
+                {selectedConsumer.contacts && selectedConsumer.contacts.length > 0 ? (
+                  selectedConsumer.contacts.map((contact, index) => (
+                    <Paper key={contact.id} elevation={0} sx={{ p: 2, mb: 2, border: '1px solid', borderColor: 'divider' }}>
+                      {/* @ts-expect-error - Grid container props work but type definitions are incomplete in MUI v7 */}
+                      <Grid container spacing={2}>
+                        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
+                        <Grid item xs={12} md={4}>
+                          <Typography variant="caption" color="text.secondary">
+                            Contact {index + 1} - Email
+                          </Typography>
+                          <Typography variant="body2" sx={{ mt: 0.5 }}>
+                            {contact.email || "-"}
+                          </Typography>
+                        </Grid>
+                        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
+                        <Grid item xs={6} md={4}>
+                          <Typography variant="caption" color="text.secondary">
+                            Mobile Number
+                          </Typography>
+                          <Typography variant="body2" sx={{ mt: 0.5 }}>
+                            {contact.mobile_number || "-"}
+                          </Typography>
+                        </Grid>
+                        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
+                        <Grid item xs={6} md={4}>
+                          <Typography variant="caption" color="text.secondary">
+                            Phone Number
+                          </Typography>
+                          <Typography variant="body2" sx={{ mt: 0.5 }}>
+                            {contact.phone_number || "-"}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Paper>
+                  ))
+                ) : (
+                  <Typography variant="body2" color="text.secondary">
+                    No contacts available
+                  </Typography>
+                )}
+              </Box>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenInfoDialog(false)} variant="contained">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
