@@ -159,9 +159,9 @@ export default function DeliveryPersons() {
                       </Typography>
                     </Box>
                     <Box sx={{ display: "flex", gap: 0.5, ml: 1 }}>
-                      <IconButton 
-                        size="small" 
-                        color="primary" 
+                      <IconButton
+                        size="small"
+                        color="primary"
                         onClick={(e) => {
                           e.stopPropagation();
                           navigate(`/delivery-persons/${person.id}`);
@@ -173,8 +173,27 @@ export default function DeliveryPersons() {
                             bgcolor: "primary.light",
                           }
                         }}
+                        title="View Details"
                       >
                         <ArrowForwardIcon fontSize="small" />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        color="success"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/delivery-persons/${person.id}?tab=consumers`);
+                        }}
+                        sx={{
+                          transition: "all 0.2s",
+                          "&:hover": {
+                            transform: "scale(1.1)",
+                            bgcolor: "success.light",
+                          }
+                        }}
+                        title="View Consumers"
+                      >
+                        <ConsumersIcon fontSize="small" />
                       </IconButton>
                     </Box>
                   </Box>

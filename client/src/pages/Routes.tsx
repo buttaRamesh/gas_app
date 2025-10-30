@@ -181,9 +181,9 @@ export default function Routes() {
                   >
                     <ViewIcon fontSize="small" />
                   </IconButton>
-                  <IconButton 
-                    size="small" 
-                    color="secondary" 
+                  <IconButton
+                    size="small"
+                    color="secondary"
                     onClick={(e) => {
                       e.stopPropagation();
                       navigate(`/routes/${route.id}/edit`);
@@ -197,6 +197,24 @@ export default function Routes() {
                     }}
                   >
                     <EditIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    color="success"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/routes/${route.id}/consumers`);
+                    }}
+                    sx={{
+                      transition: "all 0.2s",
+                      "&:hover": {
+                        transform: "scale(1.1)",
+                        bgcolor: "success.light",
+                      }
+                    }}
+                    title="View Consumers"
+                  >
+                    <GroupIcon fontSize="small" />
                   </IconButton>
                   <IconButton 
                     size="small" 

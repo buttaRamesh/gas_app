@@ -68,6 +68,15 @@ export default function DeliveryPersonDetail() {
   const [assigning, setAssigning] = useState(false);
   const [currentTab, setCurrentTab] = useState(0);
 
+  // Check URL parameters for initial tab
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const tab = searchParams.get('tab');
+    if (tab === 'consumers') {
+      setCurrentTab(1);
+    }
+  }, []);
+
   useEffect(() => {
     if (id) {
       fetchPersonDetails();

@@ -10,6 +10,8 @@ class ConnectionDetailsListSerializer(serializers.ModelSerializer):
     """
     connection_type_name = serializers.CharField(source='connection_type.name', read_only=True)
     product_name = serializers.CharField(source='product.name', read_only=True)
+    product_size = serializers.FloatField(source='product.size', read_only=True)
+    product_unit = serializers.CharField(source='product.unit.short_name', read_only=True)
     consumer_name = serializers.CharField(source='consumer.consumer_name', read_only=True)
     consumer_number = serializers.CharField(source='consumer.consumer_number', read_only=True)
 
@@ -19,6 +21,7 @@ class ConnectionDetailsListSerializer(serializers.ModelSerializer):
             'id',
             'sv_number',
             'sv_date',
+            'hist_code_description',
             'consumer',
             'consumer_name',
             'consumer_number',
@@ -26,6 +29,8 @@ class ConnectionDetailsListSerializer(serializers.ModelSerializer):
             'connection_type_name',
             'product',
             'product_name',
+            'product_size',
+            'product_unit',
             'num_of_regulators',
         ]
 

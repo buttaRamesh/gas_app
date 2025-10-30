@@ -204,7 +204,12 @@ export const consumersApi = {
   update: (id: number, data: any) => api.patch(`/consumers/${id}/`, data),
   delete: (id: number) => api.delete(`/consumers/${id}/`),
   getKycPending: () => api.get('/consumers/kyc_pending/'),
-  getByRoute: (routeCode: string) => api.get(`/consumers/by_route/?route_code=${routeCode}`),
+  getByRoute: (routeIdOrCode: number | string) => {
+    const param = typeof routeIdOrCode === 'number'
+      ? `route_id=${routeIdOrCode}`
+      : `route_code=${routeIdOrCode}`;
+    return api.get(`/consumers/by_route/?${param}`);
+  },
   getRoute: (id: number) => api.get(`/consumers/${id}/route/`),
   updateKycStatus: (id: number, isKycDone: boolean) =>
     api.patch(`/consumers/${id}/update_kyc_status/`, { is_kyc_done: isKycDone }),

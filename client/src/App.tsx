@@ -17,6 +17,7 @@ import RouteAreaCreate from "./pages/RouteAreaCreate";
 import RouteStatistics from "./pages/RouteStatistics";
 import RouteHistory from "./pages/RouteHistory";
 import RouteCardColorDemo from "./pages/RouteCardColorDemo";
+import RouteConsumers from "./pages/RouteConsumers";
 import Settings from "./pages/Settings";
 import SidebarDemo from "./pages/SidebarDemo";
 import DeliveryPersons from "./pages/DeliveryPersons";
@@ -69,6 +70,7 @@ const App = () => (
             <Route path="/routes/new" element={<AppLayout><RouteCreate /></AppLayout>} />
             <Route path="/routes/:id" element={<AppLayout><RouteDetail /></AppLayout>} />
             <Route path="/routes/:id/edit" element={<AppLayout><RouteEdit /></AppLayout>} />
+            <Route path="/routes/:id/consumers" element={<AppLayout><RouteConsumers /></AppLayout>} />
             <Route path="/route-areas" element={<AppLayout><RouteAreas /></AppLayout>} />
             <Route path="/route-areas/new" element={<AppLayout><RouteAreaCreate /></AppLayout>} />
             <Route path="/delivery-persons" element={<AppLayout><DeliveryPersons /></AppLayout>} />
