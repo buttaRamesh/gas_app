@@ -135,8 +135,8 @@ const Consumers = () => {
 
   const CustomToolbar = () => {
     return (
-      // @ts-expect-error - Toolbar supports sx prop but type definitions are incomplete
       <Toolbar
+        // @ts-expect-error - Toolbar supports sx prop but type definitions are incomplete
         sx={{
           p: 2,
           display: 'flex',
@@ -167,9 +167,9 @@ const Consumers = () => {
                 <QuickFilterTrigger
                   render={(triggerProps) => (
                     <Tooltip title="Search" arrow>
-                      {/* @ts-expect-error - ToolbarButton supports sx prop but type definitions are incomplete */}
                       <ToolbarButton
                         {...triggerProps}
+                        // @ts-expect-error - ToolbarButton supports sx prop but type definitions are incomplete
                         sx={{
                           gridArea: '1 / 1',
                           width: '40px',
@@ -222,11 +222,11 @@ const Consumers = () => {
                       slotProps={{
                         input: {
                           endAdornment: state.value ? (
-                            // @ts-expect-error - QuickFilterClear supports sx prop but type definitions are incomplete
                             <QuickFilterClear
                               edge="end"
                               size="small"
                               aria-label="Clear search"
+                              // @ts-expect-error - QuickFilterClear supports sx prop but type definitions are incomplete
                               sx={{ marginRight: -0.75 }}
                             >
                               <CloseIcon sx={{ fontSize: '18px' }} />
@@ -651,7 +651,9 @@ const Consumers = () => {
 
   const DetailPanel = ({ row }: { row: ConsumerListItem }) => (
     <Box sx={{ p: 3, bgcolor: "#f8f9fa" }}>
+      {/* @ts-expect-error - Grid container/item props work but type definitions are incomplete in MUI v7 */}
       <Grid container spacing={2}>
+        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
         <Grid item xs={12} md={6}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
             Consumer ID
@@ -660,6 +662,7 @@ const Consumers = () => {
             {row.id || "-"}
           </Typography>
         </Grid>
+        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
         <Grid item xs={12} md={6}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
             Category
@@ -668,6 +671,7 @@ const Consumers = () => {
             {row.category_name || "-"}
           </Typography>
         </Grid>
+        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
         <Grid item xs={12} md={6}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
             Type
@@ -676,6 +680,7 @@ const Consumers = () => {
             {row.type_name || "-"}
           </Typography>
         </Grid>
+        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
         <Grid item xs={12} md={6}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
             Mobile Number
@@ -684,6 +689,7 @@ const Consumers = () => {
             {row.mobile_number || "-"}
           </Typography>
         </Grid>
+        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
         <Grid item xs={12} md={6}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
             Opting Status
@@ -692,6 +698,7 @@ const Consumers = () => {
             {row.opting_status_display || row.opting_status || "-"}
           </Typography>
         </Grid>
+        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
         <Grid item xs={12} md={6}>
           <Typography variant="subtitle2" color="text.secondary" gutterBottom>
             KYC Status
