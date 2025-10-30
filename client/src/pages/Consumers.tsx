@@ -17,6 +17,12 @@ import {
   Tooltip,
   Badge,
   TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from "@mui/material";
 import {
   DataGrid,
@@ -748,184 +754,59 @@ const Consumers = () => {
           </Box>
         </DialogTitle>
         <DialogContent>
-          {selectedConsumer && (
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-              {/* Addresses Section */}
-              <Box>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: 'primary.main' }}>
-                  Addresses
-                </Typography>
-                {selectedConsumer.addresses && selectedConsumer.addresses.length > 0 ? (
-                  selectedConsumer.addresses.map((address, index) => (
-                    <Paper key={address.id} elevation={0} sx={{ p: 2, mb: 2, border: '1px solid', borderColor: 'divider' }}>
-                      {/* @ts-expect-error - Grid container props work but type definitions are incomplete in MUI v7 */}
-                      <Grid container spacing={2}>
-                        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
-                        <Grid item xs={12} md={6}>
-                          <Typography variant="caption" color="text.secondary">
-                            Address {index + 1}
-                          </Typography>
-                          <Typography variant="body2" sx={{ mt: 0.5 }}>
-                            {address.address_text || "-"}
-                          </Typography>
-                        </Grid>
-                        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
-                        <Grid item xs={6} md={3}>
-                          <Typography variant="caption" color="text.secondary">
-                            City
-                          </Typography>
-                          <Typography variant="body2" sx={{ mt: 0.5 }}>
-                            {address.city || "-"}
-                          </Typography>
-                        </Grid>
-                        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
-                        <Grid item xs={6} md={3}>
-                          <Typography variant="caption" color="text.secondary">
-                            PIN Code
-                          </Typography>
-                          <Typography variant="body2" sx={{ mt: 0.5 }}>
-                            {address.pin_code || "-"}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Paper>
-                  ))
-                ) : (
-                  <Typography variant="body2" color="text.secondary">
-                    No addresses available
-                  </Typography>
-                )}
-              </Box>
-
-              {/* Contacts Section */}
-              <Box>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: 'primary.main' }}>
-                  Contacts
-                </Typography>
-                {selectedConsumer.contacts && selectedConsumer.contacts.length > 0 ? (
-                  selectedConsumer.contacts.map((contact, index) => (
-                    <Paper key={contact.id} elevation={0} sx={{ p: 2, mb: 2, border: '1px solid', borderColor: 'divider' }}>
-                      {/* @ts-expect-error - Grid container props work but type definitions are incomplete in MUI v7 */}
-                      <Grid container spacing={2}>
-                        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
-                        <Grid item xs={12} md={4}>
-                          <Typography variant="caption" color="text.secondary">
-                            Contact {index + 1} - Email
-                          </Typography>
-                          <Typography variant="body2" sx={{ mt: 0.5 }}>
-                            {contact.email || "-"}
-                          </Typography>
-                        </Grid>
-                        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
-                        <Grid item xs={6} md={4}>
-                          <Typography variant="caption" color="text.secondary">
-                            Mobile Number
-                          </Typography>
-                          <Typography variant="body2" sx={{ mt: 0.5 }}>
-                            {contact.mobile_number || "-"}
-                          </Typography>
-                        </Grid>
-                        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
-                        <Grid item xs={6} md={4}>
-                          <Typography variant="caption" color="text.secondary">
-                            Phone Number
-                          </Typography>
-                          <Typography variant="body2" sx={{ mt: 0.5 }}>
-                            {contact.phone_number || "-"}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Paper>
-                  ))
-                ) : (
-                  <Typography variant="body2" color="text.secondary">
-                    No contacts available
-                  </Typography>
-                )}
-              </Box>
-
-              {/* Connections Section */}
-              <Box>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: 'primary.main' }}>
-                  Connections
-                </Typography>
+          <TableContainer component={Paper} elevation={0} sx={{ border: '1px solid', borderColor: 'divider' }}>
+            <Table size="small">
+              <TableHead>
+                <TableRow sx={{ bgcolor: '#f5f5f5' }}>
+                  <TableCell sx={{ fontWeight: 700, color: '#333' }}>Service Number</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: '#333' }}>Service Date</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: '#333' }}>Connection Type</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: '#333' }}>Product</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: '#333', textAlign: 'center' }}>Regulators</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: '#333' }}>Description</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
                 {connections && connections.length > 0 ? (
                   connections.map((connection, index) => (
-                    <Paper key={connection.id} elevation={0} sx={{ p: 2, mb: 2, border: '1px solid', borderColor: 'divider' }}>
-                      {/* @ts-expect-error - Grid container props work but type definitions are incomplete in MUI v7 */}
-                      <Grid container spacing={2}>
-                        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
-                        <Grid item xs={12} md={6}>
-                          <Typography variant="caption" color="text.secondary">
-                            Connection {index + 1} - Service Number
-                          </Typography>
-                          <Typography variant="body2" sx={{ mt: 0.5, fontWeight: 600 }}>
-                            {connection.sv_number}
-                          </Typography>
-                        </Grid>
-                        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
-                        <Grid item xs={6} md={3}>
-                          <Typography variant="caption" color="text.secondary">
-                            Service Date
-                          </Typography>
-                          <Typography variant="body2" sx={{ mt: 0.5 }}>
-                            {new Date(connection.sv_date).toLocaleDateString()}
-                          </Typography>
-                        </Grid>
-                        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
-                        <Grid item xs={6} md={3}>
-                          <Typography variant="caption" color="text.secondary">
-                            Connection Type
-                          </Typography>
-                          <Typography variant="body2" sx={{ mt: 0.5 }}>
-                            {connection.connection_type_name}
-                          </Typography>
-                        </Grid>
-                        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
-                        <Grid item xs={12} md={6}>
-                          <Typography variant="caption" color="text.secondary">
-                            Product
-                          </Typography>
-                          <Typography variant="body2" sx={{ mt: 0.5 }}>
-                            {connection.product_name}
-                            {connection.product_size && connection.product_unit
-                              ? ` (${connection.product_size} ${connection.product_unit})`
-                              : ''}
-                          </Typography>
-                        </Grid>
-                        {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
-                        <Grid item xs={6} md={3}>
-                          <Typography variant="caption" color="text.secondary">
-                            Regulators
-                          </Typography>
-                          <Typography variant="body2" sx={{ mt: 0.5 }}>
-                            {connection.num_of_regulators}
-                          </Typography>
-                        </Grid>
-                        {connection.hist_code_description && (
-                          <>
-                            {/* @ts-expect-error - Grid item props work but type definitions are incomplete in MUI v7 */}
-                            <Grid item xs={12}>
-                              <Typography variant="caption" color="text.secondary">
-                                Description
-                              </Typography>
-                              <Typography variant="body2" sx={{ mt: 0.5 }}>
-                                {connection.hist_code_description}
-                              </Typography>
-                            </Grid>
-                          </>
-                        )}
-                      </Grid>
-                    </Paper>
+                    <TableRow
+                      key={connection.id}
+                      sx={{
+                        bgcolor: index % 2 === 0 ? '#fafafa' : 'white',
+                        '&:hover': { bgcolor: '#f0f7ff' }
+                      }}
+                    >
+                      <TableCell sx={{ fontWeight: 600, color: '#667eea' }}>
+                        {connection.sv_number}
+                      </TableCell>
+                      <TableCell>
+                        {new Date(connection.sv_date).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>{connection.connection_type_name}</TableCell>
+                      <TableCell>
+                        {connection.product_name}
+                        {connection.product_size && connection.product_unit
+                          ? ` (${connection.product_size} ${connection.product_unit})`
+                          : ''}
+                      </TableCell>
+                      <TableCell sx={{ textAlign: 'center' }}>
+                        {connection.num_of_regulators}
+                      </TableCell>
+                      <TableCell>{connection.hist_code_description || '-'}</TableCell>
+                    </TableRow>
                   ))
                 ) : (
-                  <Typography variant="body2" color="text.secondary">
-                    No connections available
-                  </Typography>
+                  <TableRow>
+                    <TableCell colSpan={6} align="center">
+                      <Typography variant="body2" color="text.secondary">
+                        No connections available
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
                 )}
-              </Box>
-            </Box>
-          )}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenInfoDialog(false)} variant="contained">
