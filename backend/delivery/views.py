@@ -86,13 +86,19 @@ class DeliveryPersonViewSet(viewsets.ModelViewSet):
         Get all consumers in routes assigned to this delivery person with detailed information.
 
         GET /api/delivery-persons/{id}/consumers/
+        GET /api/delivery-persons/{id}/consumers/?search=john
 
         Returns paginated list with consumer details including:
         - consumer_id, consumer_number, consumer_name
         - mobile, address, route_code
         - category, consumer_type, cylinders count
+
+        Supports search parameter to filter by consumer_number or consumer_name
         """
+        from django.db.models import Q
+
         delivery_person = self.get_object()
+        search = request.query_params.get('search', None)
 
         # Get all route IDs assigned to this delivery person
         route_ids = delivery_person.route_assignments.values_list('route_id', flat=True)
@@ -109,6 +115,13 @@ class DeliveryPersonViewSet(viewsets.ModelViewSet):
             'addresses',
             'connections'
         ).distinct()
+
+        # Apply search filter if provided
+        if search:
+            queryset = queryset.filter(
+                Q(consumer_number__icontains=search) |
+                Q(consumer_name__icontains=search)
+            )
 
         # Apply pagination
         page = self.paginate_queryset(queryset)
