@@ -27,4 +27,5 @@ urlpatterns = [
     path('api/', include('address.urls')),  # Include address and contact URLs
     path('api/lookups/', include('lookups.urls')),  # Include lookups URLs
     path('api/', include('schemes.urls')),  # Include schemes URLs
+    path('api/', include('connections.urls')),  # Include connections URLs
 ]
