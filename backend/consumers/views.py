@@ -9,7 +9,8 @@ from .models import Consumer
 from .serializers import (
     ConsumerListSerializer,
     ConsumerDetailSerializer,
-    ConsumerCreateUpdateSerializer
+    ConsumerCreateUpdateSerializer,
+    ConsumersByRouteSerializer
 )
 
 
@@ -95,28 +96,48 @@ class ConsumerViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def by_route(self, request):
         """
-        Get consumers by route code.
-        
+        Get consumers by route code or route ID with detailed information.
+
         GET /api/consumers/by_route/?route_code=R001
+        GET /api/consumers/by_route/?route_id=1
+
+        Returns paginated list with consumer details including:
+        - consumer_id, consumer_number, consumer_name
+        - mobile, address, route_code
+        - category, consumer_type, cylinders count
         """
         route_code = request.query_params.get('route_code', None)
-        
-        if not route_code:
+        route_id = request.query_params.get('route_id', None)
+
+        if not route_code and not route_id:
             return Response(
-                {'error': 'route_code parameter is required'}, 
+                {'error': 'Either route_code or route_id parameter is required'},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
-        queryset = self.get_queryset().filter(
-            route_assignment__route__area_code=route_code
+
+        # Get queryset with optimized queries to avoid N+1 issues
+        queryset = Consumer.objects.select_related(
+            'category',
+            'consumer_type',
+            'route_assignment__route'
+        ).prefetch_related(
+            'contacts',
+            'addresses',
+            'connections'
         )
-        
+
+        if route_id:
+            queryset = queryset.filter(route_assignment__route_id=route_id)
+        else:
+            queryset = queryset.filter(route_assignment__route__area_code=route_code)
+
+        # Always use pagination for this endpoint
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = ConsumerListSerializer(page, many=True)
+            serializer = ConsumersByRouteSerializer(page, many=True)
             return self.get_paginated_response(serializer.data)
-        
-        serializer = ConsumerListSerializer(queryset, many=True)
+
+        serializer = ConsumersByRouteSerializer(queryset, many=True)
         return Response(serializer.data)
     
     @action(detail=True, methods=['get'])

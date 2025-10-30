@@ -21,6 +21,8 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  Tabs,
+  Tab,
 } from "@mui/material";
 import {
   ArrowBack as ArrowBackIcon,
@@ -30,11 +32,29 @@ import {
   LocalShipping as RouteIcon,
   People as ConsumersIcon,
   Add as AddIcon,
+  CheckCircle as CheckIcon,
+  Cancel as CancelIcon,
+  Phone as PhoneIcon,
+  Home as HomeIcon,
 } from "@mui/icons-material";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { deliveryPersonsApi, routeAssignmentsApi, routesApi } from "@/services/api";
 import { DeliveryPerson, Route } from "@/types/routes";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { PageHeader } from "@/components/PageHeader";
+import { CustomDataGridToolbar } from "@/components/CustomDataGridToolbar";
+
+interface Consumer {
+  consumer_id: number;
+  consumer_number: string;
+  consumer_name: string;
+  mobile: string | null;
+  address: string | null;
+  route_code: string;
+  category: string;
+  consumer_type: string;
+  cylinders: number;
+}
 
 export default function DeliveryPersonDetail() {
   const { id } = useParams<{ id: string }>();
@@ -49,12 +69,35 @@ export default function DeliveryPersonDetail() {
   const [selectedRoutes, setSelectedRoutes] = useState<number[]>([]);
   const [deleting, setDeleting] = useState(false);
   const [assigning, setAssigning] = useState(false);
+  const [currentTab, setCurrentTab] = useState(0);
+  const [consumers, setConsumers] = useState<Consumer[]>([]);
+  const [consumersRowCount, setConsumersRowCount] = useState(0);
+  const [consumersPagination, setConsumersPagination] = useState({
+    page: 0,
+    pageSize: 10,
+  });
+  const [quickFilterValue, setQuickFilterValue] = useState("");
+
+  // Check URL parameters for initial tab
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const tab = searchParams.get('tab');
+    if (tab === 'consumers') {
+      setCurrentTab(1);
+    }
+  }, []);
 
   useEffect(() => {
     if (id) {
       fetchPersonDetails();
     }
   }, [id]);
+
+  useEffect(() => {
+    if (id && currentTab === 1) {
+      fetchConsumers();
+    }
+  }, [id, currentTab, consumersPagination]);
 
   const fetchPersonDetails = async () => {
     try {
@@ -85,6 +128,22 @@ export default function DeliveryPersonDetail() {
       showSnackbar("Failed to load delivery person details", "error");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchConsumers = async () => {
+    try {
+      const response = await deliveryPersonsApi.getConsumers(Number(id), {
+        page: consumersPagination.page + 1,
+        page_size: consumersPagination.pageSize,
+      });
+
+      const data = response.data;
+      setConsumers(data.results || []);
+      setConsumersRowCount(data.count || 0);
+    } catch (err: any) {
+      console.error("Failed to fetch consumers:", err);
+      showSnackbar("Failed to load consumers", "error");
     }
   };
 
@@ -145,6 +204,63 @@ export default function DeliveryPersonDetail() {
       setAssigning(false);
     }
   };
+
+  const consumersColumns: GridColDef[] = [
+    {
+      field: "consumer_number",
+      headerName: "Consumer Number",
+      width: 150,
+      renderCell: (params) => (
+        <Chip label={params.value} size="small" color="primary" variant="outlined" />
+      ),
+    },
+    {
+      field: "consumer_name",
+      headerName: "Name",
+      width: 200,
+      flex: 1,
+    },
+    {
+      field: "category",
+      headerName: "Category",
+      width: 130,
+    },
+    {
+      field: "consumer_type",
+      headerName: "Type",
+      width: 130,
+    },
+    {
+      field: "route_code",
+      headerName: "Route",
+      width: 100,
+      renderCell: (params) => (
+        <Chip label={params.value} size="small" />
+      ),
+    },
+    {
+      field: "mobile",
+      headerName: "Mobile",
+      width: 130,
+      renderCell: (params) => params.value || "-",
+    },
+    {
+      field: "address",
+      headerName: "Address",
+      width: 250,
+      flex: 1,
+      renderCell: (params) => params.value || "-",
+    },
+    {
+      field: "cylinders",
+      headerName: "Cylinders",
+      width: 100,
+      type: "number",
+      renderCell: (params) => (
+        <Chip label={params.value} size="small" color="info" />
+      ),
+    },
+  ];
 
   const handleUnassignRoute = async (routeId: number) => {
     try {
@@ -298,85 +414,133 @@ export default function DeliveryPersonDetail() {
           </Card>
         </Box>
 
-          <Card elevation={3} sx={{ bgcolor: "background.paper" }}>
+        <Card elevation={3} sx={{ bgcolor: "background.paper" }}>
           <CardContent>
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                Assigned Routes
-              </Typography>
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={handleOpenAssignDialog}
-                sx={{ bgcolor: "primary.main", color: "white" }}
-              >
-                Assign Routes
-              </Button>
+            <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
+              <Tabs value={currentTab} onChange={(_, newValue) => setCurrentTab(newValue)}>
+                <Tab label={`Routes (${assignedRoutes.length})`} />
+                <Tab label={`Consumers (${consumersRowCount})`} />
+              </Tabs>
             </Box>
 
-            {assignedRoutes.length === 0 ? (
-              <Box sx={{ textAlign: "center", py: 8 }}>
-                <RouteIcon sx={{ fontSize: 64, color: "text.secondary", mb: 2 }} />
-                <Typography variant="h6" color="text.secondary">
-                  No routes assigned yet
-                </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                  Assign routes to this delivery person to get started
-                </Typography>
-                <Button
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  onClick={handleOpenAssignDialog}
-                  sx={{ bgcolor: "primary.main", color: "white" }}
-                >
-                  Assign Routes
-                </Button>
+            {currentTab === 0 && (
+              <>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    Assigned Routes
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={handleOpenAssignDialog}
+                    sx={{ bgcolor: "primary.main", color: "white" }}
+                  >
+                    Assign Routes
+                  </Button>
+                </Box>
+
+                {assignedRoutes.length === 0 ? (
+                  <Box sx={{ textAlign: "center", py: 8 }}>
+                    <RouteIcon sx={{ fontSize: 64, color: "text.secondary", mb: 2 }} />
+                    <Typography variant="h6" color="text.secondary">
+                      No routes assigned yet
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+                      Assign routes to this delivery person to get started
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      onClick={handleOpenAssignDialog}
+                      sx={{ bgcolor: "primary.main", color: "white" }}
+                    >
+                      Assign Routes
+                    </Button>
+                  </Box>
+                ) : (
+                  <TableContainer>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell sx={{ fontWeight: 600 }}>Route ID</TableCell>
+                          <TableCell sx={{ fontWeight: 600 }}>Area Code</TableCell>
+                          <TableCell sx={{ fontWeight: 600 }}>Description</TableCell>
+                          <TableCell sx={{ fontWeight: 600 }}>Areas</TableCell>
+                          <TableCell sx={{ fontWeight: 600 }}>Consumers</TableCell>
+                          <TableCell sx={{ fontWeight: 600 }}>Actions</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {assignedRoutes.map((route) => (
+                          <TableRow key={route.id} hover>
+                            <TableCell>#{route.id}</TableCell>
+                            <TableCell>
+                              <Chip label={route.area_code} size="small" />
+                            </TableCell>
+                            <TableCell>{route.area_code_description}</TableCell>
+                            <TableCell>{route.area_count}</TableCell>
+                            <TableCell>{route.consumer_count}</TableCell>
+                            <TableCell>
+                              <Box sx={{ display: "flex", gap: 1 }}>
+                                <Button
+                                  size="small"
+                                  onClick={() => navigate(`/routes/${route.id}`)}
+                                >
+                                  View
+                                </Button>
+                                <Button
+                                  size="small"
+                                  color="error"
+                                  onClick={() => handleUnassignRoute(route.id)}
+                                >
+                                  Unassign
+                                </Button>
+                              </Box>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                )}
+              </>
+            )}
+
+            {currentTab === 1 && (
+              <Box sx={{ height: 600 }}>
+                <DataGrid
+                  rows={consumers}
+                  columns={consumersColumns}
+                  getRowId={(row) => row.consumer_id}
+                  paginationModel={consumersPagination}
+                  onPaginationModelChange={setConsumersPagination}
+                  rowCount={consumersRowCount}
+                  pageSizeOptions={[5, 10, 25, 50, 100]}
+                  paginationMode="server"
+                  disableRowSelectionOnClick
+                  slots={{
+                    toolbar: CustomDataGridToolbar,
+                  }}
+                  slotProps={{
+                    toolbar: {
+                      title: "Assigned Consumers",
+                      onQuickFilterChange: setQuickFilterValue,
+                      showQuickFilter: true,
+                      showPrint: true,
+                      showExport: true,
+                    },
+                  }}
+                  sx={{
+                    border: 0,
+                    "& .MuiDataGrid-cell:focus": {
+                      outline: "none",
+                    },
+                    "& .MuiDataGrid-row:hover": {
+                      bgcolor: "action.hover",
+                    },
+                  }}
+                />
               </Box>
-            ) : (
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell sx={{ fontWeight: 600 }}>Route ID</TableCell>
-                      <TableCell sx={{ fontWeight: 600 }}>Area Code</TableCell>
-                      <TableCell sx={{ fontWeight: 600 }}>Description</TableCell>
-                      <TableCell sx={{ fontWeight: 600 }}>Areas</TableCell>
-                      <TableCell sx={{ fontWeight: 600 }}>Consumers</TableCell>
-                      <TableCell sx={{ fontWeight: 600 }}>Actions</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {assignedRoutes.map((route) => (
-                      <TableRow key={route.id} hover>
-                        <TableCell>#{route.id}</TableCell>
-                        <TableCell>
-                          <Chip label={route.area_code} size="small" />
-                        </TableCell>
-                        <TableCell>{route.area_code_description}</TableCell>
-                        <TableCell>{route.area_count}</TableCell>
-                        <TableCell>{route.consumer_count}</TableCell>
-                        <TableCell>
-                          <Box sx={{ display: "flex", gap: 1 }}>
-                            <Button
-                              size="small"
-                              onClick={() => navigate(`/routes/${route.id}`)}
-                            >
-                              View
-                            </Button>
-                            <Button
-                              size="small"
-                              color="error"
-                              onClick={() => handleUnassignRoute(route.id)}
-                            >
-                              Unassign
-                            </Button>
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
             )}
           </CardContent>
         </Card>

@@ -80,7 +80,12 @@ export const deliveryPersonsApi = {
   update: (id: number, data: any) => api.patch(`/delivery-persons/${id}/`, data),
   delete: (id: number) => api.delete(`/delivery-persons/${id}/`),
   getAssignedRoutes: (id: number) => api.get(`/delivery-persons/${id}/assigned_routes/`),
-  getConsumers: (id: number) => api.get(`/delivery-persons/${id}/consumers/`),
+  getConsumers: (id: number, pagination?: { page?: number; page_size?: number }) => {
+    const params = new URLSearchParams();
+    if (pagination?.page) params.append('page', pagination.page.toString());
+    if (pagination?.page_size) params.append('page_size', pagination.page_size.toString());
+    return api.get(`/delivery-persons/${id}/consumers/?${params.toString()}`);
+  },
   getUnassigned: () => api.get('/delivery-persons/unassigned/'),
   getStatistics: () => api.get('/delivery-persons/statistics/'),
 };
@@ -204,7 +209,17 @@ export const consumersApi = {
   update: (id: number, data: any) => api.patch(`/consumers/${id}/`, data),
   delete: (id: number) => api.delete(`/consumers/${id}/`),
   getKycPending: () => api.get('/consumers/kyc_pending/'),
-  getByRoute: (routeCode: string) => api.get(`/consumers/by_route/?route_code=${routeCode}`),
+  getByRoute: (routeIdOrCode: number | string, pagination?: { page?: number; page_size?: number }) => {
+    const params = new URLSearchParams();
+    if (typeof routeIdOrCode === 'number') {
+      params.append('route_id', routeIdOrCode.toString());
+    } else {
+      params.append('route_code', routeIdOrCode);
+    }
+    if (pagination?.page) params.append('page', pagination.page.toString());
+    if (pagination?.page_size) params.append('page_size', pagination.page_size.toString());
+    return api.get(`/consumers/by_route/?${params.toString()}`);
+  },
   getRoute: (id: number) => api.get(`/consumers/${id}/route/`),
   updateKycStatus: (id: number, isKycDone: boolean) =>
     api.patch(`/consumers/${id}/update_kyc_status/`, { is_kyc_done: isKycDone }),
