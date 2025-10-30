@@ -15,6 +15,8 @@ from .serializers import (
     DeliveryRouteAssignmentDetailSerializer,
     BulkAssignmentSerializer,
 )
+from consumers.serializers import ConsumersByRouteSerializer
+from consumers.models import Consumer
 
 
 class DeliveryPersonViewSet(viewsets.ModelViewSet):
@@ -81,36 +83,41 @@ class DeliveryPersonViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'])
     def consumers(self, request, pk=None):
         """
-        Get all consumers in routes assigned to this delivery person.
-        
+        Get all consumers in routes assigned to this delivery person with detailed information.
+
         GET /api/delivery-persons/{id}/consumers/
+
+        Returns paginated list with consumer details including:
+        - consumer_id, consumer_number, consumer_name
+        - mobile, address, route_code
+        - category, consumer_type, cylinders count
         """
         delivery_person = self.get_object()
-        
-        consumers_data = []
-        for assignment in delivery_person.route_assignments.select_related('route').all():
-            route = assignment.route
-            
-            for consumer_assignment in route.consumer_assignments.select_related('consumer').all():
-                consumer = consumer_assignment.consumer
-                contact = consumer.contacts.first()
-                address = consumer.addresses.first()
-                
-                consumers_data.append({
-                    'consumer_id': consumer.id,
-                    'consumer_number': consumer.consumer_number,
-                    'consumer_name': consumer.consumer_name,
-                    'mobile': contact.mobile_number if contact else None,
-                    'address': address.address_text if address else None,
-                    'route_code': route.area_code,
-                    'is_kyc_done': consumer.is_kyc_done,
-                })
-        
-        return Response({
-            'delivery_person': delivery_person.name,
-            'total_consumers': len(consumers_data),
-            'consumers': consumers_data
-        })
+
+        # Get all route IDs assigned to this delivery person
+        route_ids = delivery_person.route_assignments.values_list('route_id', flat=True)
+
+        # Get all consumers in those routes with optimized queries
+        queryset = Consumer.objects.filter(
+            route_assignment__route_id__in=route_ids
+        ).select_related(
+            'category',
+            'consumer_type',
+            'route_assignment__route'
+        ).prefetch_related(
+            'contacts',
+            'addresses',
+            'connections'
+        ).distinct()
+
+        # Apply pagination
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = ConsumersByRouteSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = ConsumersByRouteSerializer(queryset, many=True)
+        return Response(serializer.data)
     
     @action(detail=False, methods=['get'])
     def unassigned(self, request):

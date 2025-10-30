@@ -37,10 +37,12 @@ import {
   Phone as PhoneIcon,
   Home as HomeIcon,
 } from "@mui/icons-material";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { deliveryPersonsApi, routeAssignmentsApi, routesApi } from "@/services/api";
 import { DeliveryPerson, Route } from "@/types/routes";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { PageHeader } from "@/components/PageHeader";
+import { CustomDataGridToolbar } from "@/components/CustomDataGridToolbar";
 
 interface Consumer {
   consumer_id: number;
@@ -49,7 +51,9 @@ interface Consumer {
   mobile: string | null;
   address: string | null;
   route_code: string;
-  is_kyc_done: boolean;
+  category: string;
+  consumer_type: string;
+  cylinders: number;
 }
 
 export default function DeliveryPersonDetail() {
@@ -59,7 +63,6 @@ export default function DeliveryPersonDetail() {
   const [loading, setLoading] = useState(true);
   const [person, setPerson] = useState<DeliveryPerson | null>(null);
   const [assignedRoutes, setAssignedRoutes] = useState<Route[]>([]);
-  const [consumers, setConsumers] = useState<Consumer[]>([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [assignDialogOpen, setAssignDialogOpen] = useState(false);
   const [availableRoutes, setAvailableRoutes] = useState<Route[]>([]);
@@ -67,6 +70,13 @@ export default function DeliveryPersonDetail() {
   const [deleting, setDeleting] = useState(false);
   const [assigning, setAssigning] = useState(false);
   const [currentTab, setCurrentTab] = useState(0);
+  const [consumers, setConsumers] = useState<Consumer[]>([]);
+  const [consumersRowCount, setConsumersRowCount] = useState(0);
+  const [consumersPagination, setConsumersPagination] = useState({
+    page: 0,
+    pageSize: 10,
+  });
+  const [quickFilterValue, setQuickFilterValue] = useState("");
 
   // Check URL parameters for initial tab
   useEffect(() => {
@@ -83,17 +93,20 @@ export default function DeliveryPersonDetail() {
     }
   }, [id]);
 
+  useEffect(() => {
+    if (id && currentTab === 1) {
+      fetchConsumers();
+    }
+  }, [id, currentTab, consumersPagination]);
+
   const fetchPersonDetails = async () => {
     try {
       setLoading(true);
-      const [personRes, consumersRes] = await Promise.all([
-        deliveryPersonsApi.getById(Number(id)),
-        deliveryPersonsApi.getConsumers(Number(id))
-      ]);
-
+      const personRes = await deliveryPersonsApi.getById(Number(id));
       const personData = personRes.data;
+      
       setPerson(personData);
-
+      
       // Map assigned_routes to Route format for table display
       const mappedRoutes = personData.assigned_routes?.map((ar: any) => ({
         id: ar.route_id,
@@ -108,14 +121,29 @@ export default function DeliveryPersonDetail() {
           route: ar.route_id,
         })) || [],
       })) || [];
-
+      
       setAssignedRoutes(mappedRoutes);
-      setConsumers(consumersRes.data.consumers || []);
     } catch (err: any) {
       console.error("Failed to fetch person details:", err);
       showSnackbar("Failed to load delivery person details", "error");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchConsumers = async () => {
+    try {
+      const response = await deliveryPersonsApi.getConsumers(Number(id), {
+        page: consumersPagination.page + 1,
+        page_size: consumersPagination.pageSize,
+      });
+
+      const data = response.data;
+      setConsumers(data.results || []);
+      setConsumersRowCount(data.count || 0);
+    } catch (err: any) {
+      console.error("Failed to fetch consumers:", err);
+      showSnackbar("Failed to load consumers", "error");
     }
   };
 
@@ -176,6 +204,63 @@ export default function DeliveryPersonDetail() {
       setAssigning(false);
     }
   };
+
+  const consumersColumns: GridColDef[] = [
+    {
+      field: "consumer_number",
+      headerName: "Consumer Number",
+      width: 150,
+      renderCell: (params) => (
+        <Chip label={params.value} size="small" color="primary" variant="outlined" />
+      ),
+    },
+    {
+      field: "consumer_name",
+      headerName: "Name",
+      width: 200,
+      flex: 1,
+    },
+    {
+      field: "category",
+      headerName: "Category",
+      width: 130,
+    },
+    {
+      field: "consumer_type",
+      headerName: "Type",
+      width: 130,
+    },
+    {
+      field: "route_code",
+      headerName: "Route",
+      width: 100,
+      renderCell: (params) => (
+        <Chip label={params.value} size="small" />
+      ),
+    },
+    {
+      field: "mobile",
+      headerName: "Mobile",
+      width: 130,
+      renderCell: (params) => params.value || "-",
+    },
+    {
+      field: "address",
+      headerName: "Address",
+      width: 250,
+      flex: 1,
+      renderCell: (params) => params.value || "-",
+    },
+    {
+      field: "cylinders",
+      headerName: "Cylinders",
+      width: 100,
+      type: "number",
+      renderCell: (params) => (
+        <Chip label={params.value} size="small" color="info" />
+      ),
+    },
+  ];
 
   const handleUnassignRoute = async (routeId: number) => {
     try {
@@ -334,7 +419,7 @@ export default function DeliveryPersonDetail() {
             <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
               <Tabs value={currentTab} onChange={(_, newValue) => setCurrentTab(newValue)}>
                 <Tab label={`Routes (${assignedRoutes.length})`} />
-                <Tab label={`Consumers (${consumers.length})`} />
+                <Tab label={`Consumers (${consumersRowCount})`} />
               </Tabs>
             </Box>
 
@@ -422,103 +507,40 @@ export default function DeliveryPersonDetail() {
             )}
 
             {currentTab === 1 && (
-              <>
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
-                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    Assigned Consumers
-                  </Typography>
-                </Box>
-
-                {consumers.length === 0 ? (
-                  <Box sx={{ textAlign: "center", py: 8 }}>
-                    <ConsumersIcon sx={{ fontSize: 64, color: "text.secondary", mb: 2 }} />
-                    <Typography variant="h6" color="text.secondary">
-                      No consumers found
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Assign routes with consumers to this delivery person
-                    </Typography>
-                  </Box>
-                ) : (
-                  <TableContainer>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell sx={{ fontWeight: 600 }}>Consumer Number</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }}>Name</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }}>Route</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }}>Mobile</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }}>Address</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }}>KYC Status</TableCell>
-                          <TableCell sx={{ fontWeight: 600 }}>Actions</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {consumers.map((consumer) => (
-                          <TableRow key={consumer.consumer_id} hover>
-                            <TableCell>
-                              <Chip label={consumer.consumer_number} size="small" color="primary" variant="outlined" />
-                            </TableCell>
-                            <TableCell sx={{ fontWeight: 500 }}>{consumer.consumer_name}</TableCell>
-                            <TableCell>
-                              <Chip label={consumer.route_code} size="small" />
-                            </TableCell>
-                            <TableCell>
-                              {consumer.mobile ? (
-                                <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                                  <PhoneIcon sx={{ fontSize: 16, color: "text.secondary" }} />
-                                  <Typography variant="body2">{consumer.mobile}</Typography>
-                                </Box>
-                              ) : (
-                                <Typography variant="body2" color="text.secondary">-</Typography>
-                              )}
-                            </TableCell>
-                            <TableCell>
-                              {consumer.address ? (
-                                <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                                  <HomeIcon sx={{ fontSize: 16, color: "text.secondary" }} />
-                                  <Typography variant="body2" sx={{ maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                                    {consumer.address}
-                                  </Typography>
-                                </Box>
-                              ) : (
-                                <Typography variant="body2" color="text.secondary">-</Typography>
-                              )}
-                            </TableCell>
-                            <TableCell>
-                              {consumer.is_kyc_done ? (
-                                <Chip
-                                  icon={<CheckIcon />}
-                                  label="Done"
-                                  size="small"
-                                  color="success"
-                                  sx={{ fontWeight: 500 }}
-                                />
-                              ) : (
-                                <Chip
-                                  icon={<CancelIcon />}
-                                  label="Pending"
-                                  size="small"
-                                  color="warning"
-                                  sx={{ fontWeight: 500 }}
-                                />
-                              )}
-                            </TableCell>
-                            <TableCell>
-                              <Button
-                                size="small"
-                                onClick={() => navigate(`/consumers/${consumer.consumer_id}`)}
-                              >
-                                View Details
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                )}
-              </>
+              <Box sx={{ height: 600 }}>
+                <DataGrid
+                  rows={consumers}
+                  columns={consumersColumns}
+                  getRowId={(row) => row.consumer_id}
+                  paginationModel={consumersPagination}
+                  onPaginationModelChange={setConsumersPagination}
+                  rowCount={consumersRowCount}
+                  pageSizeOptions={[5, 10, 25, 50, 100]}
+                  paginationMode="server"
+                  disableRowSelectionOnClick
+                  slots={{
+                    toolbar: CustomDataGridToolbar,
+                  }}
+                  slotProps={{
+                    toolbar: {
+                      title: "Assigned Consumers",
+                      onQuickFilterChange: setQuickFilterValue,
+                      showQuickFilter: true,
+                      showPrint: true,
+                      showExport: true,
+                    },
+                  }}
+                  sx={{
+                    border: 0,
+                    "& .MuiDataGrid-cell:focus": {
+                      outline: "none",
+                    },
+                    "& .MuiDataGrid-row:hover": {
+                      bgcolor: "action.hover",
+                    },
+                  }}
+                />
+              </Box>
             )}
           </CardContent>
         </Card>
@@ -531,7 +553,7 @@ export default function DeliveryPersonDetail() {
             Are you sure you want to delete <strong>{person.name}</strong>?
             {assignedRoutes.length > 0 && (
               <Typography color="error" sx={{ mt: 2 }}>
-                Warning: This person has {assignedRoutes.length} assigned route(s).
+                Warning: This person has {assignedRoutes.length} assigned route(s). 
                 You may need to unassign routes first.
               </Typography>
             )}
@@ -552,8 +574,8 @@ export default function DeliveryPersonDetail() {
         </DialogActions>
       </Dialog>
 
-      <Dialog
-        open={assignDialogOpen}
+      <Dialog 
+        open={assignDialogOpen} 
         onClose={() => setAssignDialogOpen(false)}
         maxWidth="md"
         fullWidth

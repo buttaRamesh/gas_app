@@ -101,6 +101,63 @@ class ConsumerDetailSerializer(serializers.ModelSerializer):
         } for contact in contacts]
 
 
+class ConsumersByRouteSerializer(serializers.ModelSerializer):
+    """
+    Detailed serializer for consumers by route/delivery person views.
+    Includes all essential consumer information with related data.
+    """
+    consumer_id = serializers.IntegerField(source='id', read_only=True)
+    category = serializers.CharField(source='category.name', read_only=True)
+    consumer_type = serializers.CharField(source='consumer_type.name', read_only=True)
+    mobile = serializers.SerializerMethodField()
+    address = serializers.SerializerMethodField()
+    route_code = serializers.SerializerMethodField()
+    cylinders = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Consumer
+        fields = [
+            'consumer_id',
+            'consumer_number',
+            'consumer_name',
+            'mobile',
+            'address',
+            'route_code',
+            'category',
+            'consumer_type',
+            'cylinders',
+        ]
+
+    def get_mobile(self, obj):
+        """Get first mobile number from contacts"""
+        contact = obj.contacts.first()
+        return contact.mobile_number if contact else None
+
+    def get_address(self, obj):
+        """Get first address text from addresses"""
+        address = obj.addresses.first()
+        if address:
+            # Return formatted address
+            parts = [address.address_text]
+            if address.city_town_village:
+                parts.append(address.city_town_village)
+            if address.pin_code:
+                parts.append(f"PIN: {address.pin_code}")
+            return ", ".join(parts)
+        return None
+
+    def get_route_code(self, obj):
+        """Get route code from route assignment"""
+        try:
+            return obj.route_assignment.route.area_code
+        except AttributeError:
+            return None
+
+    def get_cylinders(self, obj):
+        """Get count of connections (cylinders) the consumer holds"""
+        return obj.connections.count()
+
+
 class ConsumerCreateUpdateSerializer(serializers.ModelSerializer):
     """
     Serializer for creating and updating consumers.
@@ -125,7 +182,7 @@ class ConsumerCreateUpdateSerializer(serializers.ModelSerializer):
             'opting_status',
             'scheme',
         ]
-    
+
     def validate_consumer_number(self, value):
         """Ensure consumer number is unique"""
         if self.instance:  # Update case
@@ -135,7 +192,7 @@ class ConsumerCreateUpdateSerializer(serializers.ModelSerializer):
             if Consumer.objects.filter(consumer_number=value).exists():
                 raise serializers.ValidationError("Consumer number already exists.")
         return value
-    
+
     def validate_lpg_id(self, value):
         """Ensure LPG ID is unique if provided"""
         if value:
