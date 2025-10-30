@@ -373,15 +373,15 @@ export function AppSidebar({ collapsed = false, onToggleCollapse }: AppSidebarPr
               {!collapsed && <ListItemText primary={<Typography fontWeight="600">Statistics</Typography>} />}
             </ListItemButton>
 
-            <ListItemButton 
+            <ListItemButton
               onClick={() => navigate('/routes/history')}
-              sx={{ 
-                mb: 2,
+              sx={{
+                mb: 1.5,
                 borderRadius: 2,
                 bgcolor: isActive('/routes/history') ? 'hsla(var(--sidebar-primary), 0.15)' : 'hsla(var(--sidebar-primary), 0.1)',
                 color: 'hsl(var(--sidebar-foreground))',
                 border: '1px solid hsla(var(--sidebar-primary), 0.3)',
-                '&:hover': { 
+                '&:hover': {
                   bgcolor: 'hsla(var(--sidebar-primary), 0.15)',
                   boxShadow: '0 0 20px hsla(var(--sidebar-primary), 0.2)'
                 }
@@ -391,15 +391,33 @@ export function AppSidebar({ collapsed = false, onToggleCollapse }: AppSidebarPr
               {!collapsed && <ListItemText primary={<Typography fontWeight="600">History</Typography>} />}
             </ListItemButton>
 
-            <ListItemButton 
+            <ListItemButton
+              onClick={() => navigate('/routes/consumers-select')}
+              sx={{
+                mb: 2,
+                borderRadius: 2,
+                bgcolor: isActive('/routes/consumers-select') ? 'hsla(var(--sidebar-primary), 0.15)' : 'hsla(var(--sidebar-primary), 0.1)',
+                color: 'hsl(var(--sidebar-foreground))',
+                border: '1px solid hsla(var(--sidebar-primary), 0.3)',
+                '&:hover': {
+                  bgcolor: 'hsla(var(--sidebar-primary), 0.15)',
+                  boxShadow: '0 0 20px hsla(var(--sidebar-primary), 0.2)'
+                }
+              }}
+            >
+              <ListItemIcon><People sx={{ color: 'hsl(var(--sidebar-primary))' }} /></ListItemIcon>
+              {!collapsed && <ListItemText primary={<Typography fontWeight="600">Consumers by Route</Typography>} />}
+            </ListItemButton>
+
+            <ListItemButton
               onClick={() => navigate('/route-areas')}
-              sx={{ 
+              sx={{
                 mb: 1.5,
                 borderRadius: 2,
                 bgcolor: isActive('/route-areas') ? 'hsla(var(--sidebar-primary), 0.15)' : 'hsla(var(--sidebar-primary), 0.1)',
                 color: 'hsl(var(--sidebar-foreground))',
                 border: '1px solid hsla(var(--sidebar-primary), 0.3)',
-                '&:hover': { 
+                '&:hover': {
                   bgcolor: 'hsla(var(--sidebar-primary), 0.15)',
                   boxShadow: '0 0 20px hsla(var(--sidebar-primary), 0.2)'
                 }
@@ -476,15 +494,15 @@ export function AppSidebar({ collapsed = false, onToggleCollapse }: AppSidebarPr
               {!collapsed && <ListItemText primary={<Typography fontWeight="600">Add Delivery Person</Typography>} />}
             </ListItemButton>
 
-            <ListItemButton 
+            <ListItemButton
               onClick={() => navigate('/delivery-persons/statistics')}
-              sx={{ 
+              sx={{
                 mb: 1.5,
                 borderRadius: 2,
                 bgcolor: isActive('/delivery-persons/statistics') ? 'hsla(var(--sidebar-primary), 0.15)' : 'hsla(var(--sidebar-primary), 0.1)',
                 color: 'hsl(var(--sidebar-foreground))',
                 border: '1px solid hsla(var(--sidebar-primary), 0.3)',
-                '&:hover': { 
+                '&:hover': {
                   bgcolor: 'hsla(var(--sidebar-primary), 0.15)',
                   boxShadow: '0 0 20px hsla(var(--sidebar-primary), 0.2)'
                 }
@@ -492,6 +510,24 @@ export function AppSidebar({ collapsed = false, onToggleCollapse }: AppSidebarPr
             >
               <ListItemIcon><BarChart sx={{ color: 'hsl(var(--sidebar-primary))' }} /></ListItemIcon>
               {!collapsed && <ListItemText primary={<Typography fontWeight="600">Statistics</Typography>} />}
+            </ListItemButton>
+
+            <ListItemButton
+              onClick={() => navigate('/delivery-persons/consumers-select')}
+              sx={{
+                mb: 1.5,
+                borderRadius: 2,
+                bgcolor: isActive('/delivery-persons/consumers-select') ? 'hsla(var(--sidebar-primary), 0.15)' : 'hsla(var(--sidebar-primary), 0.1)',
+                color: 'hsl(var(--sidebar-foreground))',
+                border: '1px solid hsla(var(--sidebar-primary), 0.3)',
+                '&:hover': {
+                  bgcolor: 'hsla(var(--sidebar-primary), 0.15)',
+                  boxShadow: '0 0 20px hsla(var(--sidebar-primary), 0.2)'
+                }
+              }}
+            >
+              <ListItemIcon><People sx={{ color: 'hsl(var(--sidebar-primary))' }} /></ListItemIcon>
+              {!collapsed && <ListItemText primary={<Typography fontWeight="600">Consumers by Person</Typography>} />}
             </ListItemButton>
           </>
         )}
