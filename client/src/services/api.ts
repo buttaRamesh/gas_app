@@ -211,6 +211,35 @@ export const consumersApi = {
   getStatistics: () => api.get('/consumers/statistics/'),
 };
 
+// Connections API
+export const connectionsApi = {
+  getAll: (filters?: {
+    consumer?: number;
+    connection_type?: number;
+    product?: number;
+    search?: string;
+    ordering?: string;
+    page?: number;
+  }) => {
+    const params = new URLSearchParams();
+    if (filters?.consumer) params.append('consumer', filters.consumer.toString());
+    if (filters?.connection_type) params.append('connection_type', filters.connection_type.toString());
+    if (filters?.product) params.append('product', filters.product.toString());
+    if (filters?.search?.trim()) params.append('search', filters.search.trim());
+    if (filters?.ordering) params.append('ordering', filters.ordering);
+    if (filters?.page) params.append('page', filters.page.toString());
+    return api.get(`/connections/?${params.toString()}`);
+  },
+  getById: (id: number) => api.get(`/connections/${id}/`),
+  getByConsumer: (consumerId: number) => api.get(`/connections/by-consumer/${consumerId}/`),
+  getByConnectionType: (connectionTypeId: number) =>
+    api.get(`/connections/by_connection_type/?connection_type=${connectionTypeId}`),
+  create: (data: any) => api.post('/connections/', data),
+  update: (id: number, data: any) => api.patch(`/connections/${id}/`, data),
+  delete: (id: number) => api.delete(`/connections/${id}/`),
+  getStatistics: () => api.get('/connections/statistics/'),
+};
+
 // Consumer Categories API
 export const consumerCategoriesApi = {
   getAll: (search?: string) => {

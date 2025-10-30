@@ -133,3 +133,21 @@ export interface ConsumerFilters {
   ordering?: string;
   page?: number;
 }
+
+// Connection types
+export interface ConnectionDetails {
+  id: number;
+  sv_number: string;
+  sv_date: string;
+  hist_code_description?: string;
+  consumer: number;
+  consumer_name: string;
+  consumer_number: string;
+  connection_type: number;
+  connection_type_name: string;
+  product: number;
+  product_name: string;
+  product_size?: number;
+  product_unit?: string;
+  num_of_regulators: number;
+}
