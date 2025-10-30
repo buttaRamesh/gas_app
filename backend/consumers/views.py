@@ -100,14 +100,18 @@ class ConsumerViewSet(viewsets.ModelViewSet):
 
         GET /api/consumers/by_route/?route_code=R001
         GET /api/consumers/by_route/?route_id=1
+        GET /api/consumers/by_route/?route_id=1&search=john
 
         Returns paginated list with consumer details including:
         - consumer_id, consumer_number, consumer_name
         - mobile, address, route_code
         - category, consumer_type, cylinders count
+
+        Supports search parameter to filter by consumer_number or consumer_name
         """
         route_code = request.query_params.get('route_code', None)
         route_id = request.query_params.get('route_id', None)
+        search = request.query_params.get('search', None)
 
         if not route_code and not route_id:
             return Response(
@@ -130,6 +134,13 @@ class ConsumerViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(route_assignment__route_id=route_id)
         else:
             queryset = queryset.filter(route_assignment__route__area_code=route_code)
+
+        # Apply search filter if provided
+        if search:
+            queryset = queryset.filter(
+                Q(consumer_number__icontains=search) |
+                Q(consumer_name__icontains=search)
+            )
 
         # Always use pagination for this endpoint
         page = self.paginate_queryset(queryset)

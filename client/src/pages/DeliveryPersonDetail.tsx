@@ -76,7 +76,8 @@ export default function DeliveryPersonDetail() {
     page: 0,
     pageSize: 10,
   });
-  const [quickFilterValue, setQuickFilterValue] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Check URL parameters for initial tab
   useEffect(() => {
@@ -93,11 +94,23 @@ export default function DeliveryPersonDetail() {
     }
   }, [id]);
 
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchQuery(searchInput);
+      // Reset to first page when search changes
+      if (searchInput !== searchQuery) {
+        setConsumersPagination(prev => ({ ...prev, page: 0 }));
+      }
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
   useEffect(() => {
     if (id && currentTab === 1) {
       fetchConsumers();
     }
-  }, [id, currentTab, consumersPagination]);
+  }, [id, currentTab, consumersPagination, searchQuery]);
 
   const fetchPersonDetails = async () => {
     try {
@@ -136,6 +149,7 @@ export default function DeliveryPersonDetail() {
       const response = await deliveryPersonsApi.getConsumers(Number(id), {
         page: consumersPagination.page + 1,
         page_size: consumersPagination.pageSize,
+        search: searchQuery || undefined,
       });
 
       const data = response.data;
@@ -524,7 +538,7 @@ export default function DeliveryPersonDetail() {
                   slotProps={{
                     toolbar: {
                       title: "Assigned Consumers",
-                      onQuickFilterChange: setQuickFilterValue,
+                      onQuickFilterChange: setSearchInput,
                       showQuickFilter: true,
                       showPrint: true,
                       showExport: true,

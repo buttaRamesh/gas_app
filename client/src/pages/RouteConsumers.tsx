@@ -46,7 +46,8 @@ export default function RouteConsumers() {
     page: 0,
     pageSize: 10,
   });
-  const [quickFilterValue, setQuickFilterValue] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     if (id) {
@@ -54,11 +55,23 @@ export default function RouteConsumers() {
     }
   }, [id]);
 
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchQuery(searchInput);
+      // Reset to first page when search changes
+      if (searchInput !== searchQuery) {
+        setPaginationModel(prev => ({ ...prev, page: 0 }));
+      }
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
   useEffect(() => {
     if (id) {
       fetchConsumers();
     }
-  }, [id, paginationModel]);
+  }, [id, paginationModel, searchQuery]);
 
   const fetchRoute = async () => {
     try {
@@ -76,6 +89,7 @@ export default function RouteConsumers() {
       const response = await consumersApi.getByRoute(Number(id), {
         page: paginationModel.page + 1,
         page_size: paginationModel.pageSize,
+        search: searchQuery || undefined,
       });
 
       const data = response.data;
@@ -278,7 +292,7 @@ export default function RouteConsumers() {
             slotProps={{
               toolbar: {
                 title: `Consumers in Route ${route?.area_code || ""}`,
-                onQuickFilterChange: setQuickFilterValue,
+                onQuickFilterChange: setSearchInput,
                 showQuickFilter: true,
                 showPrint: true,
                 showExport: true,

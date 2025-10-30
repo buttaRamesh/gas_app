@@ -80,10 +80,11 @@ export const deliveryPersonsApi = {
   update: (id: number, data: any) => api.patch(`/delivery-persons/${id}/`, data),
   delete: (id: number) => api.delete(`/delivery-persons/${id}/`),
   getAssignedRoutes: (id: number) => api.get(`/delivery-persons/${id}/assigned_routes/`),
-  getConsumers: (id: number, pagination?: { page?: number; page_size?: number }) => {
+  getConsumers: (id: number, options?: { page?: number; page_size?: number; search?: string }) => {
     const params = new URLSearchParams();
-    if (pagination?.page) params.append('page', pagination.page.toString());
-    if (pagination?.page_size) params.append('page_size', pagination.page_size.toString());
+    if (options?.page) params.append('page', options.page.toString());
+    if (options?.page_size) params.append('page_size', options.page_size.toString());
+    if (options?.search?.trim()) params.append('search', options.search.trim());
     return api.get(`/delivery-persons/${id}/consumers/?${params.toString()}`);
   },
   getUnassigned: () => api.get('/delivery-persons/unassigned/'),
@@ -209,15 +210,16 @@ export const consumersApi = {
   update: (id: number, data: any) => api.patch(`/consumers/${id}/`, data),
   delete: (id: number) => api.delete(`/consumers/${id}/`),
   getKycPending: () => api.get('/consumers/kyc_pending/'),
-  getByRoute: (routeIdOrCode: number | string, pagination?: { page?: number; page_size?: number }) => {
+  getByRoute: (routeIdOrCode: number | string, options?: { page?: number; page_size?: number; search?: string }) => {
     const params = new URLSearchParams();
     if (typeof routeIdOrCode === 'number') {
       params.append('route_id', routeIdOrCode.toString());
     } else {
       params.append('route_code', routeIdOrCode);
     }
-    if (pagination?.page) params.append('page', pagination.page.toString());
-    if (pagination?.page_size) params.append('page_size', pagination.page_size.toString());
+    if (options?.page) params.append('page', options.page.toString());
+    if (options?.page_size) params.append('page_size', options.page_size.toString());
+    if (options?.search?.trim()) params.append('search', options.search.trim());
     return api.get(`/consumers/by_route/?${params.toString()}`);
   },
   getRoute: (id: number) => api.get(`/consumers/${id}/route/`),
