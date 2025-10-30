@@ -32,10 +32,6 @@ import {
   FilterPanelTrigger,
   ExportCsv,
   ExportPrint,
-  QuickFilter,
-  QuickFilterControl,
-  QuickFilterClear,
-  QuickFilterTrigger,
 } from "@mui/x-data-grid";
 import type {
   GridColDef,
@@ -65,6 +61,7 @@ const Consumers = () => {
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
   const [consumers, setConsumers] = useState<ConsumerListItem[]>([]);
+  const [rowCount, setRowCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [consumerToDelete, setConsumerToDelete] = useState<number | null>(null);
@@ -72,24 +69,58 @@ const Consumers = () => {
     page: 0,
     pageSize: 10,
   });
+  const [sortModel, setSortModel] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchInput, setSearchInput] = useState<string>('');
   const [kycFilter, setKycFilter] = useState<'all' | 'pending' | 'done'>('all');
   const [openInfoDialog, setOpenInfoDialog] = useState(false);
   const [selectedConsumer, setSelectedConsumer] = useState<ConsumerDetail | null>(null);
   const [connections, setConnections] = useState<ConnectionDetails[]>([]);
   const [loadingDetails, setLoadingDetails] = useState(false);
 
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchQuery(searchInput);
+      // Reset to first page when searching
+      if (searchInput !== searchQuery) {
+        setPaginationModel(prev => ({ ...prev, page: 0 }));
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
   useEffect(() => {
     fetchConsumers();
-  }, [paginationModel.page, paginationModel.pageSize]);
+  }, [paginationModel.page, paginationModel.pageSize, sortModel, searchQuery, kycFilter]);
 
   const fetchConsumers = async () => {
     try {
       setLoading(true);
+
+      // Build ordering parameter from sortModel
+      let ordering = '';
+      if (sortModel.length > 0) {
+        const { field, sort } = sortModel[0];
+        ordering = sort === 'desc' ? `-${field}` : field;
+      }
+
+      // Build KYC filter parameter
+      let is_kyc_done = undefined;
+      if (kycFilter === 'done') is_kyc_done = true;
+      if (kycFilter === 'pending') is_kyc_done = false;
+
       const response = await consumersApi.getAll({
         page: paginationModel.page + 1,
+        ordering,
+        search: searchQuery || undefined,
+        is_kyc_done,
       });
+
       const data = response.data;
       setConsumers(data.results || data);
+      setRowCount(data.count || (data.results ? data.results.length : data.length));
     } catch (error) {
       showSnackbar("Failed to fetch consumers", "error");
       console.error(error);
@@ -147,6 +178,8 @@ const Consumers = () => {
 
   const handleKycFilterChange = (filter: 'all' | 'pending' | 'done') => {
     setKycFilter(filter);
+    // Reset to first page when filtering
+    setPaginationModel(prev => ({ ...prev, page: 0 }));
   };
 
   const CustomToolbar = () => {
@@ -169,94 +202,37 @@ const Consumers = () => {
         </Box>
 
         <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1 }}>
-          {/* Expandable Search */}
-          <QuickFilter
-            render={(_filterProps, state) => (
-              <Box
-                sx={{
-                  display: 'grid',
-                  alignItems: 'flex-end',
-                  width: state.expanded ? '375px' : '40px',
-                  transition: 'width 0.3s',
-                }}
-              >
-                <QuickFilterTrigger
-                  render={(triggerProps) => (
-                    <Tooltip title="Search" arrow>
-                      <ToolbarButton
-                        {...triggerProps}
-                        // @ts-expect-error - ToolbarButton supports sx prop but type definitions are incomplete
-                        sx={{
-                          gridArea: '1 / 1',
-                          width: '40px',
-                          height: '40px',
-                          minWidth: '40px',
-                          zIndex: 1,
-                          opacity: state.expanded ? 0 : 1,
-                          pointerEvents: state.expanded ? 'none' : 'auto',
-                          transition: 'opacity 0.3s',
-                          border: 'none',
-                          borderBottom: '1px solid',
-                          borderColor: 'divider',
-                          borderRadius: 0,
-                        }}
-                        aria-disabled={state.expanded}
-                      >
-                        <SearchIcon sx={{ fontSize: '20px' }} />
-                      </ToolbarButton>
-                    </Tooltip>
-                  )}
-                />
-                <QuickFilterControl
-                  render={({ ref, ...controlProps }) => (
-                    <TextField
-                      {...controlProps}
-                      inputRef={ref}
-                      variant="standard"
-                      placeholder="Search..."
-                      aria-label="Search"
-                      size="small"
-                      sx={{
-                        gridArea: '1 / 1',
-                        width: '100%',
-                        opacity: state.expanded ? 1 : 0,
-                        transition: 'opacity 0.3s',
-                        pointerEvents: state.expanded ? 'auto' : 'none',
-                        '& .MuiInput-root': {
-                          fontSize: '0.875rem',
-                        },
-                        '& .MuiInput-root:before': {
-                          borderBottomColor: 'divider',
-                        },
-                        '& .MuiInput-root:hover:not(.Mui-disabled):before': {
-                          borderBottomColor: 'text.secondary',
-                        },
-                        '& .MuiInput-root:after': {
-                          borderBottomColor: 'primary.main',
-                        },
-                      }}
-                      slotProps={{
-                        input: {
-                          endAdornment: state.value ? (
-                            <QuickFilterClear
-                              edge="end"
-                              size="small"
-                              aria-label="Clear search"
-                              // @ts-expect-error - QuickFilterClear supports sx prop but type definitions are incomplete
-                              sx={{ marginRight: -0.75 }}
-                            >
-                              <CloseIcon sx={{ fontSize: '18px' }} />
-                            </QuickFilterClear>
-                          ) : null,
-                          ...controlProps.slotProps?.input,
-                        },
-                        ...controlProps.slotProps,
-                      }}
-                    />
-                  )}
-                />
-              </Box>
-            )}
+          {/* Server-side Search */}
+          <TextField
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            variant="standard"
+            placeholder="Search consumers..."
+            size="small"
+            InputProps={{
+              startAdornment: <SearchIcon sx={{ fontSize: '20px', mr: 1, color: 'text.secondary' }} />,
+              endAdornment: searchInput ? (
+                <IconButton
+                  size="small"
+                  onClick={() => setSearchInput('')}
+                  sx={{ p: 0.5 }}
+                >
+                  <CloseIcon sx={{ fontSize: '18px' }} />
+                </IconButton>
+              ) : null,
+            }}
+            sx={{
+              minWidth: '250px',
+              '& .MuiInput-root:before': {
+                borderBottomColor: 'divider',
+              },
+              '& .MuiInput-root:hover:not(.Mui-disabled):before': {
+                borderBottomColor: 'text.secondary',
+              },
+              '& .MuiInput-root:after': {
+                borderBottomColor: 'primary.main',
+              },
+            }}
           />
 
           {/* KYC Status Filters */}
@@ -655,13 +631,7 @@ const Consumers = () => {
     return index % 2 === 0 ? "even-row" : "odd-row";
   };
 
-  // Filter consumers by KYC status
-  const filteredConsumers = consumers.filter((consumer) => {
-    if (kycFilter === 'all') return true;
-    if (kycFilter === 'pending') return !consumer.is_kyc_done;
-    if (kycFilter === 'done') return consumer.is_kyc_done;
-    return true;
-  });
+  // Server-side filtering is now handled in fetchConsumers
 
   return (
     <Container maxWidth={false} sx={{ py: 3, px: { xs: 2, sm: 3 }, maxWidth: "1260px" }}>
@@ -675,12 +645,16 @@ const Consumers = () => {
         }}
       >
         <DataGrid
-          rows={filteredConsumers}
+          rows={consumers}
           columns={columns}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
+          sortModel={sortModel}
+          onSortModelChange={setSortModel}
+          rowCount={rowCount}
           pageSizeOptions={[5, 10, 25, 50]}
-          paginationMode="client"
+          paginationMode="server"
+          sortingMode="server"
           loading={loading}
           showToolbar
           slots={{

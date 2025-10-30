@@ -9,7 +9,7 @@ class ConnectionDetailsListSerializer(serializers.ModelSerializer):
     Returns only essential fields for better performance.
     """
     connection_type_name = serializers.CharField(source='connection_type.name', read_only=True)
-    product_name = serializers.CharField(source='product.variant_name', read_only=True)
+    product_name = serializers.CharField(source='product.name', read_only=True)
     consumer_name = serializers.CharField(source='consumer.consumer_name', read_only=True)
     consumer_number = serializers.CharField(source='consumer.consumer_number', read_only=True)
 
@@ -36,9 +36,9 @@ class ConnectionDetailsSerializer(serializers.ModelSerializer):
     Includes all fields and nested relationships.
     """
     connection_type_name = serializers.CharField(source='connection_type.name', read_only=True)
-    product_name = serializers.CharField(source='product.variant_name', read_only=True)
+    product_name = serializers.CharField(source='product.name', read_only=True)
     product_size = serializers.FloatField(source='product.size', read_only=True)
-    product_unit = serializers.CharField(source='product.unit.name', read_only=True)
+    product_unit = serializers.CharField(source='product.unit.short_name', read_only=True)
     consumer_name = serializers.CharField(source='consumer.consumer_name', read_only=True)
     consumer_number = serializers.CharField(source='consumer.consumer_number', read_only=True)
 
