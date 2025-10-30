@@ -232,7 +232,9 @@ const Consumers = () => {
                               <CloseIcon sx={{ fontSize: '18px' }} />
                             </QuickFilterClear>
                           ) : null,
+                          ...controlProps.slotProps?.input,
                         },
+                        ...controlProps.slotProps,
                       }}
                     />
                   )}
@@ -283,7 +285,6 @@ const Consumers = () => {
                   border: kycFilter === 'all' ? 'none' : '1.5px solid',
                   borderColor: kycFilter === 'all' ? 'transparent' : 'divider',
                   borderRadius: '50%',
-                  boxShadow: kycFilter === 'all' ? (theme) => `0 0 20px 8px ${theme.palette.primary.main}50, 0 0 30px 12px ${theme.palette.primary.main}30, inset 0 0 10px rgba(255, 255, 255, 0.4)` : 'none',
                   transition: 'all 0.3s ease',
                   '&:hover': {
                     backgroundColor: kycFilter === 'all' ? 'primary.dark' : 'action.hover',
@@ -298,7 +299,6 @@ const Consumers = () => {
                       height: '8px',
                       borderRadius: '50%',
                       backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                      boxShadow: '0 0 6px rgba(255, 255, 255, 0.9)',
                     }}
                   />
                 )}
@@ -318,7 +318,6 @@ const Consumers = () => {
                   border: kycFilter === 'pending' ? 'none' : '1.5px solid',
                   borderColor: kycFilter === 'pending' ? 'transparent' : 'divider',
                   borderRadius: '50%',
-                  boxShadow: kycFilter === 'pending' ? (theme) => `0 0 20px 8px ${theme.palette.error.main}50, 0 0 30px 12px ${theme.palette.error.main}30, inset 0 0 10px rgba(255, 255, 255, 0.4)` : 'none',
                   transition: 'all 0.3s ease',
                   '&:hover': {
                     backgroundColor: kycFilter === 'pending' ? 'error.dark' : 'action.hover',
@@ -333,7 +332,6 @@ const Consumers = () => {
                       height: '8px',
                       borderRadius: '50%',
                       backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                      boxShadow: '0 0 6px rgba(255, 255, 255, 0.9)',
                     }}
                   />
                 )}
@@ -353,7 +351,6 @@ const Consumers = () => {
                   border: kycFilter === 'done' ? 'none' : '1.5px solid',
                   borderColor: kycFilter === 'done' ? 'transparent' : 'divider',
                   borderRadius: '50%',
-                  boxShadow: kycFilter === 'done' ? (theme) => `0 0 20px 8px ${theme.palette.success.main}50, 0 0 30px 12px ${theme.palette.success.main}30, inset 0 0 10px rgba(255, 255, 255, 0.4)` : 'none',
                   transition: 'all 0.3s ease',
                   '&:hover': {
                     backgroundColor: kycFilter === 'done' ? 'success.dark' : 'action.hover',
@@ -368,7 +365,6 @@ const Consumers = () => {
                       height: '8px',
                       borderRadius: '50%',
                       backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                      boxShadow: '0 0 6px rgba(255, 255, 255, 0.9)',
                     }}
                   />
                 )}
