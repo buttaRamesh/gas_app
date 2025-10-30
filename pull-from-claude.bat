@@ -7,7 +7,9 @@ echo Pull from Claude Branch Script
 echo ================================================
 echo.
 
-set BRANCH=claude/swf-011CUXJPdZbEdDyjL5FcyUBX
+@REM set BRANCH=claude/swf-011CUXJPdZbEdDyjL5FcyUBX
+
+set BRANCH=claude/work-011CUdAtpTaq85ynaSYtS6Rm
 
 echo [1/4] Checking current branch and status...
 git status

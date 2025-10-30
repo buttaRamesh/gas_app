@@ -16,7 +16,8 @@ if "%~1"=="" (
 )
 
 set COMMIT_MSG=%~1
-set BRANCH=claude/swf-011CUXJPdZbEdDyjL5FcyUBX
+@REM set BRANCH=claude/swf-011CUXJPdZbEdDyjL5FcyUBX
+set BRANCH=claude/work-011CUdAtpTaq85ynaSYtS6Rm
 
 echo [1/4] Checking out Claude branch...
 git checkout %BRANCH%

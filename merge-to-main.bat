@@ -9,7 +9,8 @@ echo ========================================
 echo.
 
 REM Set the Claude branch name
-set CLAUDE_BRANCH=claude/swf-011CUXJPdZbEdDyjL5FcyUBX
+@REM set CLAUDE_BRANCH=claude/swf-011CUXJPdZbEdDyjL5FcyUBX
+set CLAUDE_BRANCH=claude/work-011CUdAtpTaq85ynaSYtS6Rm
 
 echo [1/7] Fetching latest changes from remote...
 git fetch origin
