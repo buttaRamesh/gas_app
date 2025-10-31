@@ -4,7 +4,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { SnackbarProvider } from "./contexts/SnackbarContext";
 import { AppLayout } from "./components/AppLayout";
-import Index from "./pages/Index";
+// import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import LayoutDemo from "./pages/LayoutDemo";
@@ -22,8 +22,10 @@ import Settings from "./pages/Settings";
 import SidebarDemo from "./pages/SidebarDemo";
 import DeliveryPersons from "./pages/DeliveryPersons";
 import DeliveryPersonCreate from "./pages/DeliveryPersonCreate";
-import DeliveryPersonDetail from "./pages/DeliveryPersonDetail";
+import DeliveryPersonConsumers from "./pages/DeliveryPersonConsumers";
 import DeliveryPersonStatistics from "./pages/DeliveryPersonStatistics";
+import DeliveryPersonDetail from "./pages/DeliveryPersonDetail";
+
 import Products from "./pages/Products";
 import ProductCreate from "./pages/ProductCreate";
 import ProductDetail from "./pages/ProductDetail";
@@ -76,10 +78,11 @@ const App = () => (
             <Route path="/route-areas/new" element={<AppLayout><RouteAreaCreate /></AppLayout>} />
             <Route path="/delivery-persons" element={<AppLayout><DeliveryPersons /></AppLayout>} />
             <Route path="/delivery-persons/create" element={<AppLayout><DeliveryPersonCreate /></AppLayout>} />
+
             <Route path="/delivery-persons/statistics" element={<AppLayout><DeliveryPersonStatistics /></AppLayout>} />
-            <Route path="/delivery-persons/consumers-select" element={<AppLayout><DeliveryPersonDetail /></AppLayout>} />
+            <Route path="/delivery-persons/consumers-select" element={<AppLayout><DeliveryPersonConsumers /></AppLayout>} />
             <Route path="/delivery-persons/:id" element={<AppLayout><DeliveryPersonDetail /></AppLayout>} />
-            <Route path="/delivery-persons/:id/consumers" element={<AppLayout><DeliveryPersonDetail /></AppLayout>} />
+            {/* <Route path="/delivery-persons/:id/consumers" element={<AppLayout><DeliveryPersonConsumers /></AppLayout>} /> */}
             <Route path="/products" element={<AppLayout><Products /></AppLayout>} />
             <Route path="/products/create" element={<AppLayout><ProductCreate /></AppLayout>} />
             <Route path="/products/statistics" element={<AppLayout><ProductStatistics /></AppLayout>} />

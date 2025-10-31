@@ -17,7 +17,6 @@ import {
   ExpandLess,
   ExpandMore,
   Route,
-  LocationOn,
   Settings,
   BarChart,
   History,
@@ -31,7 +30,6 @@ import {
   Inventory,
   Straighten,
   People,
-  HomeWork,
   Category,
 } from '@mui/icons-material';
 
