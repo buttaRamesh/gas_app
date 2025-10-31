@@ -13,7 +13,7 @@ import {
 } from "@mui/x-data-grid";
 
 interface CustomDataGridToolbarProps extends Partial<GridToolbarProps> {
-  title: string;
+  title?: string;
   onQuickFilterChange?: (value: string) => void;
   onPrint?: () => void;
   showQuickFilter?: boolean;
@@ -52,11 +52,13 @@ export function CustomDataGridToolbar({
       {...otherProps}
     >
       {/* Left Side - Title */}
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        <Typography variant="h6" sx={{ fontWeight: 600 }}>
-          {title}
-        </Typography>
-      </Box>
+      {title && (
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            {title}
+          </Typography>
+        </Box>
+      )}
 
       {/* Right Side - Toolbar Actions */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -102,7 +104,7 @@ export function CustomDataGridToolbar({
               },
             }}
             csvOptions={{
-              fileName: `${title.replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}`,
+              fileName: `${(title || "export").replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}`,
               utf8WithBom: true,
             }}
             printOptions={{

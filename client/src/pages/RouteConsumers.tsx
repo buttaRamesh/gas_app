@@ -14,7 +14,7 @@ import {
   People as ConsumersIcon,
   LocalShipping as RouteIcon,
 } from "@mui/icons-material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { consumersApi, routesApi } from "@/services/api";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { PageHeader } from "@/components/PageHeader";
@@ -266,7 +266,7 @@ export default function RouteConsumers() {
                 </Box>
               </Box>
               <Typography variant="caption" color="text.secondary">
-                {route?.delivery_person_name ? `Delivery: ${route.delivery_person_name}` : "No delivery person assigned"}
+                {route?.delivery_person?.name ? `Delivery: ${route.delivery_person.name}` : "No delivery person assigned"}
               </Typography>
             </CardContent>
           </Card>

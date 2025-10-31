@@ -37,7 +37,7 @@ import {
   Phone as PhoneIcon,
   Home as HomeIcon,
 } from "@mui/icons-material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { deliveryPersonsApi, routeAssignmentsApi, routesApi } from "@/services/api";
 import { DeliveryPerson, Route } from "@/types/routes";
 import { useSnackbar } from "@/contexts/SnackbarContext";
