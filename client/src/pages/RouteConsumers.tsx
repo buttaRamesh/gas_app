@@ -286,6 +286,9 @@ export default function RouteConsumers() {
             loading={loading}
             disableRowSelectionOnClick
             autoHeight
+            disableColumnFilter={false}
+            disableColumnSelector={false}
+            disableDensitySelector={false}
             slots={{
               toolbar: CustomDataGridToolbar,
             }}
@@ -296,7 +299,7 @@ export default function RouteConsumers() {
                 showQuickFilter: true,
                 showPrint: true,
                 showExport: true,
-              },
+              } as any,
             }}
             sx={{
               border: 0,
@@ -305,6 +308,9 @@ export default function RouteConsumers() {
               },
               "& .MuiDataGrid-row:hover": {
                 bgcolor: "action.hover",
+              },
+              "& .MuiDataGrid-toolbarContainer": {
+                display: "flex !important",
               },
             }}
           />

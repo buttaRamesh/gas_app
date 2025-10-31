@@ -532,6 +532,9 @@ export default function DeliveryPersonDetail() {
                   pageSizeOptions={[5, 10, 25, 50, 100]}
                   paginationMode="server"
                   disableRowSelectionOnClick
+                  disableColumnFilter={false}
+                  disableColumnSelector={false}
+                  disableDensitySelector={false}
                   slots={{
                     toolbar: CustomDataGridToolbar,
                   }}
@@ -542,7 +545,7 @@ export default function DeliveryPersonDetail() {
                       showQuickFilter: true,
                       showPrint: true,
                       showExport: true,
-                    },
+                    } as any,
                   }}
                   sx={{
                     border: 0,
@@ -551,6 +554,9 @@ export default function DeliveryPersonDetail() {
                     },
                     "& .MuiDataGrid-row:hover": {
                       bgcolor: "action.hover",
+                    },
+                    "& .MuiDataGrid-toolbarContainer": {
+                      display: "flex !important",
                     },
                   }}
                 />
