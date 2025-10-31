@@ -189,12 +189,19 @@ export default function DeliveryPersonDetail() {
             value={person}
             onChange={(_, value) => handlePersonSelect(value)}
             getOptionLabel={(option) => option.name}
+            disableClearable
+            popupIcon={null}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="Select Delivery Person"
                 placeholder="Search by name..."
                 variant="standard"
+                sx={{
+                  "& .MuiInputBase-root": {
+                    paddingLeft: 2,
+                  },
+                }}
               />
             )}
             renderOption={(props, option) => (

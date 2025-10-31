@@ -178,12 +178,19 @@ export default function RouteConsumers() {
             value={route}
             onChange={(_, value) => handleRouteSelect(value)}
             getOptionLabel={(option) => option.area_code}
+            disableClearable
+            popupIcon={null}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="Select Route"
                 placeholder="Search by area code..."
                 variant="standard"
+                sx={{
+                  "& .MuiInputBase-root": {
+                    paddingLeft: 2,
+                  },
+                }}
               />
             )}
             renderOption={(props, option) => (
