@@ -300,6 +300,7 @@ export default function DeliveryPersonConsumers() {
 
         <Card elevation={3} sx={{ bgcolor: "background.paper" }}>
           <DataGrid
+            showToolbar
             rows={consumers}
             columns={consumersColumns}
             getRowId={(row) => row.consumer_id}
