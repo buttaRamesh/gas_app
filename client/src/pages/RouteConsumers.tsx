@@ -33,10 +33,10 @@ interface ConsumerByRoute {
 }
 
 export default function RouteConsumers() {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [route, setRoute] = useState<Route | null>(null);
   const [routes, setRoutes] = useState<Route[]>([]);
   const [consumers, setConsumers] = useState<ConsumerByRoute[]>([]);
@@ -52,12 +52,6 @@ export default function RouteConsumers() {
     fetchRoutes();
   }, []);
 
-  useEffect(() => {
-    if (id) {
-      fetchRoute();
-    }
-  }, [id]);
-
   // Debounce search input
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -71,10 +65,10 @@ export default function RouteConsumers() {
   }, [searchInput]);
 
   useEffect(() => {
-    if (id) {
+    if (route) {
       fetchConsumers();
     }
-  }, [id, paginationModel, searchQuery]);
+  }, [route, paginationModel, searchQuery]);
 
   const fetchRoutes = async () => {
     try {
@@ -83,26 +77,26 @@ export default function RouteConsumers() {
         ? response.data.results
         : [];
       setRoutes(allRoutes);
+
+      // If id is in URL, set that route as selected
+      if (id && allRoutes.length > 0) {
+        const selectedRoute = allRoutes.find(r => r.id === Number(id));
+        if (selectedRoute) {
+          setRoute(selectedRoute);
+        }
+      }
     } catch (err: any) {
       console.error("Failed to fetch routes:", err);
       showSnackbar("Failed to load routes", "error");
     }
   };
 
-  const fetchRoute = async () => {
-    try {
-      const routeRes = await routesApi.getById(Number(id));
-      setRoute(routeRes.data);
-    } catch (err: any) {
-      console.error("Failed to fetch route details:", err);
-      showSnackbar("Failed to load route details", "error");
-    }
-  };
-
   const fetchConsumers = async () => {
+    if (!route) return;
+
     try {
       setLoading(true);
-      const response = await consumersApi.getByRoute(Number(id), {
+      const response = await consumersApi.getByRoute(route.id, {
         page: paginationModel.page + 1,
         page_size: paginationModel.pageSize,
         search: searchQuery || undefined,
@@ -119,10 +113,11 @@ export default function RouteConsumers() {
     }
   };
 
-  const handleRouteSelect = (route: Route | null) => {
-    if (route) {
-      navigate(`/routes/${route.id}/consumers`);
-    }
+  const handleRouteSelect = (selectedRoute: Route | null) => {
+    setRoute(selectedRoute);
+    setPaginationModel({ page: 0, pageSize: 10 });
+    setSearchInput("");
+    setSearchQuery("");
   };
 
   const columns: GridColDef[] = [

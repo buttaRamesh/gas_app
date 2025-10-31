@@ -35,10 +35,10 @@ interface Consumer {
 }
 
 export default function DeliveryPersonDetail() {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [person, setPerson] = useState<DeliveryPerson | null>(null);
   const [deliveryPersons, setDeliveryPersons] = useState<DeliveryPerson[]>([]);
   const [consumers, setConsumers] = useState<Consumer[]>([]);
@@ -54,12 +54,6 @@ export default function DeliveryPersonDetail() {
     fetchDeliveryPersons();
   }, []);
 
-  useEffect(() => {
-    if (id) {
-      fetchPersonDetails();
-    }
-  }, [id]);
-
   // Debounce search input
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -73,10 +67,10 @@ export default function DeliveryPersonDetail() {
   }, [searchInput]);
 
   useEffect(() => {
-    if (id) {
+    if (person) {
       fetchConsumers();
     }
-  }, [id, consumersPagination, searchQuery]);
+  }, [person, consumersPagination, searchQuery]);
 
   const fetchDeliveryPersons = async () => {
     try {
@@ -85,26 +79,26 @@ export default function DeliveryPersonDetail() {
         ? response.data.results
         : [];
       setDeliveryPersons(allPersons);
+
+      // If id is in URL, set that person as selected
+      if (id && allPersons.length > 0) {
+        const selectedPerson = allPersons.find(p => p.id === Number(id));
+        if (selectedPerson) {
+          setPerson(selectedPerson);
+        }
+      }
     } catch (err: any) {
       console.error("Failed to fetch delivery persons:", err);
       showSnackbar("Failed to load delivery persons", "error");
     }
   };
 
-  const fetchPersonDetails = async () => {
-    try {
-      const personRes = await deliveryPersonsApi.getById(Number(id));
-      setPerson(personRes.data);
-    } catch (err: any) {
-      console.error("Failed to fetch person details:", err);
-      showSnackbar("Failed to load delivery person details", "error");
-    }
-  };
-
   const fetchConsumers = async () => {
+    if (!person) return;
+
     try {
       setLoading(true);
-      const response = await deliveryPersonsApi.getConsumers(Number(id), {
+      const response = await deliveryPersonsApi.getConsumers(person.id, {
         page: consumersPagination.page + 1,
         page_size: consumersPagination.pageSize,
         search: searchQuery || undefined,
@@ -121,10 +115,11 @@ export default function DeliveryPersonDetail() {
     }
   };
 
-  const handlePersonSelect = (person: DeliveryPerson | null) => {
-    if (person) {
-      navigate(`/delivery-persons/${person.id}/consumers`);
-    }
+  const handlePersonSelect = (selectedPerson: DeliveryPerson | null) => {
+    setPerson(selectedPerson);
+    setConsumersPagination({ page: 0, pageSize: 10 });
+    setSearchInput("");
+    setSearchQuery("");
   };
 
 

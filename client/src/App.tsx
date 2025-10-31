@@ -18,13 +18,11 @@ import RouteStatistics from "./pages/RouteStatistics";
 import RouteHistory from "./pages/RouteHistory";
 import RouteCardColorDemo from "./pages/RouteCardColorDemo";
 import RouteConsumers from "./pages/RouteConsumers";
-import RouteConsumersSelect from "./pages/RouteConsumersSelect";
 import Settings from "./pages/Settings";
 import SidebarDemo from "./pages/SidebarDemo";
 import DeliveryPersons from "./pages/DeliveryPersons";
 import DeliveryPersonCreate from "./pages/DeliveryPersonCreate";
 import DeliveryPersonDetail from "./pages/DeliveryPersonDetail";
-import DeliveryPersonConsumersSelect from "./pages/DeliveryPersonConsumersSelect";
 import DeliveryPersonStatistics from "./pages/DeliveryPersonStatistics";
 import Products from "./pages/Products";
 import ProductCreate from "./pages/ProductCreate";
@@ -69,7 +67,7 @@ const App = () => (
             <Route path="/routes/statistics" element={<AppLayout><RouteStatistics /></AppLayout>} />
             <Route path="/routes/history" element={<AppLayout><RouteHistory /></AppLayout>} />
             <Route path="/routes/color-demo" element={<AppLayout><RouteCardColorDemo /></AppLayout>} />
-            <Route path="/routes/consumers-select" element={<AppLayout><RouteConsumersSelect /></AppLayout>} />
+            <Route path="/routes/consumers-select" element={<AppLayout><RouteConsumers /></AppLayout>} />
             <Route path="/routes/new" element={<AppLayout><RouteCreate /></AppLayout>} />
             <Route path="/routes/:id" element={<AppLayout><RouteDetail /></AppLayout>} />
             <Route path="/routes/:id/edit" element={<AppLayout><RouteEdit /></AppLayout>} />
@@ -79,8 +77,9 @@ const App = () => (
             <Route path="/delivery-persons" element={<AppLayout><DeliveryPersons /></AppLayout>} />
             <Route path="/delivery-persons/create" element={<AppLayout><DeliveryPersonCreate /></AppLayout>} />
             <Route path="/delivery-persons/statistics" element={<AppLayout><DeliveryPersonStatistics /></AppLayout>} />
-            <Route path="/delivery-persons/consumers-select" element={<AppLayout><DeliveryPersonConsumersSelect /></AppLayout>} />
+            <Route path="/delivery-persons/consumers-select" element={<AppLayout><DeliveryPersonDetail /></AppLayout>} />
             <Route path="/delivery-persons/:id" element={<AppLayout><DeliveryPersonDetail /></AppLayout>} />
+            <Route path="/delivery-persons/:id/consumers" element={<AppLayout><DeliveryPersonDetail /></AppLayout>} />
             <Route path="/products" element={<AppLayout><Products /></AppLayout>} />
             <Route path="/products/create" element={<AppLayout><ProductCreate /></AppLayout>} />
             <Route path="/products/statistics" element={<AppLayout><ProductStatistics /></AppLayout>} />
