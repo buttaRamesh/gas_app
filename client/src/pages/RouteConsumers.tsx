@@ -6,11 +6,11 @@ import {
   Card,
   CardContent,
   Typography,
-  IconButton,
   Chip,
+  Autocomplete,
+  TextField,
 } from "@mui/material";
 import {
-  ArrowBack as ArrowBackIcon,
   People as ConsumersIcon,
   LocalShipping as RouteIcon,
 } from "@mui/icons-material";
@@ -38,6 +38,7 @@ export default function RouteConsumers() {
   const { showSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(true);
   const [route, setRoute] = useState<Route | null>(null);
+  const [routes, setRoutes] = useState<Route[]>([]);
   const [consumers, setConsumers] = useState<ConsumerByRoute[]>([]);
   const [rowCount, setRowCount] = useState(0);
   const [paginationModel, setPaginationModel] = useState({
@@ -46,6 +47,10 @@ export default function RouteConsumers() {
   });
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    fetchRoutes();
+  }, []);
 
   useEffect(() => {
     if (id) {
@@ -70,6 +75,19 @@ export default function RouteConsumers() {
       fetchConsumers();
     }
   }, [id, paginationModel, searchQuery]);
+
+  const fetchRoutes = async () => {
+    try {
+      const response = await routesApi.getAll();
+      const allRoutes = Array.isArray(response.data?.results)
+        ? response.data.results
+        : [];
+      setRoutes(allRoutes);
+    } catch (err: any) {
+      console.error("Failed to fetch routes:", err);
+      showSnackbar("Failed to load routes", "error");
+    }
+  };
 
   const fetchRoute = async () => {
     try {
@@ -98,6 +116,12 @@ export default function RouteConsumers() {
       showSnackbar("Failed to load consumers", "error");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRouteSelect = (route: Route | null) => {
+    if (route) {
+      navigate(`/routes/${route.id}/consumers`);
     }
   };
 
@@ -150,58 +174,60 @@ export default function RouteConsumers() {
     },
   ];
 
-  if (!route && !loading) {
-    return (
-      <Container maxWidth="xl" sx={{ py: 8, textAlign: "center" }}>
-        <Typography variant="h6">Route not found</Typography>
-        <IconButton onClick={() => navigate("/routes")} sx={{ mt: 2 }}>
-          <ArrowBackIcon />
-        </IconButton>
-      </Container>
-    );
-  }
-
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "grey.100", py: 3 }}>
+    <Box sx={{ minHeight: "100vh", bgcolor: "grey.100", py: 2 }}>
       <Container maxWidth="xl" sx={{ px: 2 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
-          <IconButton
-            onClick={() => navigate("/routes")}
-            sx={{ bgcolor: "background.paper" }}
-          >
-            <ArrowBackIcon />
-          </IconButton>
-          <Box>
-            <Typography variant="h5" sx={{ fontWeight: 600 }}>
-              Route: {route?.area_code || "Loading..."}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {route?.area_code_description || ""}
-            </Typography>
-          </Box>
+        <Box sx={{ mb: 1.5 }}>
+          <Autocomplete
+            options={routes}
+            value={route}
+            onChange={(_, value) => handleRouteSelect(value)}
+            getOptionLabel={(option) => option.area_code}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Select Route"
+                placeholder="Search by area code..."
+                variant="outlined"
+                size="small"
+              />
+            )}
+            renderOption={(props, option) => (
+              <Box component="li" {...props} key={option.id}>
+                <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
+                  <Box sx={{ fontWeight: 600 }}>{option.area_code}</Box>
+                  <Box sx={{ fontSize: "0.875rem", color: "text.secondary" }}>
+                    {option.area_code_description} • {option.consumer_count || 0} consumers
+                  </Box>
+                </Box>
+              </Box>
+            )}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+            noOptionsText="No routes found"
+          />
         </Box>
 
-        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: 2, mb: 2 }}>
-          <Card elevation={2} sx={{ bgcolor: "background.paper" }}>
-            <CardContent sx={{ py: 1.5, px: 2, "&:last-child": { pb: 1.5 } }}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: 1.5, mb: 1.5 }}>
+          <Card elevation={1} sx={{ bgcolor: "background.paper" }}>
+            <CardContent sx={{ py: 1, px: 1.5, "&:last-child": { pb: 1 } }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <Box
                   sx={{
                     bgcolor: "success.light",
-                    p: 1,
-                    borderRadius: 1.5,
+                    p: 0.75,
+                    borderRadius: 1,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
                 >
-                  <ConsumersIcon color="success" fontSize="medium" />
+                  <ConsumersIcon color="success" fontSize="small" />
                 </Box>
                 <Box>
-                  <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "1.1rem" }}>
                     {rowCount}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" sx={{ fontSize: "0.7rem" }} color="text.secondary">
                     Total Consumers
                   </Typography>
                 </Box>
@@ -209,26 +235,26 @@ export default function RouteConsumers() {
             </CardContent>
           </Card>
 
-          <Card elevation={2} sx={{ bgcolor: "background.paper" }}>
-            <CardContent sx={{ py: 1.5, px: 2, "&:last-child": { pb: 1.5 } }}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+          <Card elevation={1} sx={{ bgcolor: "background.paper" }}>
+            <CardContent sx={{ py: 1, px: 1.5, "&:last-child": { pb: 1 } }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <Box
                   sx={{
                     bgcolor: "info.light",
-                    p: 1,
-                    borderRadius: 1.5,
+                    p: 0.75,
+                    borderRadius: 1,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
                 >
-                  <RouteIcon color="info" fontSize="medium" />
+                  <RouteIcon color="info" fontSize="small" />
                 </Box>
                 <Box>
-                  <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "1.1rem" }}>
                     {route?.area_count || 0}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" sx={{ fontSize: "0.7rem" }} color="text.secondary">
                     Areas
                   </Typography>
                 </Box>
@@ -236,27 +262,27 @@ export default function RouteConsumers() {
             </CardContent>
           </Card>
 
-          <Card elevation={2} sx={{ bgcolor: "background.paper" }}>
-            <CardContent sx={{ py: 1.5, px: 2, "&:last-child": { pb: 1.5 } }}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+          <Card elevation={1} sx={{ bgcolor: "background.paper" }}>
+            <CardContent sx={{ py: 1, px: 1.5, "&:last-child": { pb: 1 } }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <Box
                   sx={{
                     bgcolor: "primary.light",
-                    p: 1,
-                    borderRadius: 1.5,
+                    p: 0.75,
+                    borderRadius: 1,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
                 >
-                  <RouteIcon color="primary" fontSize="medium" />
+                  <RouteIcon color="primary" fontSize="small" />
                 </Box>
                 <Box>
-                  <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "1.1rem" }}>
                     {route?.area_code || "-"}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {route?.delivery_person?.name ? `Delivery: ${route.delivery_person.name}` : "No delivery assigned"}
+                  <Typography variant="caption" sx={{ fontSize: "0.7rem" }} color="text.secondary">
+                    {route?.delivery_person?.name ? `${route.delivery_person.name}` : "No delivery"}
                   </Typography>
                 </Box>
               </Box>
