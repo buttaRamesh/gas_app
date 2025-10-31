@@ -5,9 +5,6 @@ import {
 } from "@mui/icons-material";
 import {
   GridToolbarContainer,
-  GridToolbarColumnsButton,
-  GridToolbarFilterButton,
-  GridToolbarDensitySelector,
   GridToolbarExport,
   GridToolbarProps,
 } from "@mui/x-data-grid";
@@ -79,10 +76,6 @@ export function CustomDataGridToolbar({
             sx={{ width: 200 }}
           />
         )}
-
-        <GridToolbarColumnsButton />
-        <GridToolbarFilterButton />
-        <GridToolbarDensitySelector />
 
         {showPrint && (
           <Button

@@ -172,7 +172,7 @@ export default function RouteConsumers() {
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "grey.100", py: 4 }}>
       <Container maxWidth="xl" sx={{ px: 2 }}>
-        <Box sx={{ mb: 1.5, width: "40%" }}>
+        <Box sx={{ mb: 3, width: "40%" }}>
           <Autocomplete
             options={routes}
             value={route}
@@ -183,8 +183,7 @@ export default function RouteConsumers() {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Select Route"
-                placeholder="Search by area code..."
+                placeholder="Select Route"
                 variant="standard"
                 sx={{
                   "& .MuiInputBase-root": {
@@ -304,18 +303,17 @@ export default function RouteConsumers() {
             loading={loading}
             disableRowSelectionOnClick
             autoHeight
-            disableColumnFilter={false}
-            disableColumnSelector={false}
-            disableDensitySelector={false}
-            showToolbar
+            rowHeight={40}
+            disableColumnFilter
+            disableColumnSelector
+            disableDensitySelector
             slots={{
               toolbar: CustomDataGridToolbar,
             }}
             slotProps={{
               toolbar: {
                 title: `Consumers in Route ${route?.area_code || ""}`,
-                onQuickFilterChange: setSearchInput,
-                showQuickFilter: true,
+                showQuickFilter: false,
                 showPrint: true,
                 showExport: true,
               } as any,

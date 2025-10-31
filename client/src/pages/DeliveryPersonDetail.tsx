@@ -183,7 +183,7 @@ export default function DeliveryPersonDetail() {
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "grey.100", py: 4 }}>
       <Container maxWidth="xl" sx={{ px: 2 }}>
-        <Box sx={{ mb: 1.5, width: "40%" }}>
+        <Box sx={{ mb: 3, width: "40%" }}>
           <Autocomplete
             options={deliveryPersons}
             value={person}
@@ -194,8 +194,7 @@ export default function DeliveryPersonDetail() {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Select Delivery Person"
-                placeholder="Search by name..."
+                placeholder="Select Delivery Person"
                 variant="standard"
                 sx={{
                   "& .MuiInputBase-root": {
@@ -313,17 +312,17 @@ export default function DeliveryPersonDetail() {
             loading={loading}
             disableRowSelectionOnClick
             autoHeight
-            disableColumnFilter={false}
-            disableColumnSelector={false}
-            disableDensitySelector={false}
+            rowHeight={40}
+            disableColumnFilter
+            disableColumnSelector
+            disableDensitySelector
             slots={{
               toolbar: CustomDataGridToolbar,
             }}
             slotProps={{
               toolbar: {
                 title: `Consumers for ${person?.name || ""}`,
-                onQuickFilterChange: setSearchInput,
-                showQuickFilter: true,
+                showQuickFilter: false,
                 showPrint: true,
                 showExport: true,
               } as any,
