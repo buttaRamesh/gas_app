@@ -7,7 +7,6 @@ import {
   CardContent,
   Typography,
   IconButton,
-  CircularProgress,
   Chip,
 } from "@mui/material";
 import {
@@ -289,6 +288,7 @@ export default function RouteConsumers() {
             disableColumnFilter={false}
             disableColumnSelector={false}
             disableDensitySelector={false}
+            showToolbar
             slots={{
               toolbar: CustomDataGridToolbar,
             }}

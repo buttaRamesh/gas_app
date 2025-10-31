@@ -12,7 +12,6 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemText,
   Chip,
 } from "@mui/material";
 import {
