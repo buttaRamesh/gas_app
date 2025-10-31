@@ -17,7 +17,6 @@ import {
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { consumersApi, routesApi } from "@/services/api";
 import { useSnackbar } from "@/contexts/SnackbarContext";
-import { PageHeader } from "@/components/PageHeader";
 import { CustomDataGridToolbar } from "@/components/CustomDataGridToolbar";
 import type { Route } from "@/types/routes";
 
@@ -163,111 +162,104 @@ export default function RouteConsumers() {
   }
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "grey.100", py: 4 }}>
+    <Box sx={{ minHeight: "100vh", bgcolor: "grey.100", py: 3 }}>
       <Container maxWidth="xl" sx={{ px: 2 }}>
-        <PageHeader
-          title={`Route: ${route?.area_code || "Loading..."}`}
-          description={route?.area_code_description || ""}
-          actions={
-            <Box sx={{ display: "flex", gap: 2 }}>
-              <IconButton
-                onClick={() => navigate("/routes")}
-                sx={{ bgcolor: "background.paper" }}
-              >
-                <ArrowBackIcon />
-              </IconButton>
-            </Box>
-          }
-        />
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+          <IconButton
+            onClick={() => navigate("/routes")}
+            sx={{ bgcolor: "background.paper" }}
+          >
+            <ArrowBackIcon />
+          </IconButton>
+          <Box>
+            <Typography variant="h5" sx={{ fontWeight: 600 }}>
+              Route: {route?.area_code || "Loading..."}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {route?.area_code_description || ""}
+            </Typography>
+          </Box>
+        </Box>
 
-        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: 3, mb: 3 }}>
-          <Card elevation={3} sx={{ bgcolor: "background.paper" }}>
-            <CardContent>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: 2, mb: 2 }}>
+          <Card elevation={2} sx={{ bgcolor: "background.paper" }}>
+            <CardContent sx={{ py: 1.5, px: 2, "&:last-child": { pb: 1.5 } }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
                 <Box
                   sx={{
                     bgcolor: "success.light",
-                    p: 1.5,
-                    borderRadius: 2,
+                    p: 1,
+                    borderRadius: 1.5,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
                 >
-                  <ConsumersIcon color="success" fontSize="large" />
+                  <ConsumersIcon color="success" fontSize="medium" />
                 </Box>
                 <Box>
-                  <Typography variant="h4" sx={{ fontWeight: 600 }}>
+                  <Typography variant="h5" sx={{ fontWeight: 600 }}>
                     {rowCount}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="caption" color="text.secondary">
                     Total Consumers
                   </Typography>
                 </Box>
               </Box>
-              <Typography variant="caption" color="text.secondary">
-                Consumers assigned to this route
-              </Typography>
             </CardContent>
           </Card>
 
-          <Card elevation={3} sx={{ bgcolor: "background.paper" }}>
-            <CardContent>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+          <Card elevation={2} sx={{ bgcolor: "background.paper" }}>
+            <CardContent sx={{ py: 1.5, px: 2, "&:last-child": { pb: 1.5 } }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
                 <Box
                   sx={{
                     bgcolor: "info.light",
-                    p: 1.5,
-                    borderRadius: 2,
+                    p: 1,
+                    borderRadius: 1.5,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
                 >
-                  <RouteIcon color="info" fontSize="large" />
+                  <RouteIcon color="info" fontSize="medium" />
                 </Box>
                 <Box>
-                  <Typography variant="h4" sx={{ fontWeight: 600 }}>
+                  <Typography variant="h5" sx={{ fontWeight: 600 }}>
                     {route?.area_count || 0}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="caption" color="text.secondary">
                     Areas
                   </Typography>
                 </Box>
               </Box>
-              <Typography variant="caption" color="text.secondary">
-                Number of areas in this route
-              </Typography>
             </CardContent>
           </Card>
 
-          <Card elevation={3} sx={{ bgcolor: "background.paper" }}>
-            <CardContent>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+          <Card elevation={2} sx={{ bgcolor: "background.paper" }}>
+            <CardContent sx={{ py: 1.5, px: 2, "&:last-child": { pb: 1.5 } }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
                 <Box
                   sx={{
                     bgcolor: "primary.light",
-                    p: 1.5,
-                    borderRadius: 2,
+                    p: 1,
+                    borderRadius: 1.5,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
                 >
-                  <RouteIcon color="primary" fontSize="large" />
+                  <RouteIcon color="primary" fontSize="medium" />
                 </Box>
                 <Box>
-                  <Typography variant="h4" sx={{ fontWeight: 600 }}>
+                  <Typography variant="h5" sx={{ fontWeight: 600 }}>
                     {route?.area_code || "-"}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Route Code
+                  <Typography variant="caption" color="text.secondary">
+                    {route?.delivery_person?.name ? `Delivery: ${route.delivery_person.name}` : "No delivery assigned"}
                   </Typography>
                 </Box>
               </Box>
-              <Typography variant="caption" color="text.secondary">
-                {route?.delivery_person?.name ? `Delivery: ${route.delivery_person.name}` : "No delivery person assigned"}
-              </Typography>
             </CardContent>
           </Card>
         </Box>

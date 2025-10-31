@@ -41,7 +41,6 @@ import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { deliveryPersonsApi, routeAssignmentsApi, routesApi } from "@/services/api";
 import { DeliveryPerson, Route } from "@/types/routes";
 import { useSnackbar } from "@/contexts/SnackbarContext";
-import { PageHeader } from "@/components/PageHeader";
 import { CustomDataGridToolbar } from "@/components/CustomDataGridToolbar";
 
 interface Consumer {
@@ -315,115 +314,110 @@ export default function DeliveryPersonDetail() {
   }
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "grey.100", py: 4 }}>
+    <Box sx={{ minHeight: "100vh", bgcolor: "grey.100", py: 3 }}>
       <Container maxWidth="lg" sx={{ px: 2 }}>
-        <PageHeader
-          title={person.name}
-          description={`Delivery Person ID: ${person.id}`}
-          actions={
-            <Box sx={{ display: "flex", gap: 2 }}>
-              <IconButton
-                onClick={() => navigate("/delivery-persons")}
-                sx={{ bgcolor: "background.paper" }}
-              >
-                <ArrowBackIcon />
-              </IconButton>
-              <IconButton
-                sx={{ bgcolor: "error.light", color: "error.main", '&:hover': { bgcolor: "error.main", color: "white" } }}
-                onClick={() => setDeleteDialogOpen(true)}
-              >
-                <DeleteIcon />
-              </IconButton>
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2, mb: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <IconButton
+              onClick={() => navigate("/delivery-persons")}
+              sx={{ bgcolor: "background.paper" }}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+            <Box>
+              <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                {person.name}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Delivery Person ID: {person.id}
+              </Typography>
             </Box>
-          }
-        />
+          </Box>
+          <IconButton
+            sx={{ bgcolor: "error.light", color: "error.main", '&:hover': { bgcolor: "error.main", color: "white" } }}
+            onClick={() => setDeleteDialogOpen(true)}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </Box>
 
-        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: 3, mb: 3 }}>
-          <Card elevation={3} sx={{ bgcolor: "background.paper" }}>
-            <CardContent>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: 2, mb: 2 }}>
+          <Card elevation={2} sx={{ bgcolor: "background.paper" }}>
+            <CardContent sx={{ py: 1.5, px: 2, "&:last-child": { pb: 1.5 } }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
                 <Box
                   sx={{
                     bgcolor: "info.light",
-                    p: 1.5,
-                    borderRadius: 2,
+                    p: 1,
+                    borderRadius: 1.5,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
                 >
-                  <RouteIcon color="info" fontSize="large" />
+                  <RouteIcon color="info" fontSize="medium" />
                 </Box>
                 <Box>
-                  <Typography variant="h4" sx={{ fontWeight: 600 }}>
+                  <Typography variant="h5" sx={{ fontWeight: 600 }}>
                     {person.assigned_routes_count || 0}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="caption" color="text.secondary">
                     Assigned Routes
                   </Typography>
                 </Box>
               </Box>
-              <Typography variant="caption" color="text.secondary">
-                Total routes assigned to this person
-              </Typography>
             </CardContent>
           </Card>
-          <Card elevation={3} sx={{ bgcolor: "background.paper" }}>
-            <CardContent>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+          <Card elevation={2} sx={{ bgcolor: "background.paper" }}>
+            <CardContent sx={{ py: 1.5, px: 2, "&:last-child": { pb: 1.5 } }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
                 <Box
                   sx={{
                     bgcolor: "success.light",
-                    p: 1.5,
-                    borderRadius: 2,
+                    p: 1,
+                    borderRadius: 1.5,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
                 >
-                  <ConsumersIcon color="success" fontSize="large" />
+                  <ConsumersIcon color="success" fontSize="medium" />
                 </Box>
                 <Box>
-                  <Typography variant="h4" sx={{ fontWeight: 600 }}>
+                  <Typography variant="h5" sx={{ fontWeight: 600 }}>
                     {person.total_consumers || 0}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="caption" color="text.secondary">
                     Total Consumers
                   </Typography>
                 </Box>
               </Box>
-              <Typography variant="caption" color="text.secondary">
-                Total consumers across all routes
-              </Typography>
             </CardContent>
           </Card>
-          <Card elevation={3} sx={{ bgcolor: "background.paper" }}>
-            <CardContent>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+          <Card elevation={2} sx={{ bgcolor: "background.paper" }}>
+            <CardContent sx={{ py: 1.5, px: 2, "&:last-child": { pb: 1.5 } }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
                 <Box
                   sx={{
                     bgcolor: "primary.light",
-                    p: 1.5,
-                    borderRadius: 2,
+                    p: 1,
+                    borderRadius: 1.5,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
                 >
-                  <PersonIcon color="primary" fontSize="large" />
+                  <PersonIcon color="primary" fontSize="medium" />
                 </Box>
                 <Box>
-                  <Typography variant="h4" sx={{ fontWeight: 600 }}>
+                  <Typography variant="h5" sx={{ fontWeight: 600 }}>
                     {assignedRoutes.reduce((sum, route) => sum + route.area_count, 0)}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="caption" color="text.secondary">
                     Total Areas
                   </Typography>
                 </Box>
               </Box>
-              <Typography variant="caption" color="text.secondary">
-                Total delivery areas covered
-              </Typography>
             </CardContent>
           </Card>
         </Box>
