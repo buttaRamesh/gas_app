@@ -292,6 +292,7 @@ export default function RouteConsumers() {
 
         <Card elevation={3} sx={{ bgcolor: "background.paper" }}>
           <DataGrid
+            showToolbar
             rows={consumers}
             columns={columns}
             getRowId={(row) => row.consumer_id}
