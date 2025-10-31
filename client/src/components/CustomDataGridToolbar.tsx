@@ -29,6 +29,8 @@ export function CustomDataGridToolbar({
   showPrint = true,
   showExport = true,
 }: CustomDataGridToolbarProps) {
+  console.log("CustomDataGridToolbar rendered with title:", title);
+
   const handlePrint = () => {
     if (onPrint) {
       onPrint();
