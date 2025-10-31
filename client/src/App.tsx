@@ -8,45 +8,54 @@ import { AppLayout } from "./components/AppLayout";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import LayoutDemo from "./pages/LayoutDemo";
-import RoutesPage from "./pages/Routes";
-import RouteDetail from "./pages/RouteDetail";
-import RouteEdit from "./pages/RouteEdit";
-import RouteCreate from "./pages/RouteCreate";
-import RouteAreas from "./pages/RouteAreas";
-import RouteAreaCreate from "./pages/RouteAreaCreate";
-import RouteStatistics from "./pages/RouteStatistics";
-import RouteHistory from "./pages/RouteHistory";
-import RouteCardColorDemo from "./pages/RouteCardColorDemo";
-import RouteConsumers from "./pages/RouteConsumers";
 import Settings from "./pages/Settings";
 import SidebarDemo from "./pages/SidebarDemo";
-import DeliveryPersons from "./pages/DeliveryPersons";
-import DeliveryPersonCreate from "./pages/DeliveryPersonCreate";
-import DeliveryPersonConsumers from "./pages/DeliveryPersonConsumers";
-import DeliveryPersonStatistics from "./pages/DeliveryPersonStatistics";
-import DeliveryPersonDetail from "./pages/DeliveryPersonDetail";
 
-import Products from "./pages/Products";
-import ProductCreate from "./pages/ProductCreate";
-import ProductDetail from "./pages/ProductDetail";
-import ProductStatistics from "./pages/ProductStatistics";
-import Units from "./pages/Units";
-import UnitCreate from "./pages/UnitCreate";
-import VariantCreate from "./pages/VariantCreate";
-import Consumers from "./pages/Consumers";
-import ConsumerDetail from "./pages/ConsumerDetail";
-import ConsumerForm from "./pages/ConsumerForm";
-import ConsumerStatistics from "./pages/ConsumerStatistics";
-import ConsumerKycPending from "./pages/ConsumerKycPending";
-import ConsumerCreateStepper from "./pages/ConsumerCreateStepper";
-import ConsumerCategories from "./pages/ConsumerCategories";
-import ConsumerTypes from "./pages/ConsumerTypes";
-import BPLTypes from "./pages/BPLTypes";
-import DCTTypes from "./pages/DCTTypes";
-import Schemes from "./pages/Schemes";
-import MarketTypes from "./pages/MarketTypes";
-import ConnectionTypes from "./pages/ConnectionTypes";
-import SubsidyDetails from "./pages/SubsidyDetails";
+// Route pages
+import RoutesPage from "./pages/route/Routes";
+import RouteDetail from "./pages/route/RouteDetail";
+import RouteEdit from "./pages/route/RouteEdit";
+import RouteCreate from "./pages/route/RouteCreate";
+import RouteAreas from "./pages/route/RouteAreas";
+import RouteAreaCreate from "./pages/route/RouteAreaCreate";
+import RouteStatistics from "./pages/route/RouteStatistics";
+import RouteHistory from "./pages/route/RouteHistory";
+import RouteCardColorDemo from "./pages/route/RouteCardColorDemo";
+import RouteConsumers from "./pages/route/RouteConsumers";
+
+// Delivery Person pages
+import DeliveryPersons from "./pages/delivery/DeliveryPersons";
+import DeliveryPersonCreate from "./pages/delivery/DeliveryPersonCreate";
+import DeliveryPersonConsumers from "./pages/delivery/DeliveryPersonConsumers";
+import DeliveryPersonStatistics from "./pages/delivery/DeliveryPersonStatistics";
+import DeliveryPersonDetail from "./pages/delivery/DeliveryPersonDetail";
+
+// Product pages
+import Products from "./pages/product/Products";
+import ProductCreate from "./pages/product/ProductCreate";
+import ProductDetail from "./pages/product/ProductDetail";
+import ProductStatistics from "./pages/product/ProductStatistics";
+import Units from "./pages/product/Units";
+import UnitCreate from "./pages/product/UnitCreate";
+import VariantCreate from "./pages/product/VariantCreate";
+
+// Consumer pages
+import Consumers from "./pages/consumer/Consumers";
+import ConsumerDetail from "./pages/consumer/ConsumerDetail";
+import ConsumerForm from "./pages/consumer/ConsumerForm";
+import ConsumerStatistics from "./pages/consumer/ConsumerStatistics";
+import ConsumerKycPending from "./pages/consumer/ConsumerKycPending";
+import ConsumerCreateStepper from "./pages/consumer/ConsumerCreateStepper";
+
+// Lookup pages
+import ConsumerCategories from "./pages/lookup/ConsumerCategories";
+import ConsumerTypes from "./pages/lookup/ConsumerTypes";
+import BPLTypes from "./pages/lookup/BPLTypes";
+import DCTTypes from "./pages/lookup/DCTTypes";
+import Schemes from "./pages/lookup/Schemes";
+import MarketTypes from "./pages/lookup/MarketTypes";
+import ConnectionTypes from "./pages/lookup/ConnectionTypes";
+import SubsidyDetails from "./pages/lookup/SubsidyDetails";
 
 const queryClient = new QueryClient();
 

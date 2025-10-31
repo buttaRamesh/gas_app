@@ -14,9 +14,9 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { ArrowBack as BackIcon, Save as SaveIcon } from "@mui/icons-material";
-import { PageHeader } from "../components/PageHeader";
-import { addressesApi } from "../services/api";
-import { useSnackbar } from "../contexts/SnackbarContext";
+import { PageHeader } from "../../components/PageHeader";
+import { addressesApi } from "../../services/api";
+import { useSnackbar } from "../../contexts/SnackbarContext";
 
 const addressSchema = z.object({
   house_no: z.string().max(50).optional(),

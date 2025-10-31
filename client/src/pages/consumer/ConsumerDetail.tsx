@@ -27,10 +27,10 @@ import {
   LocationOn as LocationIcon,
   Route as RouteIcon,
 } from "@mui/icons-material";
-import { PageHeader } from "../components/PageHeader";
-import { consumersApi } from "../services/api";
-import { useSnackbar } from "../contexts/SnackbarContext";
-import type { ConsumerDetail, ConsumerRouteInfo, OptingStatus } from "../types/consumers";
+import { PageHeader } from "../../components/PageHeader";
+import { consumersApi } from "../../services/api";
+import { useSnackbar } from "../../contexts/SnackbarContext";
+import type { ConsumerDetail, ConsumerRouteInfo, OptingStatus } from "../../types/consumers";
 
 const ConsumerDetailPage = () => {
   const { id } = useParams<{ id: string }>();

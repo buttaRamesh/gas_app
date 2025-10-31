@@ -26,10 +26,10 @@ import {
   Place as PlaceIcon,
   Delete as DeleteIcon,
 } from "@mui/icons-material";
-import { routesApi } from "../services/api";
-import type { Route } from "../types/routes";
-import { useSnackbar } from "../contexts/SnackbarContext"
-import { PageHeader } from "../components/PageHeader";
+import { routesApi } from "../../services/api";
+import type { Route } from "../../types/routes";
+import { useSnackbar } from "../../contexts/SnackbarContext"
+import { PageHeader } from "../../components/PageHeader";
 
 // import { routesApi } from "@/services/api";
 // import { Route, Area } from "@/types/routes";

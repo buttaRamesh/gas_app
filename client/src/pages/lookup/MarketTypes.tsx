@@ -1,5 +1,5 @@
 import { GenericLookupList } from "./GenericLookupList";
-import { marketTypesApi } from "../services/api";
+import { marketTypesApi } from "../../services/api";
 
 const MarketTypes = () => {
   return (

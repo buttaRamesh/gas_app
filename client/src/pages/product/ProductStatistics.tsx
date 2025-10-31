@@ -9,10 +9,10 @@ import {
   Button,
 } from '@mui/material';
 import { ArrowBack, Category, Inventory } from '@mui/icons-material';
-import { PageHeader } from '../components/PageHeader';
-import { productsApi, variantsApi } from '../services/api';
-import { ProductStatistics as IProductStatistics, VariantStatistics } from '../types/products';
-import { useSnackbar } from '../contexts/SnackbarContext';
+import { PageHeader } from '../../components/PageHeader';
+import { productsApi, variantsApi } from '../../services/api';
+import { ProductStatistics as IProductStatistics, VariantStatistics } from '../../types/products';
+import { useSnackbar } from '../../contexts/SnackbarContext';
 
 export default function ProductStatistics() {
   const navigate = useNavigate();

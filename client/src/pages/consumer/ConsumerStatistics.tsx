@@ -18,10 +18,10 @@ import {
   TrendingUp as TrendingIcon,
 } from "@mui/icons-material";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
-import { PageHeader } from "../components/PageHeader";
-import { consumersApi } from "../services/api";
-import { useSnackbar } from "../contexts/SnackbarContext";
-import type { ConsumerStatistics } from "../types/consumers";
+import { PageHeader } from "../../components/PageHeader";
+import { consumersApi } from "../../services/api";
+import { useSnackbar } from "../../contexts/SnackbarContext";
+import type { ConsumerStatistics } from "../../types/consumers";
 
 const ConsumerStatisticsPage = () => {
   const navigate = useNavigate();

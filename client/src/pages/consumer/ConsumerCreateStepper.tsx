@@ -34,12 +34,12 @@ import {
   Delete as DeleteIcon,
   Add as AddIcon,
 } from "@mui/icons-material";
-import { PageHeader } from "../components/PageHeader";
-import { consumersApi, lookupsApi, schemesApi, addressesApi, contactsApi, contentTypesApi } from "../services/api";
-import { useSnackbar } from "../contexts/SnackbarContext";
-import { AddressFormFields } from "../components/AddressFormFields";
-import { ContactFormFields } from "../components/ContactFormFields";
-import type { ConsumerCategory, ConsumerType, BPLType, DCTType, Scheme } from "../types/consumers";
+import { PageHeader } from "../../components/PageHeader";
+import { consumersApi, lookupsApi, schemesApi, addressesApi, contactsApi, contentTypesApi } from "../../services/api";
+import { useSnackbar } from "../../contexts/SnackbarContext";
+import { AddressFormFields } from "../../components/AddressFormFields";
+import { ContactFormFields } from "../../components/ContactFormFields";
+import type { ConsumerCategory, ConsumerType, BPLType, DCTType, Scheme } from "../../types/consumers";
 
 // Schema for the entire form
 const consumerCreateSchema = z.object({

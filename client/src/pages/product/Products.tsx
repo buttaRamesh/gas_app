@@ -31,10 +31,10 @@ import {
   Edit,
   Refresh,
 } from '@mui/icons-material';
-import { PageHeader } from '../components/PageHeader';
-import { productsApi } from '../services/api';
-import { Product } from '../types/products';
-import { useSnackbar } from '../contexts/SnackbarContext';
+import { PageHeader } from '../../components/PageHeader';
+import { productsApi } from '../../services/api';
+import { Product } from '../../types/products';
+import { useSnackbar } from '../../contexts/SnackbarContext';
 
 export default function Products() {
   const navigate = useNavigate();

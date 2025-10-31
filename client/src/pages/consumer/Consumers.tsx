@@ -53,9 +53,9 @@ import {
   Close as CloseIcon,
   Info as InfoIcon,
 } from "@mui/icons-material";
-import { consumersApi, connectionsApi } from "../services/api";
-import { useSnackbar } from "../contexts/SnackbarContext";
-import type { ConsumerListItem, ConsumerDetail, ConnectionDetails, OptingStatus } from "../types/consumers";
+import { consumersApi, connectionsApi } from "../../services/api";
+import { useSnackbar } from "../../contexts/SnackbarContext";
+import type { ConsumerListItem, ConsumerDetail, ConnectionDetails, OptingStatus } from "../../types/consumers";
 
 const Consumers = () => {
   const navigate = useNavigate();

@@ -1,13 +1,13 @@
 import { GenericLookupList } from "./GenericLookupList";
-import { dctTypesApi } from "../services/api";
+import { schemesApi } from "../../services/api";
 
-const DCTTypes = () => {
+const Schemes = () => {
   return (
     <GenericLookupList
       config={{
-        title: "DCT Types",
-        description: "Manage DCT types in the system",
-        api: dctTypesApi,
+        title: "Schemes",
+        description: "Manage LPG schemes in the system",
+        api: schemesApi,
         fields: [
           { name: "name", label: "Name", required: true },
           { name: "description", label: "Description", multiline: true },
@@ -17,4 +17,4 @@ const DCTTypes = () => {
   );
 };
 
-export default DCTTypes;
+export default Schemes;

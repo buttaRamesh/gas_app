@@ -22,10 +22,10 @@ import {
   Visibility as ViewIcon,
   CheckCircle as CheckIcon,
 } from "@mui/icons-material";
-import { PageHeader } from "../components/PageHeader";
-import { consumersApi } from "../services/api";
-import { useSnackbar } from "../contexts/SnackbarContext";
-import type { ConsumerListItem } from "../types/consumers";
+import { PageHeader } from "../../components/PageHeader";
+import { consumersApi } from "../../services/api";
+import { useSnackbar } from "../../contexts/SnackbarContext";
+import type { ConsumerListItem } from "../../types/consumers";
 
 const ConsumerKycPending = () => {
   const navigate = useNavigate();

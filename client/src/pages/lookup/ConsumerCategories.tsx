@@ -1,13 +1,13 @@
 import { GenericLookupList } from "./GenericLookupList";
-import { consumerTypesApi } from "../services/api";
+import { consumerCategoriesApi } from "../../services/api";
 
-const ConsumerTypes = () => {
+const ConsumerCategories = () => {
   return (
     <GenericLookupList
       config={{
-        title: "Consumer Types",
-        description: "Manage consumer types in the system",
-        api: consumerTypesApi,
+        title: "Consumer Categories",
+        description: "Manage consumer categories in the system",
+        api: consumerCategoriesApi,
         fields: [
           { name: "name", label: "Name", required: true },
           { name: "description", label: "Description", multiline: true },
@@ -17,4 +17,4 @@ const ConsumerTypes = () => {
   );
 };
 
-export default ConsumerTypes;
+export default ConsumerCategories;

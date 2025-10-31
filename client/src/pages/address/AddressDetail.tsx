@@ -22,10 +22,10 @@ import {
   Edit as EditIcon,
   LocationOn as LocationIcon,
 } from "@mui/icons-material";
-import { PageHeader } from "../components/PageHeader";
-import { addressesApi } from "../services/api";
-import { useSnackbar } from "../contexts/SnackbarContext";
-import type { Address } from "../types/address";
+import { PageHeader } from "../../components/PageHeader";
+import { addressesApi } from "../../services/api";
+import { useSnackbar } from "../../contexts/SnackbarContext";
+import type { Address } from "../../types/address";
 
 const AddressDetail = () => {
   const { id } = useParams<{ id: string }>();

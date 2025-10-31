@@ -18,10 +18,10 @@ import {
   TableRow,
 } from "@mui/material";
 import { ArrowBack as BackIcon } from "@mui/icons-material";
-import { PageHeader } from "../components/PageHeader";
-import { addressesApi } from "../services/api";
-import { useSnackbar } from "../contexts/SnackbarContext";
-import type { AddressStatistics as AddressStatsType } from "../types/address";
+import { PageHeader } from "../../components/PageHeader";
+import { addressesApi } from "../../services/api";
+import { useSnackbar } from "../../contexts/SnackbarContext";
+import type { AddressStatistics as AddressStatsType } from "../../types/address";
 
 const AddressStatistics = () => {
   const navigate = useNavigate();

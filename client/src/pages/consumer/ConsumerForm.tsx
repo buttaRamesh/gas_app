@@ -38,12 +38,12 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
 } from "@mui/icons-material";
-import { PageHeader } from "../components/PageHeader";
-import { AddressFormFields } from "../components/AddressFormFields";
-import { ContactFormFields } from "../components/ContactFormFields";
-import { consumersApi, lookupsApi, schemesApi, addressesApi, contactsApi, contentTypesApi } from "../services/api";
-import { useSnackbar } from "../contexts/SnackbarContext";
-import type { ConsumerCategory, ConsumerType, BPLType, DCTType, Scheme } from "../types/consumers";
+import { PageHeader } from "../../components/PageHeader";
+import { AddressFormFields } from "../../components/AddressFormFields";
+import { ContactFormFields } from "../../components/ContactFormFields";
+import { consumersApi, lookupsApi, schemesApi, addressesApi, contactsApi, contentTypesApi } from "../../services/api";
+import { useSnackbar } from "../../contexts/SnackbarContext";
+import type { ConsumerCategory, ConsumerType, BPLType, DCTType, Scheme } from "../../types/consumers";
 
 const consumerSchema = z.object({
   consumer_number: z.string().min(1, "Consumer number is required").max(50),

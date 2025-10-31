@@ -15,9 +15,9 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { ArrowBack, Save } from '@mui/icons-material';
-import { PageHeader } from '../components/PageHeader';
-import { productsApi } from '../services/api';
-import { useSnackbar } from '../contexts/SnackbarContext';
+import { PageHeader } from '../../components/PageHeader';
+import { productsApi } from '../../services/api';
+import { useSnackbar } from '../../contexts/SnackbarContext';
 
 // Zod validation schema
 const productSchema = z.object({

@@ -1,5 +1,5 @@
 import { GenericLookupList } from "./GenericLookupList";
-import { connectionTypesApi } from "../services/api";
+import { connectionTypesApi } from "../../services/api";
 
 const ConnectionTypes = () => {
   return (

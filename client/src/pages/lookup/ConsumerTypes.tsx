@@ -1,13 +1,13 @@
 import { GenericLookupList } from "./GenericLookupList";
-import { schemesApi } from "../services/api";
+import { consumerTypesApi } from "../../services/api";
 
-const Schemes = () => {
+const ConsumerTypes = () => {
   return (
     <GenericLookupList
       config={{
-        title: "Schemes",
-        description: "Manage LPG schemes in the system",
-        api: schemesApi,
+        title: "Consumer Types",
+        description: "Manage consumer types in the system",
+        api: consumerTypesApi,
         fields: [
           { name: "name", label: "Name", required: true },
           { name: "description", label: "Description", multiline: true },
@@ -17,4 +17,4 @@ const Schemes = () => {
   );
 };
 
-export default Schemes;
+export default ConsumerTypes;

@@ -10,10 +10,10 @@ import {
   MenuItem,
 } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
-import { PageHeader } from '../components/PageHeader';
-import { variantsApi, productsApi, unitsApi } from '../services/api';
-import { Product, Unit, VariantType } from '../types/products';
-import { useSnackbar } from '../contexts/SnackbarContext';
+import { PageHeader } from '../../components/PageHeader';
+import { variantsApi, productsApi, unitsApi } from '../../services/api';
+import { Product, Unit, VariantType } from '../../types/products';
+import { useSnackbar } from '../../contexts/SnackbarContext';
 
 const VARIANT_TYPES: VariantType[] = ['DOMESTIC', 'COMMERCIAL', 'INDUSTRIAL', 'OTHER'];
 

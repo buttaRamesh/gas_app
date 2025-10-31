@@ -29,10 +29,10 @@ import {
   Delete as DeleteIcon,
   Clear as ClearIcon,
 } from "@mui/icons-material";
-import { PageHeader } from "../components/PageHeader";
-import { addressesApi } from "../services/api";
-import { useSnackbar } from "../contexts/SnackbarContext";
-import type { AddressListItem } from "../types/address";
+import { PageHeader } from "../../components/PageHeader";
+import { addressesApi } from "../../services/api";
+import { useSnackbar } from "../../contexts/SnackbarContext";
+import type { AddressListItem } from "../../types/address";
 
 const Addresses = () => {
   const navigate = useNavigate();

@@ -26,9 +26,9 @@ import {
   Delete as DeleteIcon,
   Visibility as ViewIcon,
 } from "@mui/icons-material";
-import { PageHeader } from "../components/PageHeader";
-import { SearchBar } from "../components/SearchBar";
-import { useSnackbar } from "../contexts/SnackbarContext";
+import { PageHeader } from "../../components/PageHeader";
+import { SearchBar } from "../../components/SearchBar";
+import { useSnackbar } from "../../contexts/SnackbarContext";
 
 interface LookupConfig {
   title: string;

@@ -30,10 +30,10 @@ import {
   Divider,
 } from '@mui/material';
 import { ArrowBack, Edit, Delete, Add, Save, Close } from '@mui/icons-material';
-import { PageHeader } from '../components/PageHeader';
-import { productsApi, variantsApi, unitsApi } from '../services/api';
-import { Product, ProductVariant, Unit, VariantType } from '../types/products';
-import { useSnackbar } from '../contexts/SnackbarContext';
+import { PageHeader } from '../../components/PageHeader';
+import { productsApi, variantsApi, unitsApi } from '../../services/api';
+import { Product, ProductVariant, Unit, VariantType } from '../../types/products';
+import { useSnackbar } from '../../contexts/SnackbarContext';
 
 const VARIANT_TYPES: VariantType[] = ['DOMESTIC', 'COMMERCIAL', 'INDUSTRIAL', 'OTHER'];
 

@@ -1,5 +1,5 @@
 import { GenericLookupList } from "./GenericLookupList";
-import { subsidyDetailsApi } from "../services/api";
+import { subsidyDetailsApi } from "../../services/api";
 
 const SubsidyDetails = () => {
   return (

@@ -1,13 +1,13 @@
 import { GenericLookupList } from "./GenericLookupList";
-import { bplTypesApi } from "../services/api";
+import { dctTypesApi } from "../../services/api";
 
-const BPLTypes = () => {
+const DCTTypes = () => {
   return (
     <GenericLookupList
       config={{
-        title: "BPL Types",
-        description: "Manage BPL (Below Poverty Line) types in the system",
-        api: bplTypesApi,
+        title: "DCT Types",
+        description: "Manage DCT types in the system",
+        api: dctTypesApi,
         fields: [
           { name: "name", label: "Name", required: true },
           { name: "description", label: "Description", multiline: true },
@@ -17,4 +17,4 @@ const BPLTypes = () => {
   );
 };
 
-export default BPLTypes;
+export default DCTTypes;
