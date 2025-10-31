@@ -2,7 +2,6 @@ import { Box, Typography, Button, TextField, InputAdornment } from "@mui/materia
 import {
   Search as SearchIcon,
   Print as PrintIcon,
-  FileDownload as DownloadIcon,
 } from "@mui/icons-material";
 import {
   GridToolbarContainer,
@@ -10,9 +9,10 @@ import {
   GridToolbarFilterButton,
   GridToolbarDensitySelector,
   GridToolbarExport,
+  GridToolbarProps,
 } from "@mui/x-data-grid";
 
-interface CustomDataGridToolbarProps {
+interface CustomDataGridToolbarProps extends Partial<GridToolbarProps> {
   title: string;
   onQuickFilterChange?: (value: string) => void;
   onPrint?: () => void;
@@ -28,9 +28,8 @@ export function CustomDataGridToolbar({
   showQuickFilter = true,
   showPrint = true,
   showExport = true,
+  ...otherProps
 }: CustomDataGridToolbarProps) {
-  console.log("CustomDataGridToolbar rendered with title:", title);
-
   const handlePrint = () => {
     if (onPrint) {
       onPrint();
@@ -50,6 +49,7 @@ export function CustomDataGridToolbar({
         borderColor: "divider",
         bgcolor: "background.paper",
       }}
+      {...otherProps}
     >
       {/* Left Side - Title */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
@@ -65,12 +65,14 @@ export function CustomDataGridToolbar({
             size="small"
             placeholder="Quick search..."
             onChange={(e) => onQuickFilterChange(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon fontSize="small" />
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon fontSize="small" />
+                  </InputAdornment>
+                ),
+              },
             }}
             sx={{ width: 200 }}
           />
@@ -93,12 +95,19 @@ export function CustomDataGridToolbar({
 
         {showExport && (
           <GridToolbarExport
+            slotProps={{
+              button: {
+                variant: "outlined",
+                size: "small",
+              },
+            }}
             csvOptions={{
               fileName: `${title.replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}`,
               utf8WithBom: true,
             }}
             printOptions={{
-              disableToolbarButton: true,
+              hideFooter: true,
+              hideToolbar: true,
             }}
           />
         )}
