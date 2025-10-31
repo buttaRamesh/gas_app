@@ -186,9 +186,9 @@ export default function DeliveryPersonDetail() {
   ];
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "grey.100", py: 2 }}>
+    <Box sx={{ minHeight: "100vh", bgcolor: "grey.100", py: 4 }}>
       <Container maxWidth="xl" sx={{ px: 2 }}>
-        <Box sx={{ mb: 1.5 }}>
+        <Box sx={{ mb: 1.5, width: "40%" }}>
           <Autocomplete
             options={deliveryPersons}
             value={person}
@@ -199,8 +199,7 @@ export default function DeliveryPersonDetail() {
                 {...params}
                 label="Select Delivery Person"
                 placeholder="Search by name..."
-                variant="outlined"
-                size="small"
+                variant="standard"
               />
             )}
             renderOption={(props, option) => (

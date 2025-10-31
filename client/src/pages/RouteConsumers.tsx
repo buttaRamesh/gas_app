@@ -175,9 +175,9 @@ export default function RouteConsumers() {
   ];
 
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "grey.100", py: 2 }}>
+    <Box sx={{ minHeight: "100vh", bgcolor: "grey.100", py: 4 }}>
       <Container maxWidth="xl" sx={{ px: 2 }}>
-        <Box sx={{ mb: 1.5 }}>
+        <Box sx={{ mb: 1.5, width: "40%" }}>
           <Autocomplete
             options={routes}
             value={route}
@@ -188,8 +188,7 @@ export default function RouteConsumers() {
                 {...params}
                 label="Select Route"
                 placeholder="Search by area code..."
-                variant="outlined"
-                size="small"
+                variant="standard"
               />
             )}
             renderOption={(props, option) => (

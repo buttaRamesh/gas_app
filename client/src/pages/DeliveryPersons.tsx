@@ -182,7 +182,7 @@ export default function DeliveryPersons() {
                         color="success"
                         onClick={(e) => {
                           e.stopPropagation();
-                          navigate(`/delivery-persons/${person.id}?tab=consumers`);
+                          navigate(`/delivery-persons/${person.id}/consumers`);
                         }}
                         sx={{
                           transition: "all 0.2s",

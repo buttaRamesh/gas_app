@@ -43,7 +43,7 @@ export default function DeliveryPersonConsumersSelect() {
 
   const handlePersonSelect = (person: DeliveryPerson | null) => {
     if (person) {
-      navigate(`/delivery-persons/${person.id}?tab=consumers`);
+      navigate(`/delivery-persons/${person.id}/consumers`);
     }
   };
 
