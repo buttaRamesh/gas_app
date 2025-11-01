@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q
 
+from core.pagination import CustomPageNumberPagination
 from .models import Consumer
 from .serializers import (
     ConsumerListSerializer,
@@ -17,7 +18,7 @@ from .serializers import (
 class ConsumerViewSet(viewsets.ModelViewSet):
     """
     ViewSet for Consumer operations.
-    
+
     Provides:
     - list: Get all consumers with pagination and filtering
     - retrieve: Get single consumer with full details
@@ -25,24 +26,25 @@ class ConsumerViewSet(viewsets.ModelViewSet):
     - update: Update consumer (PUT)
     - partial_update: Partial update consumer (PATCH)
     - destroy: Delete consumer
-    
+
     Custom actions:
     - kyc_pending: Get consumers with pending KYC
     - by_route: Get consumers by route code
     - search: Advanced search
     """
-    
+
     queryset = Consumer.objects.select_related(
-        'category', 
-        'consumer_type', 
-        'bpl_type', 
-        'dct_type', 
+        'category',
+        'consumer_type',
+        'bpl_type',
+        'dct_type',
         'scheme'
     ).prefetch_related(
-        'addresses', 
+        'addresses',
         'contacts'
     ).all()
-    
+
+    pagination_class = CustomPageNumberPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['category', 'consumer_type', 'opting_status', 'is_kyc_done', 'scheme']
     search_fields = ['consumer_number', 'consumer_name', 'ration_card_num', 'lpg_id']

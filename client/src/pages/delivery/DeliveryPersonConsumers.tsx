@@ -21,6 +21,7 @@ import { deliveryPersonsApi } from "@/services/api";
 import type { DeliveryPerson } from "@/types/routes";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { CustomDataGridToolbar } from "@/components/CustomDataGridToolbar";
+import { MiniCT } from "@/components/MiniCT";
 
 interface Consumer {
   consumer_id: number;
@@ -49,6 +50,8 @@ export default function DeliveryPersonConsumers() {
   });
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [exportLoading, setExportLoading] = useState(false);
+  
 
   useEffect(() => {
     fetchDeliveryPersons();
@@ -122,6 +125,70 @@ export default function DeliveryPersonConsumers() {
     setSearchQuery("");
   };
 
+    const handleExportCSV = async () => {
+      if (!person) return;
+  
+      try {
+        setExportLoading(true);
+        // Fetch all data without pagination
+        const response = await deliveryPersonsApi.getConsumers(person.id, {
+          page: 1,
+          page_size: 10000, // Large number to get all records
+          search: searchQuery || undefined,
+        });
+  
+        const allConsumers = response.data.results || [];
+  
+        // Convert to CSV
+        const headers = [
+          "Consumer Number",
+          "Consumer Name",
+          "Category",
+          "Type",
+          "Mobile",
+          "Address",
+          "Cylinders",
+        ];
+  
+        const csvRows = [
+          headers.join(","),
+          ...allConsumers.map((consumer: Consumer) =>
+            [
+              `"${consumer.consumer_number}"`,
+              `"${consumer.consumer_name}"`,
+              `"${consumer.category}"`,
+              `"${consumer.consumer_type}"`,
+              `"${consumer.mobile || ""}"`,
+              `"${(consumer.address || "").replace(/"/g, '""')}"`,
+              consumer.cylinders,
+            ].join(",")
+          ),
+        ];
+  
+        const csvContent = csvRows.join("\n");
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+  
+        link.setAttribute("href", url);
+        link.setAttribute(
+          "download",
+          `route_${person.name}_consumers_${new Date().toISOString().split("T")[0]}.csv`
+        );
+        link.style.visibility = "hidden";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+  
+        showSnackbar(`Exported ${allConsumers.length} consumers successfully`, "success");
+      } catch (err: any) {
+        console.error("Failed to export consumers:", err);
+        showSnackbar("Failed to export consumers", "error");
+      } finally {
+        setExportLoading(false);
+      }
+    };
+  
 
   const consumersColumns: GridColDef[] = [
     {
@@ -351,11 +418,10 @@ export default function DeliveryPersonConsumers() {
             getRowId={(row) => row.consumer_id}
             paginationModel={consumersPagination}
             onPaginationModelChange={(newModel) => {
-              console.log('Pagination changed:', newModel);
               setConsumersPagination(newModel);
             }}
             rowCount={consumersRowCount}
-            pageSizeOptions={[5, 10, 25, 50, 100]}
+            pageSizeOptions={[5, 10,15, 20]}
             paginationMode="server"
             loading={loading}
             disableRowSelectionOnClick
@@ -365,14 +431,13 @@ export default function DeliveryPersonConsumers() {
             disableColumnSelector
             disableDensitySelector
             slots={{
-              toolbar: CustomDataGridToolbar,
+              toolbar: MiniCT,
             }}
             slotProps={{
               toolbar: {
                 title: `Consumers for ${person?.name || ""}`,
-                showQuickFilter: false,
-                showPrint: true,
-                showExport: true,
+                onExportClick: handleExportCSV,
+                exportLoading: exportLoading,
               },
             }}
             sx={{

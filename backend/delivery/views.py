@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count
 
+from core.pagination import CustomPageNumberPagination
 from .models import DeliveryPerson, DeliveryRouteAssignment
 from .serializers import (
     DeliveryPersonListSerializer,
@@ -22,7 +23,7 @@ from consumers.models import Consumer
 class DeliveryPersonViewSet(viewsets.ModelViewSet):
     """
     ViewSet for DeliveryPerson operations.
-    
+
     Provides:
     - list: Get all delivery persons
     - retrieve: Get single delivery person with routes
@@ -30,15 +31,16 @@ class DeliveryPersonViewSet(viewsets.ModelViewSet):
     - update: Update delivery person
     - partial_update: Partial update
     - destroy: Delete delivery person
-    
+
     Custom actions:
     - assigned_routes: Get all routes assigned to person
     - consumers: Get all consumers in assigned routes
     - unassigned: Get delivery persons without routes
     - statistics: Get delivery statistics
     """
-    
+
     queryset = DeliveryPerson.objects.prefetch_related('contacts', 'route_assignments').all()
+    pagination_class = CustomPageNumberPagination
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name', 'contacts__mobile_number']
     ordering_fields = ['name', 'id']

@@ -193,6 +193,7 @@ export const consumersApi = {
     search?: string;
     ordering?: string;
     page?: number;
+    page_size?: number;
   }) => {
     const params = new URLSearchParams();
     if (filters?.category) params.append('category', filters.category.toString());
@@ -203,6 +204,7 @@ export const consumersApi = {
     if (filters?.search?.trim()) params.append('search', filters.search.trim());
     if (filters?.ordering) params.append('ordering', filters.ordering);
     if (filters?.page) params.append('page', filters.page.toString());
+    if (filters?.page_size) params.append('page_size', filters.page_size.toString());
     return api.get(`/consumers/?${params.toString()}`);
   },
   getById: (id: number) => api.get(`/consumers/${id}/`),

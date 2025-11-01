@@ -113,6 +113,7 @@ const Consumers = () => {
 
       const response = await consumersApi.getAll({
         page: paginationModel.page + 1,
+        page_size: paginationModel.pageSize,
         ordering,
         search: searchQuery || undefined,
         is_kyc_done,

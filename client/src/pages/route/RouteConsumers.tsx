@@ -20,6 +20,7 @@ import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { consumersApi, routesApi } from "@/services/api";
 import { useSnackbar } from "@/contexts/SnackbarContext";
 import { CustomDataGridToolbar } from "@/components/CustomDataGridToolbar";
+import { MiniCT } from "@/components/MiniCT";
 import type { Route } from "@/types/routes";
 
 interface ConsumerByRoute {
@@ -36,7 +37,6 @@ interface ConsumerByRoute {
 
 export default function RouteConsumers() {
   const { id } = useParams<{ id?: string }>();
-  const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
   const [route, setRoute] = useState<Route | null>(null);
@@ -49,6 +49,7 @@ export default function RouteConsumers() {
   });
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [exportLoading, setExportLoading] = useState(false);
 
   useEffect(() => {
     fetchRoutes();
@@ -88,7 +89,6 @@ export default function RouteConsumers() {
         }
       }
     } catch (err: any) {
-      console.error("Failed to fetch routes:", err);
       showSnackbar("Failed to load routes", "error");
     }
   };
@@ -120,6 +120,70 @@ export default function RouteConsumers() {
     setPaginationModel({ page: 0, pageSize: 10 });
     setSearchInput("");
     setSearchQuery("");
+  };
+
+  const handleExportCSV = async () => {
+    if (!route) return;
+
+    try {
+      setExportLoading(true);
+      // Fetch all data without pagination
+      const response = await consumersApi.getByRoute(route.id, {
+        page: 1,
+        page_size: 10000, // Large number to get all records
+        search: searchQuery || undefined,
+      });
+
+      const allConsumers = response.data.results || [];
+
+      // Convert to CSV
+      const headers = [
+        "Consumer Number",
+        "Consumer Name",
+        "Category",
+        "Type",
+        "Mobile",
+        "Address",
+        "Cylinders",
+      ];
+
+      const csvRows = [
+        headers.join(","),
+        ...allConsumers.map((consumer: ConsumerByRoute) =>
+          [
+            `"${consumer.consumer_number}"`,
+            `"${consumer.consumer_name}"`,
+            `"${consumer.category}"`,
+            `"${consumer.consumer_type}"`,
+            `"${consumer.mobile || ""}"`,
+            `"${(consumer.address || "").replace(/"/g, '""')}"`,
+            consumer.cylinders,
+          ].join(",")
+        ),
+      ];
+
+      const csvContent = csvRows.join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+
+      link.setAttribute("href", url);
+      link.setAttribute(
+        "download",
+        `route_${route.area_code}_consumers_${new Date().toISOString().split("T")[0]}.csv`
+      );
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showSnackbar(`Exported ${allConsumers.length} consumers successfully`, "success");
+    } catch (err: any) {
+      console.error("Failed to export consumers:", err);
+      showSnackbar("Failed to export consumers", "error");
+    } finally {
+      setExportLoading(false);
+    }
   };
 
   const columns: GridColDef[] = [
@@ -337,6 +401,7 @@ export default function RouteConsumers() {
 
         <Card elevation={3} sx={{ bgcolor: "background.paper", borderRadius: 2 }}>
           <DataGrid
+            showToolbar
             rows={consumers}
             columns={columns}
             getRowId={(row) => row.consumer_id}
@@ -346,24 +411,22 @@ export default function RouteConsumers() {
               setPaginationModel(newModel);
             }}
             rowCount={rowCount}
-            pageSizeOptions={[5, 10, 25, 50, 100]}
+            pageSizeOptions={[5, 10, 20]}
             paginationMode="server"
             loading={loading}
             disableRowSelectionOnClick
-            autoHeight
             rowHeight={40}
             disableColumnFilter
             disableColumnSelector
             disableDensitySelector
             slots={{
-              toolbar: CustomDataGridToolbar,
+              toolbar: MiniCT,
             }}
             slotProps={{
               toolbar: {
-                title: `Consumers in Route ${route?.area_code || ""}`,
-                showQuickFilter: false,
-                showPrint: true,
-                showExport: true,
+                title: `Consumers for ${route?.area_code || ""} `,
+                onExportClick: handleExportCSV,
+                exportLoading: exportLoading,
               },
             }}
             sx={{
