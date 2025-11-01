@@ -1,18 +1,20 @@
-import { Box, Typography, Button, TextField, InputAdornment } from "@mui/material";
+import { useState, useRef } from "react";
+import { Box, Typography, TextField, InputAdornment, Menu, MenuItem, Divider, Tooltip } from "@mui/material";
 import {
   Search as SearchIcon,
   Print as PrintIcon,
+  FileDownload as ExportIcon,
 } from "@mui/icons-material";
 import {
-  GridToolbarContainer,
-  GridToolbarExport,
-  GridToolbarProps,
+  Toolbar,
+  ToolbarButton,
+  ExportCsv,
+  ExportPrint
 } from "@mui/x-data-grid";
 
-interface CustomDataGridToolbarProps extends Partial<GridToolbarProps> {
+interface CustomDataGridToolbarProps {
   title?: string;
   onQuickFilterChange?: (value: string) => void;
-  onPrint?: () => void;
   showQuickFilter?: boolean;
   showPrint?: boolean;
   showExport?: boolean;
@@ -21,22 +23,15 @@ interface CustomDataGridToolbarProps extends Partial<GridToolbarProps> {
 export function CustomDataGridToolbar({
   title,
   onQuickFilterChange,
-  onPrint,
   showQuickFilter = true,
   showPrint = true,
   showExport = true,
-  ...otherProps
 }: CustomDataGridToolbarProps) {
-  const handlePrint = () => {
-    if (onPrint) {
-      onPrint();
-    } else {
-      window.print();
-    }
-  };
+  const [exportMenuOpen, setExportMenuOpen] = useState(false);
+  const exportMenuTriggerRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <GridToolbarContainer
+    <Toolbar
       sx={{
         display: "flex",
         justifyContent: "space-between",
@@ -46,11 +41,10 @@ export function CustomDataGridToolbar({
         borderColor: "divider",
         bgcolor: "background.paper",
       }}
-      {...otherProps}
     >
       {/* Left Side - Title */}
       {title && (
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, flex: 1 }}>
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
             {title}
           </Typography>
@@ -77,36 +71,62 @@ export function CustomDataGridToolbar({
           />
         )}
 
-        {showPrint && (
-          <Button
-            size="small"
-            startIcon={<PrintIcon />}
-            onClick={handlePrint}
-            variant="outlined"
-          >
-            Print
-          </Button>
-        )}
+        {(showPrint || showExport) && (
+          <>
+            <Divider orientation="vertical" variant="middle" flexItem sx={{ mx: 0.5 }} />
 
-        {showExport && (
-          <GridToolbarExport
-            slotProps={{
-              button: {
-                variant: "outlined",
-                size: "small",
-              },
-            }}
-            csvOptions={{
-              fileName: `${(title || "export").replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}`,
-              utf8WithBom: true,
-            }}
-            printOptions={{
-              hideFooter: true,
-              hideToolbar: true,
-            }}
-          />
+            <Tooltip title="Export">
+              <ToolbarButton
+                ref={exportMenuTriggerRef}
+                id="export-menu-trigger"
+                aria-controls="export-menu"
+                aria-haspopup="true"
+                aria-expanded={exportMenuOpen ? 'true' : undefined}
+                onClick={() => setExportMenuOpen(true)}
+              >
+                <ExportIcon fontSize="small" />
+              </ToolbarButton>
+            </Tooltip>
+
+            <Menu
+              id="export-menu"
+              anchorEl={exportMenuTriggerRef.current}
+              open={exportMenuOpen}
+              onClose={() => setExportMenuOpen(false)}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+              slotProps={{
+                list: {
+                  'aria-labelledby': 'export-menu-trigger',
+                },
+              }}
+            >
+              {showPrint && (
+                <ExportPrint
+                  render={<MenuItem />}
+                  onClick={() => setExportMenuOpen(false)}
+                >
+                  <PrintIcon fontSize="small" sx={{ mr: 1 }} />
+                  Print
+                </ExportPrint>
+              )}
+              {showExport && (
+                <ExportCsv
+                  render={<MenuItem />}
+                  onClick={() => setExportMenuOpen(false)}
+                  csvOptions={{
+                    fileName: `${(title || "export").replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}`,
+                    utf8WithBom: true,
+                  }}
+                >
+                  <ExportIcon fontSize="small" sx={{ mr: 1 }} />
+                  Download as CSV
+                </ExportCsv>
+              )}
+            </Menu>
+          </>
         )}
       </Box>
-    </GridToolbarContainer>
+    </Toolbar>
   );
 }

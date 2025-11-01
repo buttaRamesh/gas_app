@@ -13,6 +13,8 @@ import {
 import {
   People as ConsumersIcon,
   LocalShipping as RouteIcon,
+  Place as PlaceIcon,
+  Person as PersonIcon,
 } from "@mui/icons-material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { consumersApi, routesApi } from "@/services/api";
@@ -207,97 +209,142 @@ export default function RouteConsumers() {
           />
         </Box>
 
-        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: 1.5, mb: 1.5 }}>
-          <Card elevation={1} sx={{ bgcolor: "background.paper" }}>
-            <CardContent sx={{ py: 1, px: 1.5, "&:last-child": { pb: 1 } }}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Box
-                  sx={{
-                    bgcolor: "success.light",
-                    p: 0.75,
-                    borderRadius: 1,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <ConsumersIcon color="success" fontSize="small" />
-                </Box>
+        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" }, gap: 2.5, mb: 3 }}>
+          <Card
+            elevation={2}
+            sx={{
+              bgcolor: "background.paper",
+              borderLeft: 4,
+              borderColor: "success.main",
+              transition: "all 0.3s",
+              "&:hover": {
+                transform: "translateY(-4px)",
+                boxShadow: 4,
+              }
+            }}
+          >
+            <CardContent sx={{ py: 2.5, px: 2.5, "&:last-child": { pb: 2.5 } }}>
+              <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <Box>
-                  <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "1.1rem" }}>
-                    {rowCount}
-                  </Typography>
-                  <Typography variant="caption" sx={{ fontSize: "0.7rem" }} color="text.secondary">
+                  <Typography variant="caption" sx={{ fontSize: "0.75rem", fontWeight: 500, color: "text.secondary", textTransform: "uppercase", letterSpacing: 0.5 }}>
                     Total Consumers
                   </Typography>
+                  <Typography variant="h4" sx={{ fontWeight: 700, fontSize: "2rem", mt: 0.5, color: "success.main" }}>
+                    {rowCount}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    bgcolor: "success.main",
+                    p: 1.5,
+                    borderRadius: 2,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 4px 12px rgba(46, 125, 50, 0.25)",
+                  }}
+                >
+                  <ConsumersIcon sx={{ color: "white", fontSize: "2rem" }} />
                 </Box>
               </Box>
             </CardContent>
           </Card>
 
-          <Card elevation={1} sx={{ bgcolor: "background.paper" }}>
-            <CardContent sx={{ py: 1, px: 1.5, "&:last-child": { pb: 1 } }}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Box
-                  sx={{
-                    bgcolor: "info.light",
-                    p: 0.75,
-                    borderRadius: 1,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <RouteIcon color="info" fontSize="small" />
-                </Box>
+          <Card
+            elevation={2}
+            sx={{
+              bgcolor: "background.paper",
+              borderLeft: 4,
+              borderColor: "primary.main",
+              transition: "all 0.3s",
+              "&:hover": {
+                transform: "translateY(-4px)",
+                boxShadow: 4,
+              }
+            }}
+          >
+            <CardContent sx={{ py: 2.5, px: 2.5, "&:last-child": { pb: 2.5 } }}>
+              <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 <Box>
-                  <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "1.1rem" }}>
-                    {route?.area_count || 0}
+                  <Typography variant="caption" sx={{ fontSize: "0.75rem", fontWeight: 500, color: "text.secondary", textTransform: "uppercase", letterSpacing: 0.5 }}>
+                    Route Code
                   </Typography>
-                  <Typography variant="caption" sx={{ fontSize: "0.7rem" }} color="text.secondary">
-                    Areas
-                  </Typography>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-
-          <Card elevation={1} sx={{ bgcolor: "background.paper" }}>
-            <CardContent sx={{ py: 1, px: 1.5, "&:last-child": { pb: 1 } }}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Box
-                  sx={{
-                    bgcolor: "primary.light",
-                    p: 0.75,
-                    borderRadius: 1,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <RouteIcon color="primary" fontSize="small" />
-                </Box>
-                <Box>
-                  <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "1.1rem" }}>
+                  <Typography variant="h4" sx={{ fontWeight: 700, fontSize: "2rem", mt: 0.5, color: "primary.main" }}>
                     {route?.area_code || "-"}
                   </Typography>
-                  <Typography variant="caption" sx={{ fontSize: "0.7rem" }} color="text.secondary">
-                    {route?.delivery_person?.name ? `${route.delivery_person.name}` : "No delivery"}
+                  <Typography variant="caption" sx={{ fontSize: "0.7rem", color: "text.secondary", display: "flex", alignItems: "center", gap: 0.5, mt: 0.5 }}>
+                    <PersonIcon sx={{ fontSize: "0.9rem" }} />
+                    {route?.delivery_person?.name || "No delivery person"}
                   </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    bgcolor: "primary.main",
+                    p: 1.5,
+                    borderRadius: 2,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 4px 12px rgba(25, 118, 210, 0.25)",
+                  }}
+                >
+                  <RouteIcon sx={{ color: "white", fontSize: "2rem" }} />
+                </Box>
+              </Box>
+            </CardContent>
+          </Card>
+
+          <Card
+            elevation={2}
+            sx={{
+              bgcolor: "background.paper",
+              borderLeft: 4,
+              borderColor: "info.main",
+              transition: "all 0.3s",
+              "&:hover": {
+                transform: "translateY(-4px)",
+                boxShadow: 4,
+              }
+            }}
+          >
+            <CardContent sx={{ py: 2.5, px: 2.5, "&:last-child": { pb: 2.5 } }}>
+              <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <Box>
+                  <Typography variant="caption" sx={{ fontSize: "0.75rem", fontWeight: 500, color: "text.secondary", textTransform: "uppercase", letterSpacing: 0.5 }}>
+                    Areas Count
+                  </Typography>
+                  <Typography variant="h4" sx={{ fontWeight: 700, fontSize: "2rem", mt: 0.5, color: "info.main" }}>
+                    {route?.area_count || 0}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    bgcolor: "info.main",
+                    p: 1.5,
+                    borderRadius: 2,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 4px 12px rgba(2, 136, 209, 0.25)",
+                  }}
+                >
+                  <PlaceIcon sx={{ color: "white", fontSize: "2rem" }} />
                 </Box>
               </Box>
             </CardContent>
           </Card>
         </Box>
 
-        <Card elevation={3} sx={{ bgcolor: "background.paper" }}>
+        <Card elevation={3} sx={{ bgcolor: "background.paper", borderRadius: 2 }}>
           <DataGrid
-            showToolbar
             rows={consumers}
             columns={columns}
             getRowId={(row) => row.consumer_id}
             paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
+            onPaginationModelChange={(newModel) => {
+              console.log('Pagination changed:', newModel);
+              setPaginationModel(newModel);
+            }}
             rowCount={rowCount}
             pageSizeOptions={[5, 10, 25, 50, 100]}
             paginationMode="server"
@@ -317,7 +364,7 @@ export default function RouteConsumers() {
                 showQuickFilter: false,
                 showPrint: true,
                 showExport: true,
-              } as any,
+              },
             }}
             sx={{
               border: 0,
