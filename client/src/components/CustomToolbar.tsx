@@ -18,6 +18,8 @@ import {
   QuickFilterClear,
 } from "@mui/x-data-grid";
 
+import { FilterToggle, type FilterOption } from './custom/FilterToggle';
+
 interface TBProps {
   title: string;
   searchValue?: string;
@@ -31,6 +33,10 @@ interface TBProps {
   pdfLoading?: boolean;
   onExportExcel?: () => void;
   excelLoading?: boolean;
+  filterLabel?: string;
+  filterOptions?: FilterOption[];
+  filterValue?: string;
+  onFilterChange?: (value: string) => void;
 }
 
 const StyledQuickFilter = styled(QuickFilter)({
@@ -51,6 +57,10 @@ export function CustomToolbar({
   pdfLoading = false,
   onExportExcel,
   excelLoading = false,
+  filterLabel,
+  filterOptions,
+  filterValue,
+  onFilterChange,
 }: TBProps) {
   return (
     <Toolbar sx={{
@@ -86,7 +96,7 @@ export function CustomToolbar({
                           <SearchIcon fontSize="small" />
                         </InputAdornment>
                       ),
-                     
+
                       ...other.slotProps?.input,
                     },
                     ...other.slotProps,
@@ -96,6 +106,15 @@ export function CustomToolbar({
             />
           </StyledQuickFilter>
         ) : null}
+
+        {filterOptions && filterOptions.length > 0 && onFilterChange && (
+          <FilterToggle
+            label={filterLabel || 'Filter'}
+            options={filterOptions}
+            value={filterValue}
+            onChange={onFilterChange}
+          />
+        )}
 
         {showExport && onExportClick && (
           <Tooltip title={exportLoading ? "Exporting..." : "Export CSV"}>

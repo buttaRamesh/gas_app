@@ -57,6 +57,7 @@ import { consumersApi, connectionsApi } from "../../services/api";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import type { ConsumerListItem, ConsumerDetail, ConnectionDetails, OptingStatus } from "../../types/consumers";
 import { CustomToolbar } from "@/components/CustomToolbar";
+import { KYC_FILTER_OPTIONS } from "@/components/custom/FilterToggle";
 
 const Consumers = () => {
   const navigate = useNavigate();
@@ -550,6 +551,10 @@ const Consumers = () => {
               pdfLoading: pdfLoading,
               onExportExcel: handleExportExcel,
               excelLoading: excelLoading,
+              filterLabel: 'KYC',
+              filterOptions: KYC_FILTER_OPTIONS,
+              filterValue: kycFilter,
+              onFilterChange: handleKycFilterChange,
             },
           }}
           getRowClassName={getRowClassName}
