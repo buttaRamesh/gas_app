@@ -20,8 +20,7 @@ import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { deliveryPersonsApi } from "@/services/api";
 import type { DeliveryPerson } from "@/types/routes";
 import { useSnackbar } from "@/contexts/SnackbarContext";
-import { CustomDataGridToolbar } from "@/components/CustomDataGridToolbar";
-import { MiniCT } from "@/components/MiniCT";
+import { CustomToolbar } from "@/components/CustomToolbar";
 
 interface Consumer {
   consumer_id: number;
@@ -431,13 +430,17 @@ export default function DeliveryPersonConsumers() {
             disableColumnSelector
             disableDensitySelector
             slots={{
-              toolbar: MiniCT,
+              toolbar: CustomToolbar,
             }}
             slotProps={{
               toolbar: {
                 title: `Consumers for ${person?.name || ""}`,
+                searchValue: searchInput,
+                onSearchChange: setSearchInput,
                 onExportClick: handleExportCSV,
                 exportLoading: exportLoading,
+                showExport: true,
+                showPrint: true,
               },
             }}
             sx={{

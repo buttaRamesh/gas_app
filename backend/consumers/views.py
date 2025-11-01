@@ -4,6 +4,15 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q
+from django.http import HttpResponse
+import csv
+import io
+from openpyxl import Workbook
+from openpyxl.styles import Font, Alignment, PatternFill
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter, A4
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
 
 from core.pagination import CustomPageNumberPagination
 from .models import Consumer
@@ -220,3 +229,199 @@ class ConsumerViewSet(viewsets.ModelViewSet):
             'kyc_pending': kyc_pending,
             'by_opting_status': by_status,
         })
+
+    @action(detail=False, methods=['get'])
+    def export_csv(self, request):
+        """
+        Export consumers to CSV file.
+
+        GET /api/consumers/export_csv/?search=john&ordering=consumer_number&is_kyc_done=true
+        """
+        # Get filtered queryset
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Create CSV response
+        response = HttpResponse(content_type='text/csv; charset=utf-8')
+        response['Content-Disposition'] = 'attachment; filename="consumers_export.csv"'
+
+        # Add BOM for Excel UTF-8 compatibility
+        response.write('\ufeff')
+
+        writer = csv.writer(response)
+
+        # Write header
+        writer.writerow([
+            'Consumer Number',
+            'Consumer Name',
+            'Category',
+            'Type',
+            'Opting Status',
+            'KYC Done',
+            'Mobile',
+            'Ration Card',
+            'LPG ID',
+        ])
+
+        # Write data
+        for consumer in queryset:
+            contact = consumer.contacts.first()
+            writer.writerow([
+                consumer.consumer_number,
+                consumer.consumer_name,
+                consumer.category.name if consumer.category else '',
+                consumer.consumer_type.name if consumer.consumer_type else '',
+                consumer.get_opting_status_display(),
+                'Yes' if consumer.is_kyc_done else 'No',
+                contact.mobile_number if contact else '',
+                consumer.ration_card_num or '',
+                consumer.lpg_id or '',
+            ])
+
+        return response
+
+    @action(detail=False, methods=['get'])
+    def export_excel(self, request):
+        """
+        Export consumers to Excel file.
+
+        GET /api/consumers/export_excel/?search=john&ordering=consumer_number&is_kyc_done=true
+        """
+        # Get filtered queryset
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Create workbook
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Consumers"
+
+        # Define header style
+        header_fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
+        header_font = Font(color="FFFFFF", bold=True)
+        header_alignment = Alignment(horizontal="center", vertical="center")
+
+        # Write header
+        headers = [
+            'Consumer Number',
+            'Consumer Name',
+            'Category',
+            'Type',
+            'Opting Status',
+            'KYC Done',
+            'Mobile',
+            'Ration Card',
+            'LPG ID',
+        ]
+
+        for col_num, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col_num, value=header)
+            cell.fill = header_fill
+            cell.font = header_font
+            cell.alignment = header_alignment
+
+        # Write data
+        for row_num, consumer in enumerate(queryset, 2):
+            contact = consumer.contacts.first()
+            ws.cell(row=row_num, column=1, value=consumer.consumer_number)
+            ws.cell(row=row_num, column=2, value=consumer.consumer_name)
+            ws.cell(row=row_num, column=3, value=consumer.category.name if consumer.category else '')
+            ws.cell(row=row_num, column=4, value=consumer.consumer_type.name if consumer.consumer_type else '')
+            ws.cell(row=row_num, column=5, value=consumer.get_opting_status_display())
+            ws.cell(row=row_num, column=6, value='Yes' if consumer.is_kyc_done else 'No')
+            ws.cell(row=row_num, column=7, value=contact.mobile_number if contact else '')
+            ws.cell(row=row_num, column=8, value=consumer.ration_card_num or '')
+            ws.cell(row=row_num, column=9, value=consumer.lpg_id or '')
+
+        # Adjust column widths
+        for col in ws.columns:
+            max_length = 0
+            column = col[0].column_letter
+            for cell in col:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+                except:
+                    pass
+            adjusted_width = min(max_length + 2, 50)
+            ws.column_dimensions[column].width = adjusted_width
+
+        # Save to response
+        response = HttpResponse(
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = 'attachment; filename="consumers_export.xlsx"'
+        wb.save(response)
+
+        return response
+
+    @action(detail=False, methods=['get'])
+    def export_pdf(self, request):
+        """
+        Export consumers to PDF file.
+
+        GET /api/consumers/export_pdf/?search=john&ordering=consumer_number&is_kyc_done=true
+        """
+        # Get filtered queryset
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Create PDF response
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="consumers_export.pdf"'
+
+        # Create PDF document
+        buffer = io.BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=A4)
+        elements = []
+
+        # Add title
+        styles = getSampleStyleSheet()
+        title = Paragraph("<b>Consumers Export</b>", styles['Title'])
+        elements.append(title)
+
+        # Prepare table data
+        data = [[
+            'Consumer #',
+            'Name',
+            'Category',
+            'Type',
+            'Status',
+            'KYC',
+            'Mobile',
+        ]]
+
+        for consumer in queryset:
+            contact = consumer.contacts.first()
+            data.append([
+                consumer.consumer_number,
+                consumer.consumer_name[:30],  # Truncate long names
+                consumer.category.name if consumer.category else '',
+                consumer.consumer_type.name if consumer.consumer_type else '',
+                consumer.get_opting_status_display()[:10],  # Truncate
+                'Yes' if consumer.is_kyc_done else 'No',
+                contact.mobile_number if contact else '',
+            ])
+
+        # Create table
+        table = Table(data)
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#366092')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, 0), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('FONTSIZE', (0, 1), (-1, -1), 8),
+        ]))
+
+        elements.append(table)
+
+        # Build PDF
+        doc.build(elements)
+
+        # Get PDF from buffer
+        pdf = buffer.getvalue()
+        buffer.close()
+        response.write(pdf)
+
+        return response

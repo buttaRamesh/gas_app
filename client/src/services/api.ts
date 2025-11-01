@@ -228,6 +228,39 @@ export const consumersApi = {
   updateKycStatus: (id: number, isKycDone: boolean) =>
     api.patch(`/consumers/${id}/update_kyc_status/`, { is_kyc_done: isKycDone }),
   getStatistics: () => api.get('/consumers/statistics/'),
+  exportCSV: (filters?: {
+    search?: string;
+    ordering?: string;
+    is_kyc_done?: boolean;
+  }) => {
+    const params = new URLSearchParams();
+    if (filters?.search?.trim()) params.append('search', filters.search.trim());
+    if (filters?.ordering) params.append('ordering', filters.ordering);
+    if (filters?.is_kyc_done !== undefined) params.append('is_kyc_done', filters.is_kyc_done.toString());
+    return api.get(`/consumers/export_csv/?${params.toString()}`, { responseType: 'blob' });
+  },
+  exportPDF: (filters?: {
+    search?: string;
+    ordering?: string;
+    is_kyc_done?: boolean;
+  }) => {
+    const params = new URLSearchParams();
+    if (filters?.search?.trim()) params.append('search', filters.search.trim());
+    if (filters?.ordering) params.append('ordering', filters.ordering);
+    if (filters?.is_kyc_done !== undefined) params.append('is_kyc_done', filters.is_kyc_done.toString());
+    return api.get(`/consumers/export_pdf/?${params.toString()}`, { responseType: 'blob' });
+  },
+  exportExcel: (filters?: {
+    search?: string;
+    ordering?: string;
+    is_kyc_done?: boolean;
+  }) => {
+    const params = new URLSearchParams();
+    if (filters?.search?.trim()) params.append('search', filters.search.trim());
+    if (filters?.ordering) params.append('ordering', filters.ordering);
+    if (filters?.is_kyc_done !== undefined) params.append('is_kyc_done', filters.is_kyc_done.toString());
+    return api.get(`/consumers/export_excel/?${params.toString()}`, { responseType: 'blob' });
+  },
 };
 
 // Connections API

@@ -3,7 +3,12 @@
     "allow": [
       "Bash(tree:*)",
       "Bash(mv:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(python manage.py show_urls:*)",
+      "Bash(curl:*)",
+      "Bash(python -m json.tool:*)",
+      "Bash(python manage.py shell:*)",
+      "Bash(python -c:*)"
     ],
     "deny": [],
     "ask": []

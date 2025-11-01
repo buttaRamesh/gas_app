@@ -19,8 +19,7 @@ import {
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { consumersApi, routesApi } from "@/services/api";
 import { useSnackbar } from "@/contexts/SnackbarContext";
-import { CustomDataGridToolbar } from "@/components/CustomDataGridToolbar";
-import { MiniCT } from "@/components/MiniCT";
+import { CustomToolbar } from "@/components/CustomToolbar";
 import type { Route } from "@/types/routes";
 
 interface ConsumerByRoute {
@@ -420,13 +419,17 @@ export default function RouteConsumers() {
             disableColumnSelector
             disableDensitySelector
             slots={{
-              toolbar: MiniCT,
+              toolbar: CustomToolbar,
             }}
             slotProps={{
               toolbar: {
-                title: `Consumers for ${route?.area_code || ""} `,
+                title: `Consumers for ${route?.area_code || ""}`,
+                searchValue: searchInput,
+                onSearchChange: setSearchInput,
                 onExportClick: handleExportCSV,
                 exportLoading: exportLoading,
+                showExport: true,
+                showPrint: true,
               },
             }}
             sx={{

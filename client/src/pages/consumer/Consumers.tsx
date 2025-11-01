@@ -56,6 +56,7 @@ import {
 import { consumersApi, connectionsApi } from "../../services/api";
 import { useSnackbar } from "../../contexts/SnackbarContext";
 import type { ConsumerListItem, ConsumerDetail, ConnectionDetails, OptingStatus } from "../../types/consumers";
+import { CustomToolbar } from "@/components/CustomToolbar";
 
 const Consumers = () => {
   const navigate = useNavigate();
@@ -77,6 +78,9 @@ const Consumers = () => {
   const [selectedConsumer, setSelectedConsumer] = useState<ConsumerDetail | null>(null);
   const [connections, setConnections] = useState<ConnectionDetails[]>([]);
   const [loadingDetails, setLoadingDetails] = useState(false);
+  const [csvLoading, setCsvLoading] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
+  const [excelLoading, setExcelLoading] = useState(false);
 
   // Debounce search input
   useEffect(() => {
@@ -183,260 +187,132 @@ const Consumers = () => {
     setPaginationModel(prev => ({ ...prev, page: 0 }));
   };
 
-  const CustomToolbar = () => {
-    return (
-      <Toolbar
-        // @ts-expect-error - Toolbar supports sx prop but type definitions are incomplete
-        sx={{
-          p: 2,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          minHeight: '64px',
-          flexWrap: 'nowrap',
-        }}
-      >
-        <Box>
-          <Typography variant="h6" sx={{ color: 'primary.main', fontWeight: 600 }}>
-            Consumers
-          </Typography>
-        </Box>
+  const handleExportCSV = async () => {
+    try {
+      setCsvLoading(true);
 
-        <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1 }}>
-          {/* Server-side Search */}
-          <TextField
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            variant="standard"
-            placeholder="Search consumers..."
-            size="small"
-            InputProps={{
-              startAdornment: <SearchIcon sx={{ fontSize: '20px', mr: 1, color: 'text.secondary' }} />,
-              endAdornment: searchInput ? (
-                <IconButton
-                  size="small"
-                  onClick={() => setSearchInput('')}
-                  sx={{ p: 0.5 }}
-                >
-                  <CloseIcon sx={{ fontSize: '18px' }} />
-                </IconButton>
-              ) : null,
-            }}
-            sx={{
-              minWidth: '250px',
-              '& .MuiInput-root:before': {
-                borderBottomColor: 'divider',
-              },
-              '& .MuiInput-root:hover:not(.Mui-disabled):before': {
-                borderBottomColor: 'text.secondary',
-              },
-              '& .MuiInput-root:after': {
-                borderBottomColor: 'primary.main',
-              },
-            }}
-          />
+      // Build the same filters as the current view
+      let ordering = '';
+      if (sortModel.length > 0) {
+        const { field, sort } = sortModel[0];
+        ordering = sort === 'desc' ? `-${field}` : field;
+      }
 
-          {/* KYC Status Filters */}
-          <Box
-            component="fieldset"
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 0.5,
-              border: 'none',
-              borderBottom: '1px solid',
-              borderColor: 'divider',
-              borderRadius: 0,
-              padding: '4px 6px 5px 6px',
-              backgroundColor: 'transparent',
-              margin: 0,
-              position: 'relative',
-            }}
-          >
-            <Box
-              component="legend"
-              sx={{
-                fontSize: '10px',
-                color: 'text.secondary',
-                padding: '0 4px',
-                fontWeight: 500,
-              }}
-            >
-              KYC
-            </Box>
+      let is_kyc_done = undefined;
+      if (kycFilter === 'done') is_kyc_done = true;
+      if (kycFilter === 'pending') is_kyc_done = false;
 
-            <Tooltip title="All" arrow>
-              <IconButton
-                size="small"
-                onClick={() => handleKycFilterChange('all')}
-                aria-label="All KYC"
-                sx={{
-                  width: '20px',
-                  height: '20px',
-                  padding: 0,
-                  backgroundColor: kycFilter === 'all' ? 'primary.main' : 'transparent',
-                  border: kycFilter === 'all' ? 'none' : '1.5px solid',
-                  borderColor: kycFilter === 'all' ? 'transparent' : 'divider',
-                  borderRadius: '50%',
-                  transition: 'all 0.3s ease',
-                  '&:hover': {
-                    backgroundColor: kycFilter === 'all' ? 'primary.dark' : 'action.hover',
-                    transform: 'scale(1.15)',
-                  },
-                }}
-              >
-                {kycFilter === 'all' && (
-                  <Box
-                    sx={{
-                      width: '8px',
-                      height: '8px',
-                      borderRadius: '50%',
-                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    }}
-                  />
-                )}
-              </IconButton>
-            </Tooltip>
+      const response = await consumersApi.exportCSV({
+        search: searchQuery || undefined,
+        ordering,
+        is_kyc_done,
+      });
 
-            <Tooltip title="Pending" arrow>
-              <IconButton
-                size="small"
-                onClick={() => handleKycFilterChange('pending')}
-                aria-label="KYC Pending"
-                sx={{
-                  width: '20px',
-                  height: '20px',
-                  padding: 0,
-                  backgroundColor: kycFilter === 'pending' ? 'error.main' : 'transparent',
-                  border: kycFilter === 'pending' ? 'none' : '1.5px solid',
-                  borderColor: kycFilter === 'pending' ? 'transparent' : 'divider',
-                  borderRadius: '50%',
-                  transition: 'all 0.3s ease',
-                  '&:hover': {
-                    backgroundColor: kycFilter === 'pending' ? 'error.dark' : 'action.hover',
-                    transform: 'scale(1.15)',
-                  },
-                }}
-              >
-                {kycFilter === 'pending' && (
-                  <Box
-                    sx={{
-                      width: '8px',
-                      height: '8px',
-                      borderRadius: '50%',
-                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    }}
-                  />
-                )}
-              </IconButton>
-            </Tooltip>
+      // Create download link
+      const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
 
-            <Tooltip title="Done" arrow>
-              <IconButton
-                size="small"
-                onClick={() => handleKycFilterChange('done')}
-                aria-label="KYC Done"
-                sx={{
-                  width: '20px',
-                  height: '20px',
-                  padding: 0,
-                  backgroundColor: kycFilter === 'done' ? 'success.main' : 'transparent',
-                  border: kycFilter === 'done' ? 'none' : '1.5px solid',
-                  borderColor: kycFilter === 'done' ? 'transparent' : 'divider',
-                  borderRadius: '50%',
-                  transition: 'all 0.3s ease',
-                  '&:hover': {
-                    backgroundColor: kycFilter === 'done' ? 'success.dark' : 'action.hover',
-                    transform: 'scale(1.15)',
-                  },
-                }}
-              >
-                {kycFilter === 'done' && (
-                  <Box
-                    sx={{
-                      width: '8px',
-                      height: '8px',
-                      borderRadius: '50%',
-                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    }}
-                  />
-                )}
-              </IconButton>
-            </Tooltip>
-          </Box>
+      link.setAttribute('href', url);
+      link.setAttribute('download', `consumers_${new Date().toISOString().split('T')[0]}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
 
-          {/* Toolbar Action Buttons */}
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1,
-              '& .MuiButtonBase-root': {
-                color: 'primary.main',
-                '&:hover': {
-                  color: 'primary.dark',
-                  backgroundColor: 'action.hover',
-                },
-              },
-            }}
-          >
-            <Tooltip title="Columns" arrow>
-              <ColumnsPanelTrigger render={<ToolbarButton />}>
-                <ViewColumnIcon sx={{ fontSize: '20px' }} />
-              </ColumnsPanelTrigger>
-            </Tooltip>
+      showSnackbar('CSV exported successfully', 'success');
+    } catch (error) {
+      console.error('Failed to export CSV:', error);
+      showSnackbar('Failed to export CSV', 'error');
+    } finally {
+      setCsvLoading(false);
+    }
+  };
 
-            <Tooltip title="Filters" arrow>
-              <FilterPanelTrigger
-                render={(props, state) => (
-                  // @ts-expect-error - ToolbarButton ref type incompatibility with Tooltip
-                  <ToolbarButton {...props}>
-                    <Badge badgeContent={state.filterCount} color="primary" variant="dot">
-                      <FilterListIcon sx={{ fontSize: '20px' }} />
-                    </Badge>
-                  </ToolbarButton>
-                )}
-              />
-            </Tooltip>
+  const handleExportPDF = async () => {
+    try {
+      setPdfLoading(true);
 
-            <Tooltip title="Download as CSV" arrow>
-              <ExportCsv render={<ToolbarButton />}>
-                <FileDownloadIcon sx={{ fontSize: '20px' }} />
-              </ExportCsv>
-            </Tooltip>
+      // Build the same filters as the current view
+      let ordering = '';
+      if (sortModel.length > 0) {
+        const { field, sort } = sortModel[0];
+        ordering = sort === 'desc' ? `-${field}` : field;
+      }
 
-            <Tooltip title="Print" arrow>
-              <ExportPrint render={<ToolbarButton />}>
-                <PrintIcon sx={{ fontSize: '20px' }} />
-              </ExportPrint>
-            </Tooltip>
-          </Box>
+      let is_kyc_done = undefined;
+      if (kycFilter === 'done') is_kyc_done = true;
+      if (kycFilter === 'pending') is_kyc_done = false;
 
-          {/* Add Consumer Button */}
-          <Tooltip title="Add Consumer" arrow>
-            <IconButton
-              size="medium"
-              onClick={() => navigate("/consumers/create")}
-              sx={{
-                border: '1px solid',
-                borderColor: '#667eea',
-                borderRadius: '16px',
-                height: '36px',
-                width: '48px',
-                backgroundColor: '#667eea',
-                color: 'white',
-                '&:hover': {
-                  backgroundColor: '#5568d3',
-                  borderColor: '#5568d3',
-                },
-              }}
-            >
-              <AddIcon sx={{ fontSize: '18px' }} />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      </Toolbar>
-    );
+      const response = await consumersApi.exportPDF({
+        search: searchQuery || undefined,
+        ordering,
+        is_kyc_done,
+      });
+
+      // Create download link
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+
+      link.setAttribute('href', url);
+      link.setAttribute('download', `consumers_${new Date().toISOString().split('T')[0]}.pdf`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showSnackbar('PDF exported successfully', 'success');
+    } catch (error) {
+      console.error('Failed to export PDF:', error);
+      showSnackbar('Failed to export PDF', 'error');
+    } finally {
+      setPdfLoading(false);
+    }
+  };
+
+  const handleExportExcel = async () => {
+    try {
+      setExcelLoading(true);
+
+      // Build the same filters as the current view
+      let ordering = '';
+      if (sortModel.length > 0) {
+        const { field, sort } = sortModel[0];
+        ordering = sort === 'desc' ? `-${field}` : field;
+      }
+
+      let is_kyc_done = undefined;
+      if (kycFilter === 'done') is_kyc_done = true;
+      if (kycFilter === 'pending') is_kyc_done = false;
+
+      const response = await consumersApi.exportExcel({
+        search: searchQuery || undefined,
+        ordering,
+        is_kyc_done,
+      });
+
+      // Create download link
+      const blob = new Blob([response.data], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+
+      link.setAttribute('href', url);
+      link.setAttribute('download', `consumers_${new Date().toISOString().split('T')[0]}.xlsx`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showSnackbar('Excel exported successfully', 'success');
+    } catch (error) {
+      console.error('Failed to export Excel:', error);
+      showSnackbar('Failed to export Excel', 'error');
+    } finally {
+      setExcelLoading(false);
+    }
   };
 
   const columns: GridColDef[] = [
@@ -653,7 +529,7 @@ const Consumers = () => {
           sortModel={sortModel}
           onSortModelChange={setSortModel}
           rowCount={rowCount}
-          pageSizeOptions={[5, 10, 25, 50]}
+          pageSizeOptions={[5, 10, 20]}
           paginationMode="server"
           sortingMode="server"
           loading={loading}
@@ -661,46 +537,28 @@ const Consumers = () => {
           slots={{
             toolbar: CustomToolbar,
           }}
+          slotProps={{
+            toolbar: {
+              title: 'Consumers',
+              searchValue: searchInput,
+              onSearchChange: setSearchInput,
+              onExportClick: handleExportCSV,
+              exportLoading: csvLoading,
+              showExport: true,
+              showPrint: true,
+              onExportPdf: handleExportPDF,
+              pdfLoading: pdfLoading,
+              onExportExcel: handleExportExcel,
+              excelLoading: excelLoading,
+            },
+          }}
           getRowClassName={getRowClassName}
           disableRowSelectionOnClick
           autoHeight
           disableColumnResize={false}
           columnHeaderHeight={40}
           rowHeight={40}
-          sx={{
-            border: "none",
-            width: "100%",
-            "& .MuiDataGrid-main": {
-              borderRadius: 0,
-            },
-            "& .MuiDataGrid-columnHeaders": {
-              bgcolor: "#f5f5f5",
-              borderBottom: "2px solid #667eea",
-              "& .MuiDataGrid-columnHeaderTitle": {
-                fontWeight: 700,
-                color: "#333",
-              },
-            },
-            "& .MuiDataGrid-cell": {
-              borderBottom: "1px solid #f0f0f0",
-            },
-            "& .even-row": {
-              bgcolor: "#fafafa",
-            },
-            "& .odd-row": {
-              bgcolor: "white",
-            },
-            "& .MuiDataGrid-row:hover": {
-              bgcolor: "#f0f7ff !important",
-            },
-            "& .MuiDataGrid-footerContainer": {
-              borderTop: "2px solid #667eea",
-              bgcolor: "#f5f5f5",
-            },
-            "& .MuiDataGrid-virtualScroller": {
-              overflowX: "auto",
-            },
-          }}
+         
           initialState={{
             columns: {
               columnVisibilityModel: {

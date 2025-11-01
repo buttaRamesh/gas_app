@@ -98,8 +98,10 @@ class DeliveryPersonViewSet(viewsets.ModelViewSet):
         Supports search parameter to filter by consumer_number or consumer_name
         """
         from django.db.models import Q
+        from django.shortcuts import get_object_or_404
 
-        delivery_person = self.get_object()
+        # Get delivery person directly without applying search filters
+        delivery_person = get_object_or_404(DeliveryPerson, pk=pk)
         search = request.query_params.get('search', None)
 
         # Get all route IDs assigned to this delivery person
