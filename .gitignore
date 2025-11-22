@@ -1,0 +1,73 @@
+venv/
+csv/
+seed/
+cmds/
+docs/
+reference/
+reports/
+seeders/
+.claude/
+
+# Batch files
+*.bat
+
+null
+check-status.bat
+check_routes.py
+merge-to-main-advanced.bat
+merge-to-main.bat
+MERGE-WORKFLOW-README.md
+populate_db.bat
+populate_db.sh
+pull-from-claude.bat
+push-to-claude.bat
+QUICK-FIX-GUIDE.md
+quick-merge.bat
+rollback-merge.bat
+
+# Database management scripts (contain sensitive credentials)
+backend/clean_mysql_local.bat
+backend/clean_mysql_remote.bat
+backend/migrate_local.bat
+backend/migrate_remote.bat
+backend/seed_local.bat
+backend/seed_remote.bat
+backend/reset_mysql.bat
+
+# Django migrations (except __init__.py)
+backend/*/migrations/[0-9]*.py
+
+# SQLite database
+*.sqlite3
+db.sqlite3
+
+# Data files
+*.csv
+*.xls
+*.xlsx
+*.xlsm
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Environment
+.env
+.venv
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+nul
