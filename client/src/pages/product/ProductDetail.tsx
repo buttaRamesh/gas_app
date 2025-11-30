@@ -45,8 +45,8 @@ const variantSchema = z.object({
   product_code: z.string().min(1, 'Product code is required'),
   name: z.string().min(1, 'Variant name is required'),
   unit: z.string().min(1, 'Unit is required'),
-  size: z.string().min(1, 'Size is required').refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-    message: 'Size must be a positive number',
+  quantity: z.string().min(1, 'Quantity is required').refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+    message: 'Quantity must be a positive number',
   }),
   price: z.string().min(1, 'Price is required').refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
     message: 'Price must be a positive number',
@@ -99,7 +99,7 @@ export default function ProductDetail() {
       product_code: '',
       name: '',
       unit: '',
-      size: '',
+      quantity: '',
       price: '',
       variant_type: 'DOMESTIC',
     },
@@ -132,7 +132,7 @@ export default function ProductDetail() {
         ...data,
         product: Number(id),
         unit: Number(data.unit),
-        size: parseFloat(data.size),
+        quantity: parseFloat(data.quantity),
         price: parseFloat(data.price),
       });
       showSnackbar('Variant added successfully', 'success');
@@ -352,7 +352,7 @@ export default function ProductDetail() {
                           </Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography variant="body1">{variant.size}</Typography>
+                          <Typography variant="body1">{variant.quantity}</Typography>
                         </TableCell>
                         <TableCell>
                           <Chip
@@ -454,11 +454,11 @@ export default function ProductDetail() {
           />
           <TextField
             fullWidth
-            label="Size"
+            label="Quantity"
             type="number"
-            {...registerVariant('size')}
-            error={!!variantErrors.size}
-            helperText={variantErrors.size?.message}
+            {...registerVariant('quantity')}
+            error={!!variantErrors.quantity}
+            helperText={variantErrors.quantity?.message}
             placeholder="e.g., 14.2"
             inputProps={{ step: '0.01', min: '0' }}
           />

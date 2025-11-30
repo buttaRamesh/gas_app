@@ -63,7 +63,7 @@ class ProductVariant(models.Model):
     )
     
     # --- Specific Attributes ---
-    size = models.DecimalField(
+    quantity = models.DecimalField(
         "Size (e.g., weight or volume)",
         max_digits=10,
         decimal_places=2,

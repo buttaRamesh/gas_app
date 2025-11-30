@@ -62,13 +62,13 @@ class User(AbstractUser):
     phone = models.CharField(max_length=15, blank=True, null=True)
 
     # Link to delivery person if user is a delivery person
-    delivery_person = models.ForeignKey(
-        'delivery.DeliveryPerson',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='user_account'
-    )
+    # delivery_person = models.ForeignKey(
+    #     'delivery.DeliveryPerson',
+    #     on_delete=models.SET_NULL,
+    #     null=True,
+    #     blank=True,
+    #     related_name='user_account'
+    # )
 
     # Use employee_id for authentication instead of username
     USERNAME_FIELD = 'employee_id'

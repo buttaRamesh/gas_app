@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import axios from 'axios';
+import { authApi } from '@/services/api';
 
 interface User {
   id: number;
@@ -51,7 +51,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = async (employeeId: string, password: string) => {
     try {
-      const response = await axios.post('http://localhost:8000/api/auth/login/', {
+      const response = await authApi.login({
         employee_id: employeeId,  // Changed from user_id
         password: password,
       });
@@ -74,7 +74,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const refreshToken = localStorage.getItem('refresh_token');
       if (refreshToken) {
-        await axios.post('http://localhost:8000/api/auth/logout/', {
+        await authApi.logout({
           refresh: refreshToken,
         });
       }

@@ -17,7 +17,8 @@ from datetime import timedelta
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# Settings are at backend/core/settings/base.py, so we go up 3 levels to reach backend/
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Application definition
@@ -158,7 +159,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # REACT_BUILD_DIR = BASE_DIR.parent / "client" / "dist"
 UI_DIR = BASE_DIR.parent / "ui" / "dist"
 
-STATIC_URL = '/static/'
+STATIC_URL = "/assets/"
 STATICFILES_DIRS = [
     UI_DIR / "assets",  # Serve React static files
 ]
@@ -181,7 +182,7 @@ TEMPLATES = [
     },
 ]
 
-
+TEMPLATES[0]["DIRS"] = [UI_DIR]
 
 # Logging Configuration
 LOGGING = {

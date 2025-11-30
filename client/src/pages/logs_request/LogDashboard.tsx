@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
-import axios from "axios";
+import { loggerApi } from "@/services/api";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -56,17 +56,15 @@ export default function LogDashboard() {
   const [search, setSearch] = useState("");
   const [autoRefresh, setAutoRefresh] = useState(true);
 
-  const BASE_URL = "http://127.0.0.1:8000/api/";
-
   // -----------------------------------------------------
   // 🔹 Fetch Logs
   // -----------------------------------------------------
   const fetchLogs = async (): Promise<void> => {
     try {
-      const endpoint = tab === 0 ? "logger/logs/" : "logger/errors/";
-      const fullUrl = BASE_URL + endpoint;
+      const res = tab === 0
+        ? await loggerApi.getLogs()
+        : await loggerApi.getErrors();
 
-      const res = await axios.get(fullUrl); // interceptor adds header automatically
       const rows: LogRecord[] = res.data?.results ?? [];
 
       const withIds = rows.map((item, index) => ({

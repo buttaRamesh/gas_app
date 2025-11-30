@@ -1,9 +1,16 @@
 from .base import *
 import os
+from decouple import Config, RepositoryEnv
+from pathlib import Path
+
+# Use .env.prod file for production settings
+# __file__ is at backend/core/settings/prod.py, so we need to go up 3 levels to get to backend/
+env_file = Path(__file__).resolve().parent.parent.parent / '.env.prod'
+config = Config(RepositoryEnv(str(env_file)))
 
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='').split(',')
 
 DB_ENGINE = config('DB_ENGINE')
 DATABASES = {
@@ -17,10 +24,8 @@ DATABASES = {
     }
 }
 
-cors_origins = os.getenv("CORS_ALLOWED_ORIGINS", "")
+cors_origins = config('CORS_ALLOWED_ORIGINS', default='')
 
 if cors_origins:
     CORS_ALLOW_ALL_ORIGINS = False
     CORS_ALLOWED_ORIGINS = [o.strip() for o in cors_origins.split(",") if o.strip()]
-    
-print("Loaded ALLOWED_HOSTS:", ALLOWED_HOSTS)

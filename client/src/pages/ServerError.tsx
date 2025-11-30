@@ -47,7 +47,7 @@ const ServerError = () => {
 
     try {
       // Try to ping the backend health endpoint
-      await axios.get('http://127.0.0.1:8000/api/health/', {
+      await axios.get('/api/health/', {
         timeout: 5000,
       });
 
@@ -168,7 +168,7 @@ const ServerError = () => {
           <strong>Troubleshooting Tips:</strong>
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-          1. Check if the backend server is running on http://127.0.0.1:8000
+          1. Check if the backend server is running
         </Typography>
         <Typography variant="body2" color="text.secondary">
           2. Verify your network connection

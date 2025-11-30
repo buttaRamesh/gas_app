@@ -30,7 +30,7 @@ export default function VariantCreate() {
     name: '',
     product: '',
     unit: '',
-    size: '',
+    quantity: '',
     variant_type: 'DOMESTIC' as VariantType,
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -44,7 +44,7 @@ export default function VariantCreate() {
     if (!formData.name.trim()) newErrors.name = 'Name is required';
     if (!formData.product) newErrors.product = 'Product is required';
     if (!formData.unit) newErrors.unit = 'Unit is required';
-    if (!formData.size) newErrors.size = 'Size is required';
+    if (!formData.quantity) newErrors.quantity = 'Quantity is required';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -57,7 +57,7 @@ export default function VariantCreate() {
         ...formData,
         product: Number(formData.product),
         unit: Number(formData.unit),
-        size: Number(formData.size),
+        quantity: Number(formData.quantity),
       });
       showSnackbar('Variant created successfully', 'success');
       navigate('/products');
@@ -138,16 +138,16 @@ export default function VariantCreate() {
                 </TextField>
 
                 <TextField
-                  label="Size"
+                  label="Quantity"
                   type="number"
-                  placeholder="e.g., 2.0"
-                  value={formData.size}
+                  placeholder="e.g., 14.2"
+                  value={formData.quantity}
                   onChange={(e) => {
-                    setFormData({ ...formData, size: e.target.value });
-                    setErrors({ ...errors, size: '' });
+                    setFormData({ ...formData, quantity: e.target.value });
+                    setErrors({ ...errors, quantity: '' });
                   }}
-                  error={!!errors.size}
-                  helperText={errors.size}
+                  error={!!errors.quantity}
+                  helperText={errors.quantity}
                   required
                   fullWidth
                 />

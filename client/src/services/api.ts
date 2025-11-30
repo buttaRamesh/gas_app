@@ -20,7 +20,8 @@ import type {
 } from '@/types/auth';
 
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api',
+  // baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
     "X-Requested-From": window.location.href,
@@ -77,7 +78,7 @@ api.interceptors.response.use(
         }
 
         // Try to refresh the access token
-        const response = await axios.post('http://127.0.0.1:8000/api/auth/refresh/', {
+        const response = await axios.post('/api/auth/refresh/', {
           refresh: refreshToken,
         });
 

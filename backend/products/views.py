@@ -150,7 +150,7 @@ class ProductViewSet(EnhancedModelViewSet):
             "product_code": "LPG-14.2-DOM",
             "name": "14.2 kg Domestic",
             "unit": 1,
-            "size": 14.2,
+            "quantity": 14.2,
             "variant_type": "DOMESTIC",
             "price": 850.00
         }
@@ -287,7 +287,7 @@ class ProductVariantViewSet(EnhancedModelViewSet):
     Custom actions:
     - by_type: Get variants by type
     - by_product: Get variants for a specific product
-    - search_by_size: Search variants by size range
+    - search_by_quantity: Search variants by quantity range
     - search_by_price: Search variants by price range
     - update_price: Update variant price with history tracking
     - price_history: Get price history for a variant
@@ -299,8 +299,8 @@ class ProductVariantViewSet(EnhancedModelViewSet):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['product', 'variant_type', 'unit']
     search_fields = ['product_code', 'name', 'product__name']
-    ordering_fields = ['product_code', 'name', 'size', 'price']
-    ordering = ['product__name', 'size']
+    ordering_fields = ['product_code', 'name', 'quantity', 'price']
+    ordering = ['product__name', 'quantity']
 
     def get_serializer_class(self):
         """Return appropriate serializer based on action"""
@@ -308,7 +308,7 @@ class ProductVariantViewSet(EnhancedModelViewSet):
             return ProductVariantListSerializer
         elif self.action == 'retrieve':
             return ProductVariantDetailSerializer
-        elif self.action in ['by_type', 'by_product', 'search_by_size', 'search_by_price']:
+        elif self.action in ['by_type', 'by_product', 'search_by_quantity', 'search_by_price']:
             return VariantWithProductSerializer
         elif self.action == 'update_price':
             return ProductVariantPriceUpdateSerializer
@@ -452,44 +452,44 @@ class ProductVariantViewSet(EnhancedModelViewSet):
         })
     
     @action(detail=False, methods=['get'])
-    def search_by_size(self, request):
+    def search_by_quantity(self, request):
         """
-        Search variants by size range.
-        
-        GET /api/products/variants/search_by_size/?min_size=10&max_size=20
+        Search variants by quantity range.
+
+        GET /api/products/variants/search_by_quantity/?min_quantity=10&max_quantity=20
         """
-        min_size = request.query_params.get('min_size', None)
-        max_size = request.query_params.get('max_size', None)
-        
+        min_quantity = request.query_params.get('min_quantity', None)
+        max_quantity = request.query_params.get('max_quantity', None)
+
         queryset = self.get_queryset()
-        
-        if min_size:
+
+        if min_quantity:
             try:
-                queryset = queryset.filter(size__gte=float(min_size))
+                queryset = queryset.filter(quantity__gte=float(min_quantity))
             except ValueError:
                 return Response(
-                    {'error': 'min_size must be a valid number'}, 
+                    {'error': 'min_quantity must be a valid number'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-        
-        if max_size:
+
+        if max_quantity:
             try:
-                queryset = queryset.filter(size__lte=float(max_size))
+                queryset = queryset.filter(quantity__lte=float(max_quantity))
             except ValueError:
                 return Response(
-                    {'error': 'max_size must be a valid number'}, 
+                    {'error': 'max_quantity must be a valid number'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-        
+
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
-        
+
         serializer = self.get_serializer(queryset, many=True)
         return Response({
-            'min_size': min_size,
-            'max_size': max_size,
+            'min_quantity': min_quantity,
+            'max_quantity': max_quantity,
             'total_count': queryset.count(),
             'variants': serializer.data,
         })

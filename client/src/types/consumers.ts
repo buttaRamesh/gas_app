@@ -135,8 +135,10 @@ export interface ConnectionDetails {
   connection_type: number;
   connection_type_name: string;
   product: number;
-  product_name: string;
-  product_size?: number;
+  product_code: string;
+  product_category_name: string;
+  product_variant_name: string;
+  product_quantity?: number;
   product_unit?: string;
   num_of_regulators: number;
 }

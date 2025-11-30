@@ -78,7 +78,7 @@ class ProductDetailSerializer(BaseModelSerializer):
             'id': variant.id,
             'product_code': variant.product_code,
             'name': variant.name,
-            'size': str(variant.size),
+            'quantity': str(variant.quantity),
             'unit': variant.unit.short_name,
             'variant_type': variant.variant_type,
             'variant_type_display': variant.get_variant_type_display(),
@@ -167,7 +167,7 @@ class ProductVariantListSerializer(BaseModelSerializer):
             'name',
             'product',
             'product_name',
-            'size',
+            'quantity',
             'unit',
             'unit_name',
             'variant_type',
@@ -197,7 +197,7 @@ class ProductVariantDetailSerializer(BaseModelSerializer):
             'product',
             'product_name',
             'product_description',
-            'size',
+            'quantity',
             'unit',
             'unit_name',
             'unit_description',
@@ -231,8 +231,8 @@ class ProductVariantCreateUpdateSerializer(
     Serializer for creating and updating ProductVariants.
     Only includes editable fields with comprehensive validation.
     """
-    required_fields = ['product_code', 'name', 'product', 'unit', 'size', 'variant_type', 'price']
-    positive_number_fields = ['price', 'size']
+    required_fields = ['product_code', 'name', 'product', 'unit', 'quantity', 'variant_type', 'price']
+    positive_number_fields = ['price', 'quantity']
     unique_together_fields = [('product', 'name')]
 
     class Meta:
@@ -242,7 +242,7 @@ class ProductVariantCreateUpdateSerializer(
             'name',
             'product',
             'unit',
-            'size',
+            'quantity',
             'variant_type',
             'price',
         ]
@@ -274,10 +274,10 @@ class ProductVariantCreateUpdateSerializer(
         validate_price(value)
         return value
 
-    def validate_size(self, value):
-        """Ensure size is positive"""
+    def validate_quantity(self, value):
+        """Ensure quantity is positive"""
         if value <= 0:
-            raise serializers.ValidationError("Size must be greater than zero.")
+            raise serializers.ValidationError("Quantity must be greater than zero.")
         return value
 
 
@@ -330,7 +330,7 @@ class VariantWithProductSerializer(BaseModelSerializer):
             'product_code',
             'name',
             'product_details',
-            'size',
+            'quantity',
             'unit',
             'unit_name',
             'variant_type',

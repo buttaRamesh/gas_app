@@ -1287,7 +1287,7 @@ export default function ConsumerDetail() {
                         <TableCell>{new Date(connection.sv_date).toLocaleDateString()}</TableCell>
                         <TableCell>{connection.connection_type_name}</TableCell>
                         <TableCell>
-                          {connection.product_name} {connection.product_size ? `(${connection.product_size} ${connection.product_unit})` : ''}
+                          {connection.product_code} - {connection.product_category_name} {connection.product_quantity} {connection.product_unit?.toUpperCase()} ({connection.product_variant_name})
                         </TableCell>
                         <TableCell>{connection.num_of_regulators}</TableCell>
                         <TableCell>

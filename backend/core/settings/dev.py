@@ -23,4 +23,4 @@ if cors_origins:
     CORS_ALLOW_ALL_ORIGINS = False
     CORS_ALLOWED_ORIGINS = [o.strip() for o in cors_origins.split(",") if o.strip()]
     
-print("Loaded ALLOWED_HOSTS:", ALLOWED_HOSTS)
+print('msg... ',config('DEBUG_MSG'))

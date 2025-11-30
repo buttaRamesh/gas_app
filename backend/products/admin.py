@@ -14,7 +14,7 @@ class ProductVariantInline(admin.TabularInline):
     """Inline admin for ProductVariant within Product"""
     model = ProductVariant
     extra = 1
-    fields = ['product_code', 'name', 'unit', 'size', 'variant_type', 'price']
+    fields = ['product_code', 'name', 'unit', 'quantity', 'variant_type', 'price']
     autocomplete_fields = ['unit']
     readonly_fields = []
 
@@ -51,12 +51,12 @@ class PriceHistoryInline(admin.TabularInline):
 class ProductVariantAdmin(admin.ModelAdmin):
     """Admin interface for ProductVariant with price tracking"""
     list_display = [
-        'product_code', 'name', 'product', 'size',
+        'product_code', 'name', 'product', 'quantity',
         'unit', 'variant_type', 'price', 'formatted_price'
     ]
     list_filter = ['variant_type', 'product', 'unit']
     search_fields = ['product_code', 'name', 'product__name']
-    ordering = ['product__name', 'size']
+    ordering = ['product__name', 'quantity']
     autocomplete_fields = ['product', 'unit']
     inlines = [PriceHistoryInline]
 
@@ -65,7 +65,7 @@ class ProductVariantAdmin(admin.ModelAdmin):
             'fields': ('product_code', 'name', 'product')
         }),
         ('Specifications', {
-            'fields': ('size', 'unit', 'variant_type')
+            'fields': ('quantity', 'unit', 'variant_type')
         }),
         ('Pricing', {
             'fields': ('price',),

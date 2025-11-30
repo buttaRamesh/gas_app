@@ -9,8 +9,10 @@ class ConnectionDetailsListSerializer(serializers.ModelSerializer):
     Returns only essential fields for better performance.
     """
     connection_type_name = serializers.CharField(source='connection_type.name', read_only=True)
-    product_name = serializers.CharField(source='product.name', read_only=True)
-    product_size = serializers.FloatField(source='product.size', read_only=True)
+    product_code = serializers.CharField(source='product.product_code', read_only=True)
+    product_category_name = serializers.CharField(source='product.product.name', read_only=True)
+    product_variant_name = serializers.CharField(source='product.name', read_only=True)
+    product_quantity = serializers.FloatField(source='product.quantity', read_only=True)
     product_unit = serializers.CharField(source='product.unit.short_name', read_only=True)
     consumer_name = serializers.CharField(source='consumer.person.person_name', read_only=True)
     consumer_number = serializers.CharField(source='consumer.consumer_number', read_only=True)
@@ -28,8 +30,10 @@ class ConnectionDetailsListSerializer(serializers.ModelSerializer):
             'connection_type',
             'connection_type_name',
             'product',
-            'product_name',
-            'product_size',
+            'product_code',
+            'product_category_name',
+            'product_variant_name',
+            'product_quantity',
             'product_unit',
             'num_of_regulators',
         ]
@@ -41,8 +45,10 @@ class ConnectionDetailsSerializer(serializers.ModelSerializer):
     Includes all fields and nested relationships.
     """
     connection_type_name = serializers.CharField(source='connection_type.name', read_only=True)
-    product_name = serializers.CharField(source='product.name', read_only=True)
-    product_size = serializers.FloatField(source='product.size', read_only=True)
+    product_code = serializers.CharField(source='product.product_code', read_only=True)
+    product_category_name = serializers.CharField(source='product.product.name', read_only=True)
+    product_variant_name = serializers.CharField(source='product.name', read_only=True)
+    product_quantity = serializers.FloatField(source='product.quantity', read_only=True)
     product_unit = serializers.CharField(source='product.unit.short_name', read_only=True)
     consumer_name = serializers.CharField(source='consumer.person.person_name', read_only=True)
     consumer_number = serializers.CharField(source='consumer.consumer_number', read_only=True)
@@ -60,8 +66,10 @@ class ConnectionDetailsSerializer(serializers.ModelSerializer):
             'connection_type',
             'connection_type_name',
             'product',
-            'product_name',
-            'product_size',
+            'product_code',
+            'product_category_name',
+            'product_variant_name',
+            'product_quantity',
             'product_unit',
             'num_of_regulators',
         ]
