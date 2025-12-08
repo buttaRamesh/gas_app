@@ -1,0 +1,1342 @@
+openapi: 3.0.3
+info:
+  title: Gas App API - Consumers & Routes
+  version: 1.0.0
+  description: |-
+    API documentation for Gas App - a comprehensive gas distribution management system.
+
+    **Currently Documenting:**
+    - 🛒 **Consumers API** - Consumer management, registration, and tracking
+    - 🗺️ **Routes API** - Route management, assignments, and optimization
+
+    *Other APIs will be added incrementally as the codebase is reorganized.*
+paths:
+  /api/consumers/:
+    get:
+      operationId: consumers_list
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      tags:
+      - consumers
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedConsumerListList'
+          description: ''
+  /api/consumers/{id}/:
+    get:
+      operationId: consumers_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Consumer.
+        required: true
+      tags:
+      - consumers
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsumerList'
+          description: ''
+    put:
+      operationId: consumers_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Consumer.
+        required: true
+      tags:
+      - consumers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsumerListRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ConsumerListRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ConsumerListRequest'
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsumerList'
+          description: ''
+    patch:
+      operationId: consumers_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Consumer.
+        required: true
+      tags:
+      - consumers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedConsumerListRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedConsumerListRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedConsumerListRequest'
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsumerList'
+          description: ''
+  /api/consumers/{id}/enable-kyc/:
+    patch:
+      operationId: consumers_enable_kyc_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Consumer.
+        required: true
+      tags:
+      - consumers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedConsumerListRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedConsumerListRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedConsumerListRequest'
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsumerList'
+          description: ''
+  /api/consumers/kyc/:
+    get:
+      operationId: consumers_kyc_retrieve
+      tags:
+      - consumers
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsumerList'
+          description: ''
+  /api/route-areas/:
+    get:
+      operationId: route_areas_list
+      description: |-
+        ViewSet for RouteArea operations.
+
+        List endpoint shows ALL areas by default (assigned + unassigned).
+        Use query params to filter:
+        - ?assigned=true  -> Only areas with routes
+        - ?assigned=false -> Only areas without routes
+        - ?route=1        -> Areas for specific route
+        - ?page_size=10   -> Number of items per page (default: 10)
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: route
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - route-areas
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRouteAreaList'
+          description: ''
+    post:
+      operationId: route_areas_create
+      description: |-
+        ViewSet for RouteArea operations.
+
+        List endpoint shows ALL areas by default (assigned + unassigned).
+        Use query params to filter:
+        - ?assigned=true  -> Only areas with routes
+        - ?assigned=false -> Only areas without routes
+        - ?route=1        -> Areas for specific route
+        - ?page_size=10   -> Number of items per page (default: 10)
+      tags:
+      - route-areas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteAreaCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RouteAreaCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RouteAreaCreateUpdateRequest'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteAreaCreateUpdate'
+          description: ''
+  /api/route-areas/{id}/:
+    get:
+      operationId: route_areas_retrieve
+      description: |-
+        ViewSet for RouteArea operations.
+
+        List endpoint shows ALL areas by default (assigned + unassigned).
+        Use query params to filter:
+        - ?assigned=true  -> Only areas with routes
+        - ?assigned=false -> Only areas without routes
+        - ?route=1        -> Areas for specific route
+        - ?page_size=10   -> Number of items per page (default: 10)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Route Area.
+        required: true
+      tags:
+      - route-areas
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteAreaDetail'
+          description: ''
+    put:
+      operationId: route_areas_update
+      description: |-
+        ViewSet for RouteArea operations.
+
+        List endpoint shows ALL areas by default (assigned + unassigned).
+        Use query params to filter:
+        - ?assigned=true  -> Only areas with routes
+        - ?assigned=false -> Only areas without routes
+        - ?route=1        -> Areas for specific route
+        - ?page_size=10   -> Number of items per page (default: 10)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Route Area.
+        required: true
+      tags:
+      - route-areas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteAreaCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RouteAreaCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RouteAreaCreateUpdateRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteAreaCreateUpdate'
+          description: ''
+    patch:
+      operationId: route_areas_partial_update
+      description: |-
+        ViewSet for RouteArea operations.
+
+        List endpoint shows ALL areas by default (assigned + unassigned).
+        Use query params to filter:
+        - ?assigned=true  -> Only areas with routes
+        - ?assigned=false -> Only areas without routes
+        - ?route=1        -> Areas for specific route
+        - ?page_size=10   -> Number of items per page (default: 10)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Route Area.
+        required: true
+      tags:
+      - route-areas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRouteAreaCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRouteAreaCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRouteAreaCreateUpdateRequest'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteAreaCreateUpdate'
+          description: ''
+    delete:
+      operationId: route_areas_destroy
+      description: Override destroy to provide custom response message
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Route Area.
+        required: true
+      tags:
+      - route-areas
+      responses:
+        '204':
+          description: No response body
+  /api/route-areas/{id}/assign_to_route/:
+    post:
+      operationId: route_areas_assign_to_route_create
+      description: |-
+        Assign an unassigned area to a route.
+
+        POST /api/route-areas/{id}/assign_to_route/
+        Body: {
+            "route": 1
+        }
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Route Area.
+        required: true
+      tags:
+      - route-areas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteAreaRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RouteAreaRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RouteAreaRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteArea'
+          description: ''
+  /api/route-areas/{id}/unassign_from_route/:
+    post:
+      operationId: route_areas_unassign_from_route_create
+      description: |-
+        Unassign an area from its route (make it unassigned).
+
+        POST /api/route-areas/{id}/unassign_from_route/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Route Area.
+        required: true
+      tags:
+      - route-areas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteAreaRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RouteAreaRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RouteAreaRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteArea'
+          description: ''
+  /api/route-areas/bulk_create/:
+    post:
+      operationId: route_areas_bulk_create_create
+      description: |-
+        Create multiple areas for a route at once.
+
+        POST /api/route-areas/bulk_create/
+        Body: {
+            "route": 1,
+            "area_names": ["Area 1", "Area 2", "Area 3"]
+        }
+      tags:
+      - route-areas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteAreaRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RouteAreaRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RouteAreaRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteArea'
+          description: ''
+  /api/route-areas/bulk_delete/:
+    delete:
+      operationId: route_areas_bulk_delete_destroy
+      description: |-
+        Delete multiple areas at once.
+
+        DELETE /api/route-areas/bulk_delete/
+        Body: {
+            "area_ids": [1, 2, 3]
+        }
+      tags:
+      - route-areas
+      responses:
+        '204':
+          description: No response body
+  /api/route-areas/statistics/:
+    get:
+      operationId: route_areas_statistics_retrieve
+      description: |-
+        Get route area statistics.
+
+        GET /api/route-areas/statistics/
+      tags:
+      - route-areas
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteArea'
+          description: ''
+  /api/routes/:
+    get:
+      operationId: routes_list
+      description: |-
+        ViewSet for Route operations.
+
+        Provides:
+        - list: Get all routes with counts
+        - retrieve: Get single route with full details
+        - create: Create new route with areas
+        - update: Update route
+        - partial_update: Partial update route
+        - destroy: Delete route
+
+        Custom actions:
+        - consumers: Get all consumers in this route
+        - delivery_person: Get assigned delivery person
+        - add_area: Add a new area to route
+        - remove_area: Remove area from route
+        - statistics: Get route statistics
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - routes
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRouteListList'
+          description: ''
+    post:
+      operationId: routes_create
+      description: |-
+        ViewSet for Route operations.
+
+        Provides:
+        - list: Get all routes with counts
+        - retrieve: Get single route with full details
+        - create: Create new route with areas
+        - update: Update route
+        - partial_update: Partial update route
+        - destroy: Delete route
+
+        Custom actions:
+        - consumers: Get all consumers in this route
+        - delivery_person: Get assigned delivery person
+        - add_area: Add a new area to route
+        - remove_area: Remove area from route
+        - statistics: Get route statistics
+      tags:
+      - routes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RouteCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RouteCreateUpdateRequest'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteCreateUpdate'
+          description: ''
+  /api/routes/{id}/:
+    get:
+      operationId: routes_retrieve
+      description: |-
+        ViewSet for Route operations.
+
+        Provides:
+        - list: Get all routes with counts
+        - retrieve: Get single route with full details
+        - create: Create new route with areas
+        - update: Update route
+        - partial_update: Partial update route
+        - destroy: Delete route
+
+        Custom actions:
+        - consumers: Get all consumers in this route
+        - delivery_person: Get assigned delivery person
+        - add_area: Add a new area to route
+        - remove_area: Remove area from route
+        - statistics: Get route statistics
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this route.
+        required: true
+      tags:
+      - routes
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteDetail'
+          description: ''
+    put:
+      operationId: routes_update
+      description: |-
+        ViewSet for Route operations.
+
+        Provides:
+        - list: Get all routes with counts
+        - retrieve: Get single route with full details
+        - create: Create new route with areas
+        - update: Update route
+        - partial_update: Partial update route
+        - destroy: Delete route
+
+        Custom actions:
+        - consumers: Get all consumers in this route
+        - delivery_person: Get assigned delivery person
+        - add_area: Add a new area to route
+        - remove_area: Remove area from route
+        - statistics: Get route statistics
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this route.
+        required: true
+      tags:
+      - routes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RouteCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RouteCreateUpdateRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteCreateUpdate'
+          description: ''
+    patch:
+      operationId: routes_partial_update
+      description: |-
+        ViewSet for Route operations.
+
+        Provides:
+        - list: Get all routes with counts
+        - retrieve: Get single route with full details
+        - create: Create new route with areas
+        - update: Update route
+        - partial_update: Partial update route
+        - destroy: Delete route
+
+        Custom actions:
+        - consumers: Get all consumers in this route
+        - delivery_person: Get assigned delivery person
+        - add_area: Add a new area to route
+        - remove_area: Remove area from route
+        - statistics: Get route statistics
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this route.
+        required: true
+      tags:
+      - routes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRouteCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRouteCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRouteCreateUpdateRequest'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteCreateUpdate'
+          description: ''
+    delete:
+      operationId: routes_destroy
+      description: |-
+        ViewSet for Route operations.
+
+        Provides:
+        - list: Get all routes with counts
+        - retrieve: Get single route with full details
+        - create: Create new route with areas
+        - update: Update route
+        - partial_update: Partial update route
+        - destroy: Delete route
+
+        Custom actions:
+        - consumers: Get all consumers in this route
+        - delivery_person: Get assigned delivery person
+        - add_area: Add a new area to route
+        - remove_area: Remove area from route
+        - statistics: Get route statistics
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this route.
+        required: true
+      tags:
+      - routes
+      responses:
+        '204':
+          description: No response body
+  /api/routes/{id}/add_area/:
+    post:
+      operationId: routes_add_area_create
+      description: |-
+        Add a new area to this route.
+
+        POST /api/routes/{id}/add_area/
+        Body: { "area_name": "New Area" }
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this route.
+        required: true
+      tags:
+      - routes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteCreateUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RouteCreateUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RouteCreateUpdateRequest'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteCreateUpdate'
+          description: ''
+  /api/routes/{id}/consumers/:
+    get:
+      operationId: routes_consumers_retrieve
+      description: |-
+        Get all consumers assigned to this route.
+
+        GET /api/routes/{id}/consumers/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this route.
+        required: true
+      tags:
+      - routes
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteCreateUpdate'
+          description: ''
+  /api/routes/{id}/delivery_person/:
+    get:
+      operationId: routes_delivery_person_retrieve
+      description: |-
+        Get delivery person assigned to this route.
+
+        GET /api/routes/{id}/delivery_person/
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this route.
+        required: true
+      tags:
+      - routes
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteCreateUpdate'
+          description: ''
+  /api/routes/{id}/remove_area/{area_id}/:
+    delete:
+      operationId: routes_remove_area_destroy
+      description: |-
+        Remove an area from this route.
+
+        DELETE /api/routes/{id}/remove_area/{area_id}/
+      parameters:
+      - in: path
+        name: area_id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this route.
+        required: true
+      tags:
+      - routes
+      responses:
+        '204':
+          description: No response body
+  /api/routes/statistics/:
+    get:
+      operationId: routes_statistics_retrieve
+      description: |-
+        Get route statistics.
+
+        GET /api/routes/statistics/
+      tags:
+      - routes
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteCreateUpdate'
+          description: ''
+  /api/routes/unassigned_delivery/:
+    get:
+      operationId: routes_unassigned_delivery_retrieve
+      description: |-
+        Get routes without delivery person assigned.
+
+        GET /api/routes/unassigned_delivery/
+      tags:
+      - routes
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteCreateUpdate'
+          description: ''
+components:
+  schemas:
+    ConsumerList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        consumer_number:
+          type: string
+          nullable: true
+          maxLength: 9
+        name:
+          type: string
+          readOnly: true
+        ration_card_num:
+          type: string
+          readOnly: true
+        aadhar_num:
+          type: string
+          readOnly: true
+        pan_num:
+          type: string
+          readOnly: true
+        street_road_name:
+          type: string
+          readOnly: true
+        pin_code:
+          type: string
+          readOnly: true
+        address_text:
+          type: string
+          readOnly: true
+        email:
+          type: string
+          readOnly: true
+        phone_number:
+          type: string
+          readOnly: true
+        mobile_number:
+          type: string
+          readOnly: true
+        category:
+          type: string
+          readOnly: true
+        consumer_type:
+          type: string
+          readOnly: true
+        is_kyc_done:
+          type: boolean
+          title: KYC Status
+        blue_book:
+          type: integer
+          maximum: 18446744073709551615
+          minimum: 0
+          format: int64
+          nullable: true
+          title: Blue Book Number
+        cylinders:
+          type: string
+          readOnly: true
+      required:
+      - aadhar_num
+      - address_text
+      - category
+      - consumer_type
+      - cylinders
+      - email
+      - id
+      - mobile_number
+      - name
+      - pan_num
+      - phone_number
+      - pin_code
+      - ration_card_num
+      - street_road_name
+    ConsumerListRequest:
+      type: object
+      properties:
+        consumer_number:
+          type: string
+          nullable: true
+          maxLength: 9
+        is_kyc_done:
+          type: boolean
+          title: KYC Status
+        blue_book:
+          type: integer
+          maximum: 18446744073709551615
+          minimum: 0
+          format: int64
+          nullable: true
+          title: Blue Book Number
+    PaginatedConsumerListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsumerList'
+    PaginatedRouteAreaList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RouteArea'
+    PaginatedRouteListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RouteList'
+    PatchedConsumerListRequest:
+      type: object
+      properties:
+        consumer_number:
+          type: string
+          nullable: true
+          maxLength: 9
+        is_kyc_done:
+          type: boolean
+          title: KYC Status
+        blue_book:
+          type: integer
+          maximum: 18446744073709551615
+          minimum: 0
+          format: int64
+          nullable: true
+          title: Blue Book Number
+    PatchedRouteAreaCreateUpdateRequest:
+      type: object
+      description: |-
+        Serializer for creating/updating individual route areas.
+        Includes validation to prevent duplicate area names in same route.
+      properties:
+        area_name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        route:
+          type: integer
+          nullable: true
+          title: Associated route
+    PatchedRouteCreateUpdateRequest:
+      type: object
+      description: |-
+        Serializer for creating and updating routes.
+        Can optionally assign existing unassigned RouteArea IDs to the route.
+      properties:
+        area_code:
+          type: string
+          minLength: 1
+          title: Unique route code
+          maxLength: 50
+        area_code_description:
+          type: string
+          minLength: 1
+          title: Route description
+          maxLength: 150
+        areas:
+          type: array
+          items:
+            type: integer
+          writeOnly: true
+          description: List of existing RouteArea IDs to assign to this route
+    RouteArea:
+      type: object
+      description: |-
+        Basic serializer for RouteArea with route details.
+        Used for list views and basic operations.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        area_name:
+          type: string
+          maxLength: 100
+        route:
+          type: integer
+          nullable: true
+          title: Associated route
+        route_code:
+          type: string
+          readOnly: true
+        route_description:
+          type: string
+          readOnly: true
+      required:
+      - area_name
+      - id
+      - route_code
+      - route_description
+    RouteAreaCreateUpdate:
+      type: object
+      description: |-
+        Serializer for creating/updating individual route areas.
+        Includes validation to prevent duplicate area names in same route.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        area_name:
+          type: string
+          maxLength: 100
+        route:
+          type: integer
+          nullable: true
+          title: Associated route
+      required:
+      - area_name
+      - id
+    RouteAreaCreateUpdateRequest:
+      type: object
+      description: |-
+        Serializer for creating/updating individual route areas.
+        Includes validation to prevent duplicate area names in same route.
+      properties:
+        area_name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        route:
+          type: integer
+          nullable: true
+          title: Associated route
+      required:
+      - area_name
+    RouteAreaDetail:
+      type: object
+      description: |-
+        Detailed serializer with full route information.
+        Used for retrieve/detail views.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        area_name:
+          type: string
+          maxLength: 100
+        route:
+          type: string
+          readOnly: true
+      required:
+      - area_name
+      - id
+      - route
+    RouteAreaRequest:
+      type: object
+      description: |-
+        Basic serializer for RouteArea with route details.
+        Used for list views and basic operations.
+      properties:
+        area_name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        route:
+          type: integer
+          nullable: true
+          title: Associated route
+      required:
+      - area_name
+    RouteCreateUpdate:
+      type: object
+      description: |-
+        Serializer for creating and updating routes.
+        Can optionally assign existing unassigned RouteArea IDs to the route.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        area_code:
+          type: string
+          title: Unique route code
+          maxLength: 50
+        area_code_description:
+          type: string
+          title: Route description
+          maxLength: 150
+      required:
+      - area_code
+      - area_code_description
+      - id
+    RouteCreateUpdateRequest:
+      type: object
+      description: |-
+        Serializer for creating and updating routes.
+        Can optionally assign existing unassigned RouteArea IDs to the route.
+      properties:
+        area_code:
+          type: string
+          minLength: 1
+          title: Unique route code
+          maxLength: 50
+        area_code_description:
+          type: string
+          minLength: 1
+          title: Route description
+          maxLength: 150
+        areas:
+          type: array
+          items:
+            type: integer
+          writeOnly: true
+          description: List of existing RouteArea IDs to assign to this route
+      required:
+      - area_code
+      - area_code_description
+    RouteDetail:
+      type: object
+      description: |-
+        Detailed serializer for single route view.
+        Includes all areas and assignment info.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        area_code:
+          type: string
+          title: Unique route code
+          maxLength: 50
+        area_code_description:
+          type: string
+          title: Route description
+          maxLength: 150
+        areas:
+          type: array
+          items:
+            $ref: '#/components/schemas/RouteArea'
+          readOnly: true
+        area_count:
+          type: string
+          readOnly: true
+        consumer_count:
+          type: string
+          readOnly: true
+        delivery_person:
+          type: string
+          readOnly: true
+        consumers:
+          type: string
+          readOnly: true
+      required:
+      - area_code
+      - area_code_description
+      - area_count
+      - areas
+      - consumer_count
+      - consumers
+      - delivery_person
+      - id
+    RouteList:
+      type: object
+      description: |-
+        Lightweight serializer for route list views.
+        Shows basic info with counts.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        area_code:
+          type: string
+          title: Unique route code
+          maxLength: 50
+        area_code_description:
+          type: string
+          title: Route description
+          maxLength: 150
+        area_count:
+          type: string
+          readOnly: true
+        consumer_count:
+          type: string
+          readOnly: true
+        delivery_person:
+          type: string
+          readOnly: true
+        delivery_person_name:
+          type: string
+          readOnly: true
+      required:
+      - area_code
+      - area_code_description
+      - area_count
+      - consumer_count
+      - delivery_person
+      - delivery_person_name
+      - id
+tags:
+- name: consumers
+  description: Consumer management endpoints - create, update, and manage gas consumers
+- name: routes
+  description: Route management endpoints - manage delivery routes and assignments

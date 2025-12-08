@@ -1,23 +1,19 @@
 import { useState, useEffect } from 'react';
 import { productsApi, unitsApi } from '../services/api';
-import type { Product, ProductVariant, Unit } from '../types/products';
+import type { Product, Unit } from '../types/products';
 
 export interface UseProductsOptions {
   /** Whether to auto-fetch on mount */
   autoFetch?: boolean;
-  /** Whether to include product variants */
-  includeVariants?: boolean;
   /** Whether to include units */
   includeUnits?: boolean;
-  /** Specific product ID to fetch (with variants) */
+  /** Specific product ID to fetch */
   productId?: number;
 }
 
 export interface UseProductsReturn {
   /** All products */
   products: Product[];
-  /** Product variants (if includeVariants is true) */
-  variants: ProductVariant[];
   /** Units (if includeUnits is true) */
   units: Unit[];
   /** Single product (if productId is specified) */
@@ -42,23 +38,18 @@ export interface UseProductsReturn {
  * // Fetch products with units for form dropdowns
  * const { products, units, loading } = useProducts({ includeUnits: true });
  *
- * // Fetch a specific product with its variants
- * const { product, variants, loading } = useProducts({
- *   productId: 1,
- *   includeVariants: true
- * });
+ * // Fetch a specific product
+ * const { product, loading } = useProducts({ productId: 1 });
  * ```
  */
 export function useProducts(options: UseProductsOptions = {}): UseProductsReturn {
   const {
     autoFetch = true,
-    includeVariants = false,
     includeUnits = false,
     productId,
   } = options;
 
   const [products, setProducts] = useState<Product[]>([]);
-  const [variants, setVariants] = useState<ProductVariant[]>([]);
   const [units, setUnits] = useState<Unit[]>([]);
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -87,10 +78,6 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
       // Fetch specific product or all products
       if (productId) {
         promises.push(productsApi.getById(productId));
-
-        if (includeVariants) {
-          promises.push(productsApi.getVariants(productId));
-        }
       } else {
         promises.push(productsApi.getAll());
       }
@@ -107,16 +94,6 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
       if (productId) {
         setProduct(responses[responseIndex].data);
         responseIndex++;
-
-        if (includeVariants) {
-          const variantsData = responses[responseIndex].data;
-          setVariants(
-            Array.isArray(variantsData?.variants)
-              ? variantsData.variants
-              : extractResults(variantsData)
-          );
-          responseIndex++;
-        }
       } else {
         setProducts(extractResults(responses[responseIndex].data));
         responseIndex++;
@@ -132,7 +109,6 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
 
       // Set empty arrays/null on error to prevent map errors
       setProducts([]);
-      setVariants([]);
       setUnits([]);
       setProduct(null);
     } finally {
@@ -144,11 +120,10 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
     if (autoFetch) {
       fetchProducts();
     }
-  }, [autoFetch, includeVariants, includeUnits, productId]);
+  }, [autoFetch, includeUnits, productId]);
 
   return {
     products,
-    variants,
     units,
     product,
     loading,

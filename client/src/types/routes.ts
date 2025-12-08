@@ -1,3 +1,5 @@
+import type { Person } from './person';
+
 export interface Route {
   id: number;
   area_code: string;
@@ -20,17 +22,22 @@ export interface Area {
 
 export interface DeliveryPerson {
   id: number;
-  name: string;
-  contacts?: any[];
-  assigned_routes_count?: number;
-  assigned_routes?: Array<{
-    route_id: number;
-    route_code: string;
-    route_description: string;
+  person: Person;
+  assigned_routes_count: number;
+  total_consumers: number;
+}
+
+export interface DeliveryPersonDetail extends DeliveryPerson {
+  assigned_routes: Array<{
+    id: number;
+    area_code: string;
+    area_code_description: string;
     consumer_count: number;
-    areas: string[];
+    areas: Array<{
+      id: number;
+      name: string;
+    }>;
   }>;
-  total_consumers?: number;
 }
 
 export interface DeliveryPersonStatistics {

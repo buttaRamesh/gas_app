@@ -1,0 +1,10 @@
+cd src
+  mkdir api
+  mkdir pages
+  mkdir components
+  mkdir router
+  mkdir theme
+  mkdir utils
+  mkdir layouts
+  mkdir store
+  mkdir schemas

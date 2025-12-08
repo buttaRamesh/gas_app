@@ -23,7 +23,6 @@ import {
   Add,
   Visibility,
   Delete,
-  Assessment,
   Edit,
   Refresh,
 } from '@mui/icons-material';
@@ -46,7 +45,11 @@ export default function Products() {
   const deleteDialog = useDialog<Product>();
   const { query: searchQuery, setQuery: setSearchQuery, filteredItems: filteredProducts } = useSearch({
     items: products,
-    searchKeys: (product) => [product.name, product.description || ''],
+    searchKeys: (product) => [
+      product.name,
+      product.product_code || '',
+      product.category?.name || '',
+    ],
   });
 
   useEffect(() => {
@@ -87,10 +90,9 @@ export default function Products() {
     <>
       {[1, 2, 3, 4, 5].map((i) => (
         <TableRow key={i}>
-          <TableCell><Skeleton variant="text" width={40} /></TableCell>
-          <TableCell><Skeleton variant="text" width={200} /></TableCell>
+          <TableCell><Skeleton variant="text" width={120} /></TableCell>
           <TableCell><Skeleton variant="text" width={300} /></TableCell>
-          <TableCell><Skeleton variant="rectangular" width={100} height={24} /></TableCell>
+          <TableCell><Skeleton variant="rectangular" width={120} height={24} /></TableCell>
           <TableCell align="right">
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
               <Skeleton variant="circular" width={32} height={32} />
@@ -124,16 +126,6 @@ export default function Products() {
                   <Refresh />
                 </IconButton>
               </Tooltip>
-              {productPerms.canView() && (
-                <Button
-                  variant="outlined"
-                  startIcon={<Assessment />}
-                  onClick={() => navigate('/products/statistics')}
-                  sx={{ mr: 2 }}
-                >
-                  Statistics
-                </Button>
-              )}
               {productPerms.canCreate() && (
                 <Button
                   variant="contained"
@@ -174,10 +166,9 @@ export default function Products() {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>ID</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Product Code</TableCell>
                     <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Name</TableCell>
-                    <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Description</TableCell>
-                    <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Variants</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: 'text.primary' }}>Category</TableCell>
                     <TableCell sx={{ fontWeight: 600, color: 'text.primary' }} align="right">Actions</TableCell>
                   </TableRow>
                 </TableHead>
@@ -186,7 +177,7 @@ export default function Products() {
                     <LoadingSkeleton />
                   ) : filteredProducts.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={5} align="center" sx={{ py: 8 }}>
+                      <TableCell colSpan={4} align="center" sx={{ py: 8 }}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
                           <Typography variant="h6" color="text.secondary">
                             {searchQuery ? 'No products found' : 'No products yet'}
@@ -224,7 +215,7 @@ export default function Products() {
                       >
                         <TableCell>
                           <Typography variant="body2" sx={{ fontFamily: 'monospace', fontWeight: 500 }}>
-                            #{product.id}
+                            {product.product_code || 'N/A'}
                           </Typography>
                         </TableCell>
                         <TableCell>
@@ -233,24 +224,10 @@ export default function Products() {
                           </Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap',
-                              maxWidth: 400,
-                            }}
-                          >
-                            {product.description || 'No description'}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
                           <Chip
-                            label={`${product.variants_count || 0} variant${product.variants_count !== 1 ? 's' : ''}`}
+                            label={product.category?.name || 'No category'}
                             size="small"
-                            color={product.variants_count ? 'primary' : 'default'}
+                            color={product.category ? 'primary' : 'default'}
                             variant="outlined"
                           />
                         </TableCell>

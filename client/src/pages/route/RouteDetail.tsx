@@ -148,10 +148,10 @@ export default function RouteDetail() {
                   <Typography variant="body2" color="text.secondary" sx={{ minWidth: 120 }}>
                     Delivery Person:
                   </Typography>
-                  {route.delivery_person?.name ? (
+                  {route.delivery_person?.person?.full_name ? (
                     <Chip
                       icon={<PersonIcon />}
-                      label={route.delivery_person.name}
+                      label={route.delivery_person.person.full_name}
                       color="primary"
                       variant="outlined"
                     />

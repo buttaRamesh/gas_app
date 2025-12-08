@@ -8,6 +8,7 @@ export interface ApiResponse<T> {
 // Re-export all type modules
 export * from './address';
 export * from './auth';
+export * from './person';
 export * from './consumers';
 export * from './products';
 export * from './routes';

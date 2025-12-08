@@ -1,4 +1,4 @@
-import { useEffect ,useState} from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,166 +10,121 @@ import {
   CardContent,
   Typography,
   Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  IconButton,
-  Chip,
   TextField,
   MenuItem,
   Alert,
   Skeleton,
-  Tooltip,
   Divider,
+  Chip,
+  Switch,
+  FormControlLabel,
 } from '@mui/material';
-import { ArrowBack, Edit, Delete, Add, Save, Close } from '@mui/icons-material';
+import { ArrowBack, Edit, Delete } from '@mui/icons-material';
 import { PageHeader } from '../../components/PageHeader';
 import { FormDialog } from '../../components/common';
 import { useProducts } from '../../hooks';
-import { productsApi, variantsApi } from '../../services/api';
-import { VariantType } from '../../types/products';
+import { productsApi, productCategoriesApi, unitsApi } from '../../services/api';
 import { useSnackbar } from '../../contexts/SnackbarContext';
+import type { ProductCategory, Unit } from '../../types/products';
 
-const VARIANT_TYPES: VariantType[] = ['DOMESTIC', 'COMMERCIAL', 'INDUSTRIAL', 'OTHER'];
-
-// Validation schemas
+// Validation schema
 const productSchema = z.object({
   name: z.string().min(1, 'Product name is required').min(3, 'Must be at least 3 characters'),
-  description: z.string().max(500, 'Description too long').optional().or(z.literal('')),
-});
-
-const variantSchema = z.object({
-  product_code: z.string().min(1, 'Product code is required'),
-  name: z.string().min(1, 'Variant name is required'),
+  product_code: z.string().optional().nullable(),
+  category: z.string().min(1, 'Category is required'),
   unit: z.string().min(1, 'Unit is required'),
-  quantity: z.string().min(1, 'Quantity is required').refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-    message: 'Quantity must be a positive number',
-  }),
-  price: z.string().min(1, 'Price is required').refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-    message: 'Price must be a positive number',
-  }),
-  variant_type: z.enum(['DOMESTIC', 'COMMERCIAL', 'INDUSTRIAL', 'OTHER']),
+  is_cylinder: z.boolean(),
+  description: z.string().max(500, 'Description too long').optional().nullable(),
+  is_active: z.boolean(),
 });
 
 type ProductFormData = z.infer<typeof productSchema>;
-type VariantFormData = z.infer<typeof variantSchema>;
 
 export default function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
 
-  const { product, variants, units, loading, refetch } = useProducts({
+  const { product, loading, refetch } = useProducts({
     productId: Number(id),
-    includeVariants: true,
-    includeUnits: true,
   });
 
+  const [categories, setCategories] = useState<ProductCategory[]>([]);
+  const [units, setUnits] = useState<Unit[]>([]);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [addVariantDialogOpen, setAddVariantDialogOpen] = useState(false);
-  const [deleteVariantDialogOpen, setDeleteVariantDialogOpen] = useState(false);
-  const [selectedVariant, setSelectedVariant] = useState<any>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   // Form for editing product
   const {
-    register: registerProduct,
-    handleSubmit: handleProductSubmit,
-    formState: { errors: productErrors },
-    reset: resetProduct,
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    watch,
   } = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
     mode: 'onChange',
   });
 
-  // Form for adding variant
-  const {
-    register: registerVariant,
-    handleSubmit: handleVariantSubmit,
-    formState: { errors: variantErrors },
-    reset: resetVariant,
-    setValue: setVariantValue,
-    watch: watchVariant,
-  } = useForm<VariantFormData>({
-    resolver: zodResolver(variantSchema),
-    mode: 'onChange',
-    defaultValues: {
-      product_code: '',
-      name: '',
-      unit: '',
-      quantity: '',
-      price: '',
-      variant_type: 'DOMESTIC',
-    },
-  });
+  const isCylinder = watch('is_cylinder');
+
+  useEffect(() => {
+    fetchCategoriesAndUnits();
+  }, []);
 
   useEffect(() => {
     if (product) {
-      resetProduct({
+      reset({
         name: product.name,
+        product_code: product.product_code || '',
+        category: String(product.category.id),
+        unit: String(product.unit.id),
+        is_cylinder: product.is_cylinder,
         description: product.description || '',
+        is_active: product.is_active,
       });
     }
-  }, [product, resetProduct]);
+  }, [product, reset]);
+
+  const fetchCategoriesAndUnits = async () => {
+    try {
+      const [categoriesRes, unitsRes] = await Promise.all([
+        productCategoriesApi.getAll(),
+        unitsApi.getAll(),
+      ]);
+      setCategories(categoriesRes.data.results || categoriesRes.data);
+      setUnits(unitsRes.data.results || unitsRes.data);
+    } catch (err) {
+      console.error('Failed to fetch categories/units:', err);
+    }
+  };
 
   const onProductUpdate = async (data: ProductFormData) => {
     try {
-      await productsApi.update(Number(id), data);
+      await productsApi.update(Number(id), {
+        ...data,
+        category: Number(data.category),
+        unit: Number(data.unit),
+        product_code: data.product_code || null,
+        description: data.description || null,
+      });
       showSnackbar('Product updated successfully', 'success');
       setEditDialogOpen(false);
       refetch();
     } catch (err: any) {
       console.error('Failed to update product:', err);
-      showSnackbar('Failed to update product', 'error');
+      showSnackbar(err.response?.data?.detail || 'Failed to update product', 'error');
     }
   };
 
-  const onVariantAdd = async (data: VariantFormData) => {
+  const handleDelete = async () => {
     try {
-      await productsApi.addVariant(Number(id), {
-        ...data,
-        product: Number(id),
-        unit: Number(data.unit),
-        quantity: parseFloat(data.quantity),
-        price: parseFloat(data.price),
-      });
-      showSnackbar('Variant added successfully', 'success');
-      setAddVariantDialogOpen(false);
-      resetVariant();
-      refetch();
+      await productsApi.delete(Number(id));
+      showSnackbar('Product deleted successfully', 'success');
+      navigate('/products');
     } catch (err: any) {
-      console.error('Failed to add variant:', err);
-      showSnackbar(err.response?.data?.detail || 'Failed to add variant', 'error');
-    }
-  };
-
-  const handleDeleteVariant = async () => {
-    if (!selectedVariant) return;
-
-    try {
-      await variantsApi.delete(selectedVariant.id);
-      showSnackbar('Variant deleted successfully', 'success');
-      setDeleteVariantDialogOpen(false);
-      setSelectedVariant(null);
-      refetch();
-    } catch (err: any) {
-      console.error('Failed to delete variant:', err);
-      showSnackbar('Failed to delete variant', 'error');
-    }
-  };
-
-  const getVariantTypeColor = (type: VariantType) => {
-    switch (type) {
-      case 'DOMESTIC':
-        return 'primary';
-      case 'COMMERCIAL':
-        return 'success';
-      case 'INDUSTRIAL':
-        return 'warning';
-      default:
-        return 'default';
+      console.error('Failed to delete product:', err);
+      showSnackbar(err.response?.data?.detail || 'Failed to delete product', 'error');
     }
   };
 
@@ -188,9 +143,7 @@ export default function ProductDetail() {
     return (
       <Box sx={{ bgcolor: 'hsl(var(--background))', minHeight: '100vh', py: 4 }}>
         <Container maxWidth="xl">
-          <Alert severity="error">
-            Product not found
-          </Alert>
+          <Alert severity="error">Product not found</Alert>
           <Button
             variant="outlined"
             startIcon={<ArrowBack />}
@@ -221,6 +174,15 @@ export default function ProductDetail() {
                 Back
               </Button>
               <Button
+                variant="outlined"
+                color="error"
+                startIcon={<Delete />}
+                onClick={() => setDeleteDialogOpen(true)}
+                sx={{ mr: 2 }}
+              >
+                Delete
+              </Button>
+              <Button
                 variant="contained"
                 startIcon={<Edit />}
                 onClick={() => setEditDialogOpen(true)}
@@ -242,26 +204,56 @@ export default function ProductDetail() {
           }}
         >
           <CardContent sx={{ p: 3 }}>
-            <Box sx={{ display: 'flex', gap: 4 }}>
-              <Box sx={{ flex: 1 }}>
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 3 }}>
+              <Box>
                 <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase' }}>
-                  Product ID
+                  Product Code
                 </Typography>
                 <Typography variant="h6" sx={{ fontFamily: 'monospace', mt: 0.5 }}>
-                  #{product.id}
+                  {product.product_code || 'N/A'}
                 </Typography>
               </Box>
-              <Divider orientation="vertical" flexItem />
-              <Box sx={{ flex: 1 }}>
+              <Box>
                 <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase' }}>
-                  Total Variants
+                  Category
                 </Typography>
                 <Typography variant="h6" sx={{ mt: 0.5 }}>
-                  {variants.length}
+                  {product.category.name}
                 </Typography>
               </Box>
-              <Divider orientation="vertical" flexItem />
-              <Box sx={{ flex: 1 }}>
+              <Box>
+                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase' }}>
+                  Unit
+                </Typography>
+                <Typography variant="h6" sx={{ mt: 0.5 }}>
+                  {product.unit.short_name}
+                </Typography>
+              </Box>
+              <Box>
+                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase' }}>
+                  Type
+                </Typography>
+                <Box sx={{ mt: 0.5 }}>
+                  <Chip
+                    label={product.is_cylinder ? 'Cylinder' : 'Non-Cylinder'}
+                    color={product.is_cylinder ? 'primary' : 'default'}
+                    size="small"
+                  />
+                </Box>
+              </Box>
+              <Box>
+                <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase' }}>
+                  Status
+                </Typography>
+                <Box sx={{ mt: 0.5 }}>
+                  <Chip
+                    label={product.is_active ? 'Active' : 'Inactive'}
+                    color={product.is_active ? 'success' : 'default'}
+                    size="small"
+                  />
+                </Box>
+              </Box>
+              <Box>
                 <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600, textTransform: 'uppercase' }}>
                   Created
                 </Typography>
@@ -273,7 +265,7 @@ export default function ProductDetail() {
           </CardContent>
         </Card>
 
-        {/* Variants Card */}
+        {/* Additional Details Card */}
         <Card
           elevation={3}
           sx={{
@@ -283,116 +275,48 @@ export default function ProductDetail() {
           }}
         >
           <CardContent>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+              Product Details
+            </Typography>
+            <Divider sx={{ mb: 3 }} />
+
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <Box>
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  Product Variants
+                <Typography variant="subtitle2" color="text.secondary">
+                  Product Name
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Manage different configurations of this product
+                <Typography variant="body1" sx={{ mt: 0.5 }}>
+                  {product.name}
                 </Typography>
               </Box>
-              <Button
-                variant="contained"
-                startIcon={<Add />}
-                onClick={() => setAddVariantDialogOpen(true)}
-              >
-                Add Variant
-              </Button>
-            </Box>
 
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 600 }}>Code</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Name</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Size</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Unit</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Price</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }}>Type</TableCell>
-                    <TableCell sx={{ fontWeight: 600 }} align="right">
-                      Actions
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {variants.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={7} align="center" sx={{ py: 8 }}>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-                          <Typography variant="h6" color="text.secondary">
-                            No variants yet
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            Add variants to define different configurations of this product
-                          </Typography>
-                          <Button
-                            variant="contained"
-                            startIcon={<Add />}
-                            onClick={() => setAddVariantDialogOpen(true)}
-                            sx={{ mt: 1 }}
-                          >
-                            Add First Variant
-                          </Button>
-                        </Box>
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    variants.map((variant) => (
-                      <TableRow key={variant.id} hover>
-                        <TableCell>
-                          <Typography variant="body2" sx={{ fontFamily: 'monospace', fontWeight: 500 }}>
-                            {variant.product_code}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                            {variant.name}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography variant="body1">{variant.quantity}</Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Chip
-                            label={variant.unit_name || variant.unit}
-                            size="small"
-                            variant="outlined"
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Typography variant="body1" sx={{ fontWeight: 600, color: 'success.main' }}>
-                            ₹{variant.price ? Number(variant.price).toFixed(2) : '0.00'}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Chip
-                            label={variant.variant_type}
-                            size="small"
-                            color={getVariantTypeColor(variant.variant_type)}
-                          />
-                        </TableCell>
-                        <TableCell align="right">
-                          <Tooltip title="Delete Variant">
-                            <IconButton
-                              size="small"
-                              color="error"
-                              onClick={() => {
-                                setSelectedVariant(variant);
-                                setDeleteVariantDialogOpen(true);
-                              }}
-                            >
-                              <Delete fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
+              <Box>
+                <Typography variant="subtitle2" color="text.secondary">
+                  Description
+                </Typography>
+                <Typography variant="body1" sx={{ mt: 0.5 }}>
+                  {product.description || 'No description provided'}
+                </Typography>
+              </Box>
+
+              <Box>
+                <Typography variant="subtitle2" color="text.secondary">
+                  Category Details
+                </Typography>
+                <Typography variant="body1" sx={{ mt: 0.5 }}>
+                  {product.category.description || product.category.name}
+                </Typography>
+              </Box>
+
+              <Box>
+                <Typography variant="subtitle2" color="text.secondary">
+                  Unit Details
+                </Typography>
+                <Typography variant="body1" sx={{ mt: 0.5 }}>
+                  {product.unit.description} ({product.unit.short_name})
+                </Typography>
+              </Box>
+            </Box>
           </CardContent>
         </Card>
       </Container>
@@ -402,7 +326,7 @@ export default function ProductDetail() {
         open={editDialogOpen}
         onClose={() => setEditDialogOpen(false)}
         title="Edit Product"
-        onSubmit={handleProductSubmit(onProductUpdate)}
+        onSubmit={handleSubmit(onProductUpdate)}
         submitLabel="Save Changes"
         maxWidth="sm"
       >
@@ -410,121 +334,85 @@ export default function ProductDetail() {
           <TextField
             fullWidth
             label="Product Name"
-            {...registerProduct('name')}
-            error={!!productErrors.name}
-            helperText={productErrors.name?.message}
+            {...register('name')}
+            error={!!errors.name}
+            helperText={errors.name?.message}
           />
+
+          <TextField
+            fullWidth
+            label="Product Code"
+            {...register('product_code')}
+            error={!!errors.product_code}
+            helperText={errors.product_code?.message || (isCylinder ? 'Required for cylinder products' : 'Optional for non-cylinder products')}
+          />
+
+          <TextField
+            fullWidth
+            select
+            label="Category"
+            {...register('category')}
+            error={!!errors.category}
+            helperText={errors.category?.message}
+          >
+            {categories.map((cat) => (
+              <MenuItem key={cat.id} value={cat.id}>
+                {cat.name}
+              </MenuItem>
+            ))}
+          </TextField>
+
+          <TextField
+            fullWidth
+            select
+            label="Unit"
+            {...register('unit')}
+            error={!!errors.unit}
+            helperText={errors.unit?.message}
+          >
+            {units.map((unit) => (
+              <MenuItem key={unit.id} value={unit.id}>
+                {unit.short_name} - {unit.description}
+              </MenuItem>
+            ))}
+          </TextField>
+
+          <FormControlLabel
+            control={<Switch {...register('is_cylinder')} defaultChecked={product.is_cylinder} />}
+            label="Is Cylinder Product"
+          />
+
+          <FormControlLabel
+            control={<Switch {...register('is_active')} defaultChecked={product.is_active} />}
+            label="Active"
+          />
+
           <TextField
             fullWidth
             label="Description"
             multiline
             rows={3}
-            {...registerProduct('description')}
-            error={!!productErrors.description}
-            helperText={productErrors.description?.message}
+            {...register('description')}
+            error={!!errors.description}
+            helperText={errors.description?.message}
           />
         </Box>
       </FormDialog>
 
-      {/* Add Variant Dialog */}
+      {/* Delete Confirmation Dialog */}
       <FormDialog
-        open={addVariantDialogOpen}
-        onClose={() => setAddVariantDialogOpen(false)}
-        title="Add Product Variant"
-        onSubmit={handleVariantSubmit(onVariantAdd)}
-        submitLabel="Add Variant"
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        title="Delete Product"
+        onSubmit={handleDelete}
+        submitLabel="Delete Product"
         maxWidth="sm"
-      >
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, mt: 1 }}>
-          <TextField
-            fullWidth
-            label="Product Code"
-            {...registerVariant('product_code')}
-            error={!!variantErrors.product_code}
-            helperText={variantErrors.product_code?.message || 'Unique identifier for this variant'}
-            placeholder="e.g., LPG-14.2-DOM"
-          />
-          <TextField
-            fullWidth
-            label="Variant Name"
-            {...registerVariant('name')}
-            error={!!variantErrors.name}
-            helperText={variantErrors.name?.message}
-            placeholder="e.g., 14.2 kg Domestic"
-          />
-          <TextField
-            fullWidth
-            label="Quantity"
-            type="number"
-            {...registerVariant('quantity')}
-            error={!!variantErrors.quantity}
-            helperText={variantErrors.quantity?.message}
-            placeholder="e.g., 14.2"
-            inputProps={{ step: '0.01', min: '0' }}
-          />
-          <TextField
-            fullWidth
-            select
-            label="Unit"
-            {...registerVariant('unit')}
-            error={!!variantErrors.unit}
-            helperText={variantErrors.unit?.message}
-            defaultValue=""
-          >
-            {units.length === 0 ? (
-              <MenuItem value="" disabled>
-                No units available
-              </MenuItem>
-            ) : (
-              units.map((unit) => (
-                <MenuItem key={unit.id} value={unit.id}>
-                  {unit.short_name} - {unit.description}
-                </MenuItem>
-              ))
-            )}
-          </TextField>
-          <TextField
-            fullWidth
-            label="Price"
-            type="number"
-            {...registerVariant('price')}
-            error={!!variantErrors.price}
-            helperText={variantErrors.price?.message || 'Price in INR (₹)'}
-            placeholder="e.g., 850.00"
-            inputProps={{ step: '0.01', min: '0' }}
-          />
-          <TextField
-            fullWidth
-            select
-            label="Variant Type"
-            {...registerVariant('variant_type')}
-            error={!!variantErrors.variant_type}
-            helperText={variantErrors.variant_type?.message}
-            defaultValue="DOMESTIC"
-          >
-            {VARIANT_TYPES.map((type) => (
-              <MenuItem key={type} value={type}>
-                {type}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Box>
-      </FormDialog>
-
-      {/* Delete Variant Dialog */}
-      <FormDialog
-        open={deleteVariantDialogOpen}
-        onClose={() => setDeleteVariantDialogOpen(false)}
-        title="Delete Variant"
-        onSubmit={handleDeleteVariant}
-        submitLabel="Delete Variant"
-        maxWidth="xs"
       >
         <Alert severity="warning" sx={{ mb: 2 }}>
           This action cannot be undone!
         </Alert>
         <Typography>
-          Are you sure you want to delete variant <strong>"{selectedVariant?.name}"</strong>?
+          Are you sure you want to delete <strong>"{product.name}"</strong>?
         </Typography>
       </FormDialog>
     </Box>

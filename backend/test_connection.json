@@ -1,0 +1,9 @@
+{
+  "consumer": 16192,
+  "sv_number": "SV-TEST-001",
+  "sv_date": "2024-12-04",
+  "connection_type": 3,
+  "product": 11,
+  "num_of_regulators": 2,
+  "hist_code_description": "Test connection for TEST001 consumer"
+}

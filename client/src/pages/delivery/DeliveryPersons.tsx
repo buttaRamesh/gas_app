@@ -39,7 +39,6 @@ export default function DeliveryPersons() {
       </Container>
     );
   }
-
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "hsl(var(--background))", py: 4 }}>
       <Container maxWidth="xl" sx={{ px: 2 }}>
@@ -121,7 +120,7 @@ export default function DeliveryPersons() {
                           lineHeight: 1.3,
                         }}
                       >
-                        {person.name}
+                        {person.person.full_name}
                       </Typography>
                     </Box>
                     <Box sx={{ display: "flex", gap: 0.5, ml: 1 }}>

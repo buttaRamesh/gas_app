@@ -1,7 +1,7 @@
 # File: connections/urls.py
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import ConnectionDetailsViewSet
+from connections.api.views import ConnectionDetailsViewSet
 
 router = DefaultRouter()
 router.register(r'connections', ConnectionDetailsViewSet, basename='connection')

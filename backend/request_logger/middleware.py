@@ -43,7 +43,7 @@ class APILogMiddleware:
                     traceback=None,
                 )
                 print(
-                    f"[{now()}] ⚠️ {request.method} {request.path} "
+                    f"[{now()}] [WARN] {request.method} {request.path} "
                     f"from {ip} (Status: {response.status_code}) logged as error"
                 )
             else:
@@ -55,8 +55,8 @@ class APILogMiddleware:
                     status_code=response.status_code,
                 )
                 print(
-                    f"[{now()}] ✅ {request.method} {request.path} "
-                    f"from {ip} (Referer: {referer}) → {response.status_code}"
+                    f"[{now()}] [OK] {request.method} {request.path} "
+                    f"from {ip} (Referer: {referer}) -> {response.status_code}"
                 )
 
             return response
@@ -75,7 +75,7 @@ class APILogMiddleware:
                 traceback=tb_str,
             )
             print(
-                f"[{now()}] ❌ ERROR {request.method} {request.path} "
+                f"[{now()}] [ERROR] {request.method} {request.path} "
                 f"from {ip} ({type(e).__name__}: {str(e)})"
             )
             print(tb_str)

@@ -1,0 +1,8 @@
+{
+  "consumer_number": "TEST001",
+  "person": {
+    "first_name": "John",
+    "last_name": "Doe",
+    "full_name": "John Doe"
+  }
+}

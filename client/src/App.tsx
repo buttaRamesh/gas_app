@@ -38,10 +38,8 @@ import DeliveryPersonDetail from "./pages/delivery/DeliveryPersonDetail";
 import Products from "./pages/product/Products";
 import ProductCreate from "./pages/product/ProductCreate";
 import ProductDetail from "./pages/product/ProductDetail";
-import ProductStatistics from "./pages/product/ProductStatistics";
 import Units from "./pages/product/Units";
 import UnitCreate from "./pages/product/UnitCreate";
-import VariantCreate from "./pages/product/VariantCreate";
 
 // Consumer pages
 import Consumers from "./pages/consumer/Consumers";
@@ -113,11 +111,9 @@ const App = () => (
             <Route path="/delivery-persons/:id" element={<ProtectedRoute requiredPermission="delivery_persons.view"><AppLayout><DeliveryPersonDetail /></AppLayout></ProtectedRoute>} />
             <Route path="/products" element={<ProtectedRoute requiredPermission="products.view"><AppLayout><Products /></AppLayout></ProtectedRoute>} />
             <Route path="/products/create" element={<ProtectedRoute requiredPermission="products.create"><AppLayout><ProductCreate /></AppLayout></ProtectedRoute>} />
-            <Route path="/products/statistics" element={<ProtectedRoute requiredPermission="products.view"><AppLayout><ProductStatistics /></AppLayout></ProtectedRoute>} />
             <Route path="/products/:id" element={<ProtectedRoute requiredPermission="products.view"><AppLayout><ProductDetail /></AppLayout></ProtectedRoute>} />
             <Route path="/units" element={<ProtectedRoute requiredPermission="units.view"><AppLayout><Units /></AppLayout></ProtectedRoute>} />
             <Route path="/units/create" element={<ProtectedRoute requiredPermission="units.create"><AppLayout><UnitCreate /></AppLayout></ProtectedRoute>} />
-            <Route path="/variants/create" element={<ProtectedRoute requiredPermission="variants.create"><AppLayout><VariantCreate /></AppLayout></ProtectedRoute>} />
             <Route path="/consumers" element={<ProtectedRoute requiredPermission="consumers.view"><AppLayout><Consumers /></AppLayout></ProtectedRoute>} />
 
             <Route path="/consumers/create" element={<ProtectedRoute requiredPermission="consumers.create"><AppLayout><ConsumerCreate /></AppLayout></ProtectedRoute>} />

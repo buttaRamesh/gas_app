@@ -6,7 +6,9 @@ docs/
 reference/
 reports/
 seeders/
+fixtures/
 .claude/
+backend/utils/
 
 # Batch files
 *.bat

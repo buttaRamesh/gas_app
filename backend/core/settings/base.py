@@ -36,19 +36,20 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'django_filters',
     'corsheaders',
+    'drf_spectacular',
     'authentication',
-    'address',
+    'commons',
     'connections',
     'consumers',
     'delivery',
     'lookups',
-    'products',
     'routes',
     'schemes',
     'lgd',
     'request_logger',
     'commands',
     'order_book',
+    'inventory',
 ]
 
 MIDDLEWARE = [
@@ -106,9 +107,10 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'core.pagination.CustomPageNumberPagination',
-    'PAGE_SIZE': 20,
+    "DEFAULT_PAGINATION_CLASS": "core.pagination.base_pagination.DefaultPagination",
+    "PAGE_SIZE": 20,
     'EXCEPTION_HANDLER': 'core.exceptions.custom_exception_handler',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 # JWT Settings
@@ -121,6 +123,40 @@ SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'USER_ID_FIELD': 'id',  # Use the numeric primary key, not our custom user_id field
     'USER_ID_CLAIM': 'user_id',  # The claim name in the JWT token
+}
+
+# drf-spectacular Settings
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Gas App API - Consumers & Routes',
+    'DESCRIPTION': 'API documentation for Gas App - Currently documenting Consumers and Routes modules',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SCHEMA_PATH_PREFIX': '/api/',
+
+    # Completely disable all security/authentication in Swagger
+    'SECURITY': [],  # Empty = no security required
+    'SERVE_PERMISSIONS': ['rest_framework.permissions.AllowAny'],
+
+    # Filter endpoints to show only specific apps (consumers, routes)
+    'PREPROCESSING_HOOKS': [
+        'core.spectacular_hooks.filter_endpoints_by_app',
+    ],
+    'POSTPROCESSING_HOOKS': [
+        'core.spectacular_hooks.customize_schema',
+    ],
+
+    # Swagger UI Configuration
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+        'persistAuthorization': False,  # Don't persist auth
+        'displayOperationId': True,
+        'filter': True,  # Enable filtering endpoints
+        'defaultModelsExpandDepth': 3,
+        'defaultModelExpandDepth': 3,
+        'docExpansion': 'list',  # 'list', 'full', or 'none'
+        'defaultModelRendering': 'model',  # 'example' or 'model'
+    },
 }
 
 # ✅ Allow custom header

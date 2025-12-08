@@ -36,17 +36,9 @@ def seed_delivery_persons():
     seeder = DeliveryPersonSeeder(path_routes)
     seeder.save_db()
 def seed_products():
-    units_file = '../seed/db/units.csv'
-    products_file = '../seed/db/products.csv'
-    variants_file = '../seed/db/product-variants.csv'
-
-    seeder = ProductSeeder(
-        units_file=units_file,
-        products_file=products_file,
-        variants_file=variants_file
-    )
-    seeder.save_db(clear=False)  # Use upsert mode to preserve ConnectionDetails
-
+    products_file = '../seed/db/ProductSeed.csv'
+    seeder = ProductSeeder(products_file)
+    seeder.save_db()
 
 def seed_consumers():
     path_consumers = "../seed/db/consumers.csv" 
@@ -68,10 +60,10 @@ def seed_consumers():
         print(cnum, len(items))
 
 if __name__ == "__main__":
-        seed_rbac()
-        create_test_users(use_defaults=True)
-        create_admin_user(use_defaults=True)
-        seed_routes()
+        # seed_rbac()
+        # create_test_users(use_defaults=True)
+        # create_admin_user(use_defaults=True)
+        # seed_routes()
         seed_delivery_persons()
-        seed_products()        
-        seed_consumers()
+        # seed_products()        
+        # seed_consumers()

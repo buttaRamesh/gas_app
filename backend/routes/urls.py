@@ -5,7 +5,7 @@
 
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import RouteViewSet, RouteAreaViewSet
+from routes.api.views import RouteViewSet, RouteAreaViewSet
 
 # Create router
 router = DefaultRouter()

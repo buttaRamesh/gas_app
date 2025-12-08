@@ -2,17 +2,29 @@ export interface Unit {
   id: number;
   short_name: string;
   description: string;
+  is_active: boolean;
   created_at?: string;
   updated_at?: string;
+}
+
+export interface ProductCategory {
+  id: number;
+  name: string;
+  description: string;
+  is_active: boolean;
 }
 
 export interface Product {
   id: number;
   name: string;
-  description: string;
+  product_code: string | null;
+  category: ProductCategory;
+  unit: Unit;
+  is_cylinder: boolean;
+  description: string | null;
+  is_active: boolean;
   created_at?: string;
   updated_at?: string;
-  variants_count?: number;
 }
 
 export type VariantType = 'DOMESTIC' | 'COMMERCIAL' | 'INDUSTRIAL' | 'OTHER';

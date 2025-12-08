@@ -197,18 +197,31 @@ export const routeAssignmentsApi = {
     api.delete(`/delivery-route-assignments/unassign_route/?route=${routeId}`),
 };
 
+// Product Categories API
+export const productCategoriesApi = {
+  getAll: (search?: string) => {
+    const params = new URLSearchParams();
+    if (search?.trim()) params.append('search', search.trim());
+    return api.get(`/inventory/categories/?${params.toString()}`);
+  },
+  getById: (id: number) => api.get(`/inventory/categories/${id}/`),
+  create: (data: any) => api.post('/inventory/categories/', data),
+  update: (id: number, data: any) => api.patch(`/inventory/categories/${id}/`, data),
+  delete: (id: number) => api.delete(`/inventory/categories/${id}/`),
+};
+
 // Units API
 export const unitsApi = {
   getAll: (search?: string) => {
     const params = new URLSearchParams();
     if (search?.trim()) params.append('search', search.trim());
-    return api.get(`/products/units/?${params.toString()}`);
+    return api.get(`/inventory/units/?${params.toString()}`);
   },
-  getById: (id: number) => api.get(`/products/units/${id}/`),
-  create: (data: any) => api.post('/products/units/', data),
-  update: (id: number, data: any) => api.patch(`/products/units/${id}/`, data),
-  delete: (id: number) => api.delete(`/products/units/${id}/`),
-  getStatistics: () => api.get('/products/units/statistics/'),
+  getById: (id: number) => api.get(`/inventory/units/${id}/`),
+  create: (data: any) => api.post('/inventory/units/', data),
+  update: (id: number, data: any) => api.patch(`/inventory/units/${id}/`, data),
+  delete: (id: number) => api.delete(`/inventory/units/${id}/`),
+  getStatistics: () => api.get('/inventory/units/statistics/'),
 };
 
 // Products API
@@ -217,16 +230,12 @@ export const productsApi = {
     const params = new URLSearchParams();
     if (search?.trim()) params.append('search', search.trim());
     if (ordering) params.append('ordering', ordering);
-    return api.get(`/products/products/?${params.toString()}`);
+    return api.get(`/inventory/products/?${params.toString()}`);
   },
-  getById: (id: number) => api.get(`/products/products/${id}/`),
-  create: (data: any) => api.post('/products/products/', data),
-  update: (id: number, data: any) => api.patch(`/products/products/${id}/`, data),
-  delete: (id: number) => api.delete(`/products/products/${id}/`),
-  getVariants: (id: number) => api.get(`/products/products/${id}/variants/`),
-  addVariant: (id: number, variantData: any) => api.post(`/products/products/${id}/add_variant/`, variantData),
-  getStatistics: () => api.get('/products/products/statistics/'),
-  getCatalog: () => api.get('/products/products/catalog/'),
+  getById: (id: number) => api.get(`/inventory/products/${id}/`),
+  create: (data: any) => api.post('/inventory/products/', data),
+  update: (id: number, data: any) => api.patch(`/inventory/products/${id}/`, data),
+  delete: (id: number) => api.delete(`/inventory/products/${id}/`),
 };
 
 // Product Variants API
