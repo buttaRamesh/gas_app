@@ -61,6 +61,8 @@ __pycache__/
 .venv
 env/
 ENV/
+ui/.env.development
+ui/.env.production
 
 # IDE
 .vscode/
