@@ -55,10 +55,7 @@ export default function TopBar() {
           alignItems: "center",
         }}
       >
-        {/* Left side brand title in appbar */}
-        <Typography variant="h6" fontWeight={700}>
-          Lalitha Gas Agency
-        </Typography>
+        
 
         {/* Push items to right */}
         <Box sx={{ flexGrow: 1 }} />

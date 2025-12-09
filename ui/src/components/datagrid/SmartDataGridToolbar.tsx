@@ -1,4 +1,5 @@
 // src/components/datagrid/SmartDataGridToolbar.tsx
+
 import React from "react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -6,180 +7,469 @@ import Tooltip from "@mui/material/Tooltip";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
-import InputAdornment from "@mui/material/InputAdornment";
-import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Badge from "@mui/material/Badge";
 
-import SearchIcon from "@mui/icons-material/Search";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import PrintIcon from "@mui/icons-material/Print";
 import ViewColumnIcon from "@mui/icons-material/ViewColumn";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import PrintIcon from "@mui/icons-material/Print";
-import Badge from "@mui/material/Badge";
-import Typography from "@mui/material/Typography";
+import SearchIcon from "@mui/icons-material/Search";
+import ClearIcon from "@mui/icons-material/Cancel";
 
 import {
+  Toolbar,                 // ⭐ MUST RECEIVE {...props}
+  QuickFilter,
+  QuickFilterControl,
+  QuickFilterClear,
+  type GridToolbarProps,
   ColumnsPanelTrigger,
   FilterPanelTrigger,
 } from "@mui/x-data-grid";
 
-import type { GridToolbarProps } from "@mui/x-data-grid";
-
-export type CustomToolbarProps = {
-  quickFilterValue?: string;
-  onQuickFilterChange?: (v: string) => void;
-
-  showColumns?: boolean;
-  showFilters?: boolean;
-  showExport?: boolean;
-
-  filterCount?: number;
-
-  onPrint?: () => void;
-  onExportCsv?: () => void;
-  onExportExcel?: () => void;
-};
+import UnderlineInput from "./UnderlineInput";
 
 export default function SmartDataGridToolbar(
-  props: GridToolbarProps & Partial<CustomToolbarProps>
+  props: GridToolbarProps & {
+    showColumns?: boolean;
+    showFilters?: boolean;
+    showExport?: boolean;
+    filterCount?: number;
+
+    onPrint?: () => void;
+    onExportCsv?: () => void;
+    onExportExcel?: () => void;
+  }
 ) {
-  // Dummy placeholder functions
-  const handlePrint = () => {};
-  const handleExportCsv = () => {};
-  const handleExportExcel = () => {};
-
   const {
-    quickFilterValue = "",
-    onQuickFilterChange,
-
     showColumns = true,
     showFilters = true,
     showExport = true,
-
     filterCount = 0,
 
-    onPrint = handlePrint,
-    onExportCsv = handleExportCsv,
-    onExportExcel = handleExportExcel,
+    onPrint = () => {},
+    onExportCsv = () => {},
+    onExportExcel = () => {},
+    ...muiToolbarProps // IMPORTANT → needed for context
   } = props;
 
-  const [exportAnchor, setExportAnchor] = React.useState<HTMLElement | null>(null);
+  const [exportAnchor, setExportAnchor] = React.useState<null | HTMLElement>(
+    null
+  );
+
+  // Focus state controls animated underline
+  const [focused, setFocused] = React.useState(false);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        gap: 1.5,
-        px: 1.5,
-        py: 1,
-        width: "100%",
-      }}
+    // 🟢 THIS IS THE FIX — spread GridToolbarProps into Toolbar
+    <Toolbar
+      {...muiToolbarProps}
+      sx={(theme) => ({
+        // Bold Branding: Primary blue gradient - Full width!
+        background: `linear-gradient(90deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 50%, ${theme.palette.primary.light} 100%)`,
+        borderBottom: `2px solid ${theme.palette.primary.dark}`,
+        boxShadow: "0 2px 8px rgba(0, 51, 102, 0.15)",
+        padding: "0 !important", // Remove default Toolbar padding
+
+        // White placeholder text for search input
+        "& .underline-input::placeholder": {
+          color: "rgba(255, 255, 255, 0.7)",
+          opacity: 1,
+        },
+      })}
     >
-      {/* Left spacer / Title placeholder */}
-      <Typography fontWeight="medium" sx={{ flex: 1 }} />
-
-      {/* Search box */}
-      <TextField
-        size="small"
-        placeholder="Search…"
-        value={quickFilterValue}
-        onChange={(e) => onQuickFilterChange?.(e.target.value)}
-        sx={{ width: 220 }}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon fontSize="small" />
-            </InputAdornment>
-          ),
-          sx: { height: 36 },
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1.5,
+          px: 1.5,
+          py: 1,
+          height: 56,
+          width: "100%",
         }}
-      />
+      >
+        {/* Spacer */}
+        <Typography sx={{ flex: 1 }} />
 
-      {/* Divider between search and icons */}
-      <Divider orientation="vertical" flexItem />
+        {/* ================= QuickFilter with underline animation ================= */}
+        <QuickFilter
+          render={(quickProps, state) => (
+            <Box
+              {...quickProps}
+              sx={(theme) => ({
+                width: 360,
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                position: "relative",
+                pb: "6px",
 
-      {/* Columns panel trigger */}
-      {showColumns && (
-        <ColumnsPanelTrigger
-          render={({ onClick }) => (
-            <Tooltip title="Columns">
-              <IconButton size="small" onClick={onClick}>
-                <ViewColumnIcon />
-              </IconButton>
-            </Tooltip>
+                // Base underline (always visible) - Yellow for contrast on blue
+                "&::before": {
+                  content: '""',
+                  position: "absolute",
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  height: "2px",
+                  background: theme.palette.secondary.main,
+                  opacity: 0.5,
+                },
+
+                // Animated underline (focus) - Bright yellow
+                "&::after": {
+                  content: '""',
+                  position: "absolute",
+                  left: 0,
+                  bottom: 0,
+                  height: "2px",
+                  background: theme.palette.secondary.main,
+                  right: focused ? 0 : "100%",
+                  transition: "right 200ms ease",
+                },
+              })}
+            >
+              <SearchIcon
+                sx={{ color: "#ffffff" }}
+              />
+
+              <QuickFilterControl
+                placeholder="Search…"
+                render={({ slotProps, ...controlProps }) => (
+                  <UnderlineInput
+                    {...(slotProps?.htmlInput as any)}
+                    {...(controlProps as any)}
+                    placeholder="Search…"
+                    onFocus={() => setFocused(true)}
+                    onBlur={() => setFocused(false)}
+                    style={{
+                      color: "#ffffff",
+                      "::placeholder": { color: "rgba(255, 255, 255, 0.7)" },
+                    }}
+                  />
+                )}
+              />
+
+              {state.value !== "" && (
+                <QuickFilterClear
+                  render={
+                    <IconButton size="small">
+                      <ClearIcon
+                        fontSize="small"
+                        sx={{ color: "#ffffff" }}
+                      />
+                    </IconButton>
+                  }
+                />
+              )}
+            </Box>
           )}
         />
-      )}
 
-      {/* Filters panel trigger */}
-      {showFilters && (
-        <FilterPanelTrigger
-          render={({ onClick }) => (
-            <Tooltip title="Filters">
-              <IconButton size="small" onClick={onClick}>
-                <Badge badgeContent={filterCount} color="primary" variant="dot">
-                  <FilterListIcon />
-                </Badge>
+        <Divider orientation="vertical" flexItem sx={{ borderColor: "rgba(255, 255, 255, 0.3)" }} />
+
+        {/* Columns Panel */}
+        {showColumns && (
+          <ColumnsPanelTrigger
+            render={({ onClick }) => (
+              <Tooltip title="Columns">
+                <IconButton size="small" onClick={onClick} sx={{ color: "#ffffff" }}>
+                  <ViewColumnIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+          />
+        )}
+
+        {/* Filters Panel */}
+        {showFilters && (
+          <FilterPanelTrigger
+            render={({ onClick }) => (
+              <Tooltip title="Filters">
+                <IconButton size="small" onClick={onClick} sx={{ color: "#ffffff" }}>
+                  <Badge badgeContent={filterCount} color="secondary" variant="dot">
+                    <FilterListIcon />
+                  </Badge>
+                </IconButton>
+              </Tooltip>
+            )}
+          />
+        )}
+
+        <Divider orientation="vertical" flexItem sx={{ borderColor: "rgba(255, 255, 255, 0.3)" }} />
+
+        {/* Print */}
+        <Tooltip title="Print">
+          <IconButton size="small" onClick={onPrint} sx={{ color: "#ffffff" }}>
+            <PrintIcon />
+          </IconButton>
+        </Tooltip>
+
+        <Divider orientation="vertical" flexItem sx={{ borderColor: "rgba(255, 255, 255, 0.3)" }} />
+
+        {/* Export */}
+        {showExport && (
+          <>
+            <Tooltip title="Export">
+              <IconButton
+                size="small"
+                onClick={(e) => setExportAnchor(e.currentTarget)}
+                sx={{ color: "#ffffff" }}
+              >
+                <FileDownloadIcon />
               </IconButton>
             </Tooltip>
-          )}
-        />
-      )}
 
-      {/* Divider between filters and print */}
-      <Divider orientation="vertical" flexItem />
-
-      {/* Print button */}
-      <Tooltip title="Print">
-        <IconButton size="small" onClick={() => onPrint()}>
-          <PrintIcon />
-        </IconButton>
-      </Tooltip>
-
-      {/* Divider before export */}
-      <Divider orientation="vertical" flexItem />
-
-      {/* Export menu (CSV, Excel placeholder) */}
-      {showExport && (
-        <>
-          <Tooltip title="Export">
-            <IconButton
-              size="small"
-              aria-haspopup="true"
-              onClick={(e) => setExportAnchor(e.currentTarget)}
+            <Menu
+              anchorEl={exportAnchor}
+              open={Boolean(exportAnchor)}
+              onClose={() => setExportAnchor(null)}
             >
-              <FileDownloadIcon />
-            </IconButton>
-          </Tooltip>
+              <MenuItem
+                onClick={() => {
+                  setExportAnchor(null);
+                  onExportCsv();
+                }}
+              >
+                Download CSV (placeholder)
+              </MenuItem>
 
-          <Menu
-            id="export-menu"
-            anchorEl={exportAnchor}
-            open={Boolean(exportAnchor)}
-            onClose={() => setExportAnchor(null)}
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
-          >
-            <MenuItem
-              onClick={() => {
-                setExportAnchor(null);
-                onExportCsv();
-              }}
-            >
-              Download CSV (placeholder)
-            </MenuItem>
-
-            <MenuItem
-              onClick={() => {
-                setExportAnchor(null);
-                onExportExcel();
-              }}
-            >
-              Download Excel (placeholder)
-            </MenuItem>
-          </Menu>
-        </>
-      )}
-    </Box>
+              <MenuItem
+                onClick={() => {
+                  setExportAnchor(null);
+                  onExportExcel();
+                }}
+              >
+                Download Excel (placeholder)
+              </MenuItem>
+            </Menu>
+          </>
+        )}
+      </Box>
+    </Toolbar>
   );
 }
+
+
+
+
+// // src/components/datagrid/SmartDataGridToolbar.tsx
+// import React from "react";
+// import Box from "@mui/material/Box";
+// import IconButton from "@mui/material/IconButton";
+// import Tooltip from "@mui/material/Tooltip";
+// import Menu from "@mui/material/Menu";
+// import MenuItem from "@mui/material/MenuItem";
+// import Divider from "@mui/material/Divider";
+// import Typography from "@mui/material/Typography";
+// import Badge from "@mui/material/Badge";
+
+// import FileDownloadIcon from "@mui/icons-material/FileDownload";
+// import PrintIcon from "@mui/icons-material/Print";
+// import ViewColumnIcon from "@mui/icons-material/ViewColumn";
+// import FilterListIcon from "@mui/icons-material/FilterList";
+// import SearchIcon from "@mui/icons-material/Search";
+// import ClearIcon from "@mui/icons-material/Cancel";
+
+// import {
+//   QuickFilter,
+//   QuickFilterControl,
+//   QuickFilterClear,
+//   type GridToolbarProps,
+//   ColumnsPanelTrigger,
+//   FilterPanelTrigger,
+// } from "@mui/x-data-grid";
+
+// import UnderlineInput from "./UnderlineInput";
+
+// export default function SmartDataGridToolbar(
+//   props: GridToolbarProps & {
+//     showColumns?: boolean;
+//     showFilters?: boolean;
+//     showExport?: boolean;
+//     filterCount?: number;
+
+//     onPrint?: () => void;
+//     onExportCsv?: () => void;
+//     onExportExcel?: () => void;
+//   }
+// ) {
+//   const {
+//     showColumns = true,
+//     showFilters = true,
+//     showExport = true,
+//     filterCount = 0,
+
+//     onPrint = () => {},
+//     onExportCsv = () => {},
+//     onExportExcel = () => {},
+//   } = props;
+
+//   const [exportAnchor, setExportAnchor] = React.useState<null | HTMLElement>(
+//     null
+//   );
+
+//   // focused state is only for underline animation (pure UI)
+//   const [focused, setFocused] = React.useState(false);
+
+//   return (
+//     <Box
+//       sx={(theme) => ({
+//         display: "flex",
+//         alignItems: "center",
+//         gap: 1.5,
+//         px: 1.5,
+//         py: 1,
+//         height: 56,
+//         borderBottom: `1px solid ${theme.palette.divider}`,
+//         backgroundColor: theme.palette.background.paper,
+//       })}
+//     >
+//       {/* Left spacer */}
+//       <Typography sx={{ flex: 1 }} />
+
+//       {/* QuickFilter: always-visible custom input */}
+//       <QuickFilter
+//         render={(props, state) => (
+//           <Box
+//             {...props}
+//             sx={(theme) => ({
+//               width: 360, // increased width as requested
+//               display: "flex",
+//               alignItems: "center",
+//               gap: 1,
+//               position: "relative",
+//               pb: "4px",
+//               // animated underline pseudo-element
+//               "&::after": {
+//                 content: '""',
+//                 position: "absolute",
+//                 left: 0,
+//                 bottom: 0,
+//                 height: "2px",
+//                 background: theme.palette.secondary.main, // theme-based
+//                 right: focused ? 0 : "100%",
+//                 transition: "right 200ms ease",
+//               },
+//             })}
+//           >
+//             <SearchIcon sx={(theme) => ({ color: theme.palette.text.primary })} />
+
+//             <QuickFilterControl
+//               placeholder="Search…"
+//               render={({ slotProps, ...controlProps }) => (
+//                 <UnderlineInput
+//                   {...(slotProps?.htmlInput as any)}
+//                   {...(controlProps as any)}
+//                   placeholder="Search…"
+//                   onFocus={(e: React.FocusEvent<HTMLInputElement>) =>
+//                     setFocused(true)
+//                   }
+//                   onBlur={(e: React.FocusEvent<HTMLInputElement>) =>
+//                     setFocused(false)
+//                   }
+//                 />
+//               )}
+//             />
+
+//             {state.value !== "" && (
+//               <QuickFilterClear
+//                 render={
+//                   <IconButton size="small" aria-label="Clear quick filter">
+//                     <ClearIcon
+//                       fontSize="small"
+//                       sx={(theme) => ({ color: theme.palette.text.secondary })}
+//                     />
+//                   </IconButton>
+//                 }
+//               />
+//             )}
+//           </Box>
+//         )}
+//       />
+
+//       <Divider orientation="vertical" flexItem />
+
+//       {showColumns && (
+//         <ColumnsPanelTrigger
+//           render={({ onClick }) => (
+//             <Tooltip title="Columns">
+//               <IconButton size="small" onClick={onClick}>
+//                 <ViewColumnIcon />
+//               </IconButton>
+//             </Tooltip>
+//           )}
+//         />
+//       )}
+
+//       {showFilters && (
+//         <FilterPanelTrigger
+//           render={({ onClick }) => (
+//             <Tooltip title="Filters">
+//               <IconButton size="small" onClick={onClick}>
+//                 <Badge
+//                   badgeContent={filterCount}
+//                   color="primary"
+//                   variant="dot"
+//                 >
+//                   <FilterListIcon />
+//                 </Badge>
+//               </IconButton>
+//             </Tooltip>
+//           )}
+//         />
+//       )}
+
+//       <Divider orientation="vertical" flexItem />
+
+//       <Tooltip title="Print">
+//         <IconButton size="small" onClick={onPrint}>
+//           <PrintIcon />
+//         </IconButton>
+//       </Tooltip>
+
+//       <Divider orientation="vertical" flexItem />
+
+//       {showExport && (
+//         <>
+//           <Tooltip title="Export">
+//             <IconButton
+//               size="small"
+//               onClick={(e) => setExportAnchor(e.currentTarget)}
+//             >
+//               <FileDownloadIcon />
+//             </IconButton>
+//           </Tooltip>
+
+//           <Menu
+//             anchorEl={exportAnchor}
+//             open={Boolean(exportAnchor)}
+//             onClose={() => setExportAnchor(null)}
+//           >
+//             <MenuItem
+//               onClick={() => {
+//                 setExportAnchor(null);
+//                 onExportCsv();
+//               }}
+//             >
+//               Download CSV (placeholder)
+//             </MenuItem>
+//             <MenuItem
+//               onClick={() => {
+//                 setExportAnchor(null);
+//                 onExportExcel();
+//               }}
+//             >
+//               Download Excel (placeholder)
+//             </MenuItem>
+//           </Menu>
+//         </>
+//       )}
+//     </Box>
+//   );
+// }
+
+
+
+

@@ -22,4 +22,8 @@ const typography: NonNullable<ThemeOptions["typography"]> = {
   button: { fontWeight: 700, textTransform: "none" },
 };
 
+// Export monospace font family for numeric data
+export const monospaceFontFamily =
+  "'Roboto Mono', 'JetBrains Mono', 'Courier New', monospace";
+
 export default typography;

@@ -1,3 +1,11 @@
+"""
+Consumer filtering for the Consumer API.
+
+Provides comprehensive filtering capabilities for Consumer model including:
+- Text search across consumer_number, person name, and mobile
+- Exact and range filters for IDs
+- Status and category filters
+"""
 from django_filters import rest_framework as filters
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType

@@ -22,12 +22,16 @@ a:hover {
   color: #535bf2;
 }
 
-body {
+html, body, #root {
   margin: 0;
-  display: flex;
-  place-items: center;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
   min-width: 320px;
-  min-height: 100vh;
 }
 
 h1 {
@@ -66,3 +70,8 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* ============================================
+   SCROLLBARS - Now handled in theme/components.ts
+   ============================================ */
+/* Global scrollbar styles moved to MUI theme for better theme integration */

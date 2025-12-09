@@ -107,6 +107,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ],
     "DEFAULT_PAGINATION_CLASS": "core.pagination.base_pagination.DefaultPagination",
     "PAGE_SIZE": 20,
     'EXCEPTION_HANDLER': 'core.exceptions.custom_exception_handler',

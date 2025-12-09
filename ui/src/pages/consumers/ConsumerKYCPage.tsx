@@ -1,9 +1,9 @@
-// ConsumerListPage.tsx
+// src/pages/consumers/ConsumerKYCPage.tsx
 import { Box } from "@mui/material";
 import SmartDataGrid from "@/components/datagrid/SmartDataGrid";
-import { consumerColumns } from "./consumerColumns";
+import { kycColumns } from "./kycColumns";
 
-export default function ConsumerListPage() {
+export default function ConsumerKYCPage() {
   return (
     <Box
       sx={{
@@ -14,7 +14,12 @@ export default function ConsumerListPage() {
         overflow: "hidden",
       }}
     >
-      <SmartDataGrid endpoint="/consumers/" columns={consumerColumns} />
+      <SmartDataGrid
+        endpoint="/consumers/kyc/"
+        columns={kycColumns}
+        initialPageSize={20}
+        pageSizeOptions={[10, 20, 50]}
+      />
     </Box>
   );
 }
