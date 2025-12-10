@@ -15,6 +15,7 @@ import InboxIcon from "@mui/icons-material/Inbox";
 
 import axiosInstance from "@/api/axiosInstance";
 import SmartDataGridToolbar from "./SmartDataGridToolbar";
+import { useExport } from "@/hooks/useExport";
 
 export interface SmartDataGridProps {
   endpoint: string;
@@ -27,6 +28,8 @@ export interface SmartDataGridProps {
     showColumns?: boolean;
     showFilters?: boolean;
     showExport?: boolean;
+    kycStatus?: "pending" | "done";
+    onKycStatusChange?: (status: "pending" | "done") => void;
   };
 }
 
@@ -108,6 +111,16 @@ export default function SmartDataGrid({
       savedPrefs?.columnVisibility ?? initialVisibility
     );
 
+  /* Export functionality */
+  const { exportData, isExporting, error: exportError } = useExport(endpoint);
+
+  /* Calculate visible columns for export */
+  const visibleColumns = React.useMemo(() => {
+    return processedColumns
+      .filter((col) => columnVisibilityModel[col.field] !== false)
+      .map((col) => col.field);
+  }, [processedColumns, columnVisibilityModel]);
+
   /* Save preferences to localStorage whenever they change */
   React.useEffect(() => {
     try {
@@ -131,8 +144,29 @@ export default function SmartDataGrid({
     null
   );
 
+  /* AbortController to cancel previous requests */
+  const abortControllerRef = React.useRef<AbortController | null>(null);
+
+  /* Clear data immediately when endpoint changes and show loading */
+  React.useEffect(() => {
+    setRows([]);
+    setRowCount(0);
+    setLoading(true);
+  }, [cleanedEndpoint]);
+
   /* Fetch data logic */
   const fetchData = React.useCallback(async () => {
+    // Cancel previous request if it exists
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // Create new AbortController for this request
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
+    // Clear data first for clean skeleton display
+    setRows([]);
     setLoading(true);
     try {
       const params: Record<string, any> = {
@@ -146,6 +180,82 @@ export default function SmartDataGrid({
         params.search = filterModel.quickFilterValues[0];
       }
 
+      // Apply column filters from filter panel
+      if (filterModel.items && filterModel.items.length > 0) {
+        filterModel.items.forEach((filter) => {
+          if (!filter.field || filter.value === undefined || filter.value === null) {
+            return;
+          }
+
+          const { field, operator, value } = filter;
+
+          // Map DataGrid operators to backend query params
+          switch (operator) {
+            case 'contains':
+            case 'startsWith':
+            case 'endsWith':
+              // Text filters - backend uses icontains/istartswith/iendswith
+              params[field] = value;
+              break;
+
+            case 'equals':
+            case '=':
+              // Exact match for numbers, IDs, and choice fields
+              params[field] = value;
+              break;
+
+            case 'is':
+              // Boolean filters (is_kyc_done, etc.)
+              params[field] = value;
+              break;
+
+            case '>':
+            case 'after':
+              params[`${field}__gt`] = value;
+              break;
+
+            case '>=':
+            case 'onOrAfter':
+              params[`${field}__gte`] = value;
+              break;
+
+            case '<':
+            case 'before':
+              params[`${field}__lt`] = value;
+              break;
+
+            case '<=':
+            case 'onOrBefore':
+              params[`${field}__lte`] = value;
+              break;
+
+            case '!=':
+            case 'not':
+              params[`${field}__ne`] = value;
+              break;
+
+            case 'isEmpty':
+              params[`${field}__isnull`] = 'true';
+              break;
+
+            case 'isNotEmpty':
+              params[`${field}__isnull`] = 'false';
+              break;
+
+            case 'isAnyOf':
+              // Multiple values (for choice fields)
+              if (Array.isArray(value) && value.length > 0) {
+                params[`${field}__in`] = value.join(',');
+              }
+              break;
+
+            default:
+              // Default to simple equality
+              params[field] = value;
+          }
+        });
+      }
+
       // Sorting: Support multiple columns (comma-separated)
       if (sortModel.length > 0) {
         const orderingFields = sortModel
@@ -157,11 +267,18 @@ export default function SmartDataGrid({
         }
       }
 
-      const resp = await axiosInstance.get(cleanedEndpoint, { params });
+      const resp = await axiosInstance.get(cleanedEndpoint, {
+        params,
+        signal: abortController.signal
+      });
 
       setRows(resp.data.results ?? []);
       setRowCount(resp.data.count ?? 0);
-    } catch (err) {
+    } catch (err: any) {
+      // Ignore aborted requests (they were intentionally cancelled)
+      if (err.name === 'CanceledError' || err.name === 'AbortError') {
+        return;
+      }
       console.error("SmartDataGrid fetch error:", err);
     } finally {
       setLoading(false);
@@ -172,6 +289,7 @@ export default function SmartDataGrid({
     paginationModel.page,
     paginationModel.pageSize,
     filterModel.quickFilterValues,
+    filterModel.items,
     sortModel,
   ]);
 
@@ -179,6 +297,7 @@ export default function SmartDataGrid({
   React.useEffect(() => {
     if (fetchDebounceRef.current) clearTimeout(fetchDebounceRef.current);
 
+    // Use 300ms debounce for better UX (prevents race conditions on fast typing)
     fetchDebounceRef.current = setTimeout(fetchData, 300);
 
     return () => {
@@ -333,7 +452,24 @@ export default function SmartDataGrid({
             showFilters: toolbarOptions?.showFilters ?? true,
             showExport: toolbarOptions?.showExport ?? true,
             filterCount: filterModel.items.length,
-          } as unknown as any, // ✔ FIXED TS ERROR
+            kycStatus: toolbarOptions?.kycStatus,
+            onKycStatusChange: toolbarOptions?.onKycStatusChange,
+            // Export functionality
+            exportData,
+            isExporting,
+            exportError,
+            visibleColumns,
+            exportParams: {
+              ...stableExtraParams,
+              search: filterModel.quickFilterValues?.[0],
+              ordering: sortModel.length > 0
+                ? sortModel
+                    .filter((s) => s?.field)
+                    .map((s) => (s.sort === "desc" ? `-${s.field}` : s.field))
+                    .join(",")
+                : undefined,
+            },
+          } as unknown as any,
         }}
         sx={(theme) => ({
           width: "100%",
@@ -363,6 +499,7 @@ export default function SmartDataGrid({
 
           // Professional zebra striping - subtle blue tint
           "& .MuiDataGrid-row": {
+            animation: "fadeIn 150ms ease-in",
             "&:nth-of-type(odd)": {
               backgroundColor: "#ffffff", // White
             },
@@ -377,9 +514,27 @@ export default function SmartDataGrid({
             },
           },
 
-          // Ensure virtualScroller handles all scrolling
+          // Fade-in animation for smooth row appearance
+          "@keyframes fadeIn": {
+            from: {
+              opacity: 0,
+              transform: "translateY(-3px)",
+            },
+            to: {
+              opacity: 1,
+              transform: "translateY(0)",
+            },
+          },
+
+          // Ensure virtualScroller handles all scrolling with smooth transitions
           "& .MuiDataGrid-virtualScroller": {
             overflow: "auto !important",
+            transition: "opacity 100ms ease-in-out",
+          },
+
+          // Smooth opacity transition for rows when data changes
+          "& .MuiDataGrid-virtualScrollerContent": {
+            transition: "opacity 100ms ease-in-out",
           },
 
           // Consistent font weight for ALL cells

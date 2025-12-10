@@ -1,10 +1,16 @@
 // src/pages/consumers/kycColumns.tsx
 import type { GridColDef } from "@mui/x-data-grid";
 import { Chip } from "@mui/material";
+import KYCAction from "@/components/consumers/KYCAction";
 
 export type AppGridColDef = GridColDef & {
   visibleByDefault?: boolean;
 };
+
+export interface KYCColumnsOptions {
+  showActions?: boolean;
+  onActionSuccess?: () => void;
+}
 
 export const kycColumns: AppGridColDef[] = [
   {
@@ -18,6 +24,7 @@ export const kycColumns: AppGridColDef[] = [
     headerName: "Consumer No",
     width: 150,
     sortable: true,
+    filterable: true,
     visibleByDefault: true,
   },
   {
@@ -26,6 +33,7 @@ export const kycColumns: AppGridColDef[] = [
     flex: 1.5,
     minWidth: 180,
     sortable: true,
+    filterable: true,
     visibleByDefault: true,
   },
   {
@@ -33,6 +41,7 @@ export const kycColumns: AppGridColDef[] = [
     headerName: "Mobile No",
     width: 140,
     sortable: true,
+    filterable: true,
     visibleByDefault: true,
     valueGetter: (params: any) => params ?? "",
   },
@@ -53,6 +62,7 @@ export const kycColumns: AppGridColDef[] = [
     flex: 0.8,
     minWidth: 110,
     sortable: true,
+    filterable: true,
     visibleByDefault: false,
   },
   {
@@ -60,6 +70,7 @@ export const kycColumns: AppGridColDef[] = [
     headerName: "Type",
     width: 130,
     sortable: true,
+    filterable: true,
     visibleByDefault: false,
     valueFormatter: (params: any) => {
       if (!params?.value) return "";
@@ -75,6 +86,7 @@ export const kycColumns: AppGridColDef[] = [
     headerName: "KYC Status",
     width: 130,
     sortable: true,
+    filterable: true,
     visibleByDefault: false,
     renderCell: (params: any) =>
       params.value ? (
@@ -84,3 +96,38 @@ export const kycColumns: AppGridColDef[] = [
       ),
   },
 ];
+
+/**
+ * Get KYC columns with optional actions column
+ *
+ * @param options - Configuration options
+ * @returns Column definitions with optional actions column
+ */
+export function getKYCColumns(options?: KYCColumnsOptions): AppGridColDef[] {
+  const { showActions = false, onActionSuccess } = options || {};
+
+  if (!showActions) {
+    return kycColumns;
+  }
+
+  // Add actions column for pending KYC status
+  const actionsColumn: AppGridColDef = {
+    field: 'actions',
+    headerName: 'Actions',
+    width: 150,
+    sortable: false,
+    filterable: false,
+    hideable: false,
+    visibleByDefault: true,
+    renderCell: (params: any) => (
+      <KYCAction
+        consumerId={params.row.id}
+        consumerName={params.row.name}
+        consumerNumber={params.row.consumer_number}
+        onSuccess={onActionSuccess}
+      />
+    ),
+  };
+
+  return [...kycColumns, actionsColumn];
+}

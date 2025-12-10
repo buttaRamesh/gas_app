@@ -77,6 +77,7 @@ const NAV: NavGroup[] = [
     icon: <RouteIcon />,
     to: "/routes",
     children: [
+      { key: "routes-list", label: "List All", to: "/routes/", icon: <ListAltIcon /> },
       { key: "routes-active", label: "Active Routes", to: "/routes/active", icon: <ListAltIcon /> },
       { key: "routes-mapping", label: "Route Mapping", to: "/routes/mapping", icon: <InfoIcon /> },
     ],

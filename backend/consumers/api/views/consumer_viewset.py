@@ -8,6 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from consumers.models import Consumer
 from core.pagination.base_pagination import DefaultPagination
 from consumers.api.filters import ConsumerFilter, ConsumerOrderingFilter
+from core.exports import ExportViewMixin
 
 from consumers.api.serializers import (
     ConsumerListSerializer,
@@ -18,6 +19,7 @@ from consumers.api.serializers import (
 
 
 class ConsumerViewSet(
+    ExportViewMixin,
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
@@ -42,6 +44,10 @@ class ConsumerViewSet(
         'is_kyc_done',
     ]
     ordering = ['id']  # default ordering
+
+    # Export configuration
+    export_serializer_class = ConsumerListSerializer
+    export_filename_prefix = 'consumers'
 
     def get_queryset(self):
         return (

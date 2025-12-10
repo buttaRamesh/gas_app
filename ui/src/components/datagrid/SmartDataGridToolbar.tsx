@@ -28,6 +28,8 @@ import {
 } from "@mui/x-data-grid";
 
 import UnderlineInput from "./UnderlineInput";
+import StatusToggle from "@/components/shared/StatusToggle";
+import type { ExportFormat } from "@/services/export/types";
 
 export default function SmartDataGridToolbar(
   props: GridToolbarProps & {
@@ -35,10 +37,21 @@ export default function SmartDataGridToolbar(
     showFilters?: boolean;
     showExport?: boolean;
     filterCount?: number;
+    kycStatus?: "pending" | "done";
+    onKycStatusChange?: (status: "pending" | "done") => void;
+
+    // Export functionality
+    exportData?: (
+      format: ExportFormat,
+      visibleColumns: string[],
+      params?: Record<string, any>
+    ) => Promise<void>;
+    isExporting?: boolean;
+    exportError?: string | null;
+    visibleColumns?: string[];
+    exportParams?: Record<string, any>;
 
     onPrint?: () => void;
-    onExportCsv?: () => void;
-    onExportExcel?: () => void;
   }
 ) {
   const {
@@ -46,10 +59,17 @@ export default function SmartDataGridToolbar(
     showFilters = true,
     showExport = true,
     filterCount = 0,
+    kycStatus,
+    onKycStatusChange,
+
+    // Export props
+    exportData,
+    isExporting = false,
+    exportError,
+    visibleColumns = [],
+    exportParams = {},
 
     onPrint = () => {},
-    onExportCsv = () => {},
-    onExportExcel = () => {},
     ...muiToolbarProps // IMPORTANT → needed for context
   } = props;
 
@@ -59,6 +79,20 @@ export default function SmartDataGridToolbar(
 
   // Focus state controls animated underline
   const [focused, setFocused] = React.useState(false);
+
+  // Export handlers
+  const handleExport = async (format: ExportFormat) => {
+    if (!exportData) return;
+
+    setExportAnchor(null); // Close menu
+
+    try {
+      await exportData(format, visibleColumns, exportParams);
+    } catch (error) {
+      console.error('Export failed:', error);
+      // Error handling is done in the hook
+    }
+  };
 
   return (
     // 🟢 THIS IS THE FIX — spread GridToolbarProps into Toolbar
@@ -167,6 +201,19 @@ export default function SmartDataGridToolbar(
           )}
         />
 
+        {/* KYC Status Toggle (only shown when kycStatus prop is provided) */}
+        {kycStatus !== undefined && onKycStatusChange && (
+          <>
+            <Divider orientation="vertical" flexItem sx={{ borderColor: "rgba(255, 255, 255, 0.3)", mx: 1 }} />
+            <StatusToggle
+              status={kycStatus}
+              onChange={onKycStatusChange}
+              size="small"
+              showLabel={true}
+            />
+          </>
+        )}
+
         <Divider orientation="vertical" flexItem sx={{ borderColor: "rgba(255, 255, 255, 0.3)" }} />
 
         {/* Columns Panel */}
@@ -211,14 +258,20 @@ export default function SmartDataGridToolbar(
         {/* Export */}
         {showExport && (
           <>
-            <Tooltip title="Export">
-              <IconButton
-                size="small"
-                onClick={(e) => setExportAnchor(e.currentTarget)}
-                sx={{ color: "#ffffff" }}
-              >
-                <FileDownloadIcon />
-              </IconButton>
+            <Tooltip title={isExporting ? "Exporting..." : "Export"}>
+              <span>
+                <IconButton
+                  size="small"
+                  onClick={(e) => setExportAnchor(e.currentTarget)}
+                  disabled={isExporting}
+                  sx={{
+                    color: "#ffffff",
+                    opacity: isExporting ? 0.5 : 1,
+                  }}
+                >
+                  <FileDownloadIcon />
+                </IconButton>
+              </span>
             </Tooltip>
 
             <Menu
@@ -226,22 +279,16 @@ export default function SmartDataGridToolbar(
               open={Boolean(exportAnchor)}
               onClose={() => setExportAnchor(null)}
             >
-              <MenuItem
-                onClick={() => {
-                  setExportAnchor(null);
-                  onExportCsv();
-                }}
-              >
-                Download CSV (placeholder)
+              <MenuItem onClick={() => handleExport('csv')}>
+                Export as CSV
               </MenuItem>
 
-              <MenuItem
-                onClick={() => {
-                  setExportAnchor(null);
-                  onExportExcel();
-                }}
-              >
-                Download Excel (placeholder)
+              <MenuItem onClick={() => handleExport('excel')}>
+                Export as Excel
+              </MenuItem>
+
+              <MenuItem onClick={() => handleExport('pdf')}>
+                Export as PDF
               </MenuItem>
             </Menu>
           </>

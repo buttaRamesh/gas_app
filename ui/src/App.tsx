@@ -10,6 +10,7 @@ import MainLayout from "@/layouts/MainLayout"
 import ThemePreview from "@/pages/theme/ThemePreview"
 import ConsumerListPage from "@/pages/consumers/ConsumerListPage";
 import ConsumerKYCPage from "@/pages/consumers/ConsumerKYCPage";
+import RoutesListPage  from "@/pages/routes/RoutesListPage"
 
 function App() {
   useEffect(() => {
@@ -24,6 +25,7 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/consumers/list" element={<ConsumerListPage />} />
           <Route path="/consumers/kyc" element={<ConsumerKYCPage />} />
+          <Route path="/routes/" element={<RoutesListPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
         </Route>
       </Route>
