@@ -44,7 +44,7 @@ export default function SmartDataGridToolbar(
     exportData?: (
       format: ExportFormat,
       visibleColumns: string[],
-      params?: Record<string, any>
+      filters?: Record<string, any>
     ) => Promise<void>;
     isExporting?: boolean;
     exportError?: string | null;
@@ -68,6 +68,7 @@ export default function SmartDataGridToolbar(
     exportError,
     visibleColumns = [],
     exportParams = {},
+    pageTitle, // Smart page title for exports
 
     onPrint = () => {},
     ...muiToolbarProps // IMPORTANT → needed for context
@@ -87,7 +88,7 @@ export default function SmartDataGridToolbar(
     setExportAnchor(null); // Close menu
 
     try {
-      await exportData(format, visibleColumns, exportParams);
+      await exportData(format, visibleColumns, exportParams, pageTitle);
     } catch (error) {
       console.error('Export failed:', error);
       // Error handling is done in the hook

@@ -5,30 +5,47 @@ import axiosInstance from '@/api/axiosInstance';
 import type { ExportOptions, ExportFormat } from './types';
 
 /**
- * Export data from an endpoint and trigger file download
+ * Export data from a resource and trigger file download
  *
  * @param options - Export options
  * @throws Error if export fails
  */
 export async function exportData(options: ExportOptions): Promise<void> {
-  const { endpoint, format, visibleColumns, params = {} } = options;
-
-  // Clean endpoint (remove leading slash if present)
-  const cleanedEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
-
-  // Build query parameters
-  const queryParams = {
-    ...params,
-    export_format: format,
-    visible_fields: visibleColumns.join(','),
-  };
+  const { resource, format, visibleColumns, filters = {}, pageTitle } = options;
 
   try {
-    // Make API call with blob response type
-    const response = await axiosInstance.get(`${cleanedEndpoint}export/`, {
-      params: queryParams,
-      responseType: 'blob',
-    });
+    // Track export timing
+    const startTime = performance.now();
+    console.log(`🚀 Export started at ${new Date().toLocaleTimeString()}`);
+
+    // Make POST request to universal export endpoint
+    const response = await axiosInstance.post(
+      '/export/',
+      {
+        resource,
+        export_format: format,
+        visible_fields: visibleColumns,
+        filters,
+        page_title: pageTitle, // Pass page title for Excel/PDF
+      },
+      {
+        responseType: 'blob',
+        withCredentials: true, // Include authentication credentials
+        timeout: 300000, // 5 minutes for large exports
+        onDownloadProgress: (progressEvent) => {
+          // Log progress to help debug timeout issues
+          const percentCompleted = progressEvent.total
+            ? Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            : 0;
+          const elapsed = ((performance.now() - startTime) / 1000).toFixed(2);
+          console.log(`📥 Export progress: ${progressEvent.loaded} bytes (${percentCompleted}%) - ${elapsed}s elapsed`);
+        },
+      }
+    );
+
+    const endTime = performance.now();
+    const totalTime = ((endTime - startTime) / 1000).toFixed(2);
+    console.log(`✅ Export completed in ${totalTime}s at ${new Date().toLocaleTimeString()}`);
 
     // Extract filename from Content-Disposition header or generate default
     const filename = extractFilename(response.headers['content-disposition'], format);

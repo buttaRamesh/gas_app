@@ -87,10 +87,13 @@ class ConsumerListSerializer(serializers.ModelSerializer):
     # ADDRESS (first)
     # -----------------------
     def _addr(self, obj):
+        """Get first address using prefetched data (no extra query)"""
         person = obj.person
-        if person and person.addresses.exists():
-            return person.addresses.first()
-        return None
+        if not person:
+            return None
+        # Use list() to access prefetched data without triggering query
+        addresses = list(person.addresses.all())
+        return addresses[0] if addresses else None
 
     def get_street_road_name(self, obj) -> str | None:
         a = self._addr(obj)
@@ -108,10 +111,13 @@ class ConsumerListSerializer(serializers.ModelSerializer):
     # CONTACT (first)
     # -----------------------
     def _contact(self, obj):
+        """Get first contact using prefetched data (no extra query)"""
         person = obj.person
-        if person and person.contacts.exists():
-            return person.contacts.first()
-        return None
+        if not person:
+            return None
+        # Use list() to access prefetched data without triggering query
+        contacts = list(person.contacts.all())
+        return contacts[0] if contacts else None
 
     def get_email(self, obj) -> str | None:
         c = self._contact(obj)
@@ -138,7 +144,9 @@ class ConsumerListSerializer(serializers.ModelSerializer):
     # CYLINDER COUNT
     # -----------------------
     def get_cylinders(self, obj) -> int:
-        return obj.connections.count()
+        """Get cylinder count using prefetched data (no extra query)"""
+        # Use len() on list to access prefetched data without triggering query
+        return len(list(obj.connections.all()))
 
 
 class ConsumerKYCListSerializer(serializers.ModelSerializer):

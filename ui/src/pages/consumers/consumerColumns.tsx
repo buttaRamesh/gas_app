@@ -79,14 +79,6 @@ export const consumerColumns: AppGridColDef[] = [
     width: 130,  // Fixed - "Domestic" or "Commercial"
     sortable: true,
     visibleByDefault: true,
-    valueFormatter: (params: any) => {
-      if (!params?.value) return "";
-      const map: Record<string, string> = {
-        D: "Domestic",
-        C: "Commercial",
-      };
-      return map[params.value] ?? params.value;
-    },
   },
   {
     field: "category",

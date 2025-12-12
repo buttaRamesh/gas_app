@@ -8,23 +8,23 @@ import type { ExportFormat, ExportState } from '@/services/export/types';
 /**
  * Hook for managing data export functionality
  *
- * @param endpoint - API endpoint to export from
+ * @param resource - Resource name (e.g., 'consumers', 'routes')
  * @returns Export state and functions
  *
  * @example
  * ```tsx
- * const { exportData, isExporting, error } = useExport('/consumers/');
+ * const { exportData, isExporting, error } = useExport('consumers');
  *
  * const handleExport = async () => {
- *   await exportData({
- *     format: 'excel',
- *     visibleColumns: ['id', 'name', 'mobile'],
- *     params: { search: 'john', ordering: 'name' }
- *   });
+ *   await exportData(
+ *     'excel',
+ *     ['id', 'name', 'mobile'],
+ *     { search: 'john', ordering: 'name' }
+ *   );
  * };
  * ```
  */
-export function useExport(endpoint: string) {
+export function useExport(resource: string) {
   const [state, setState] = useState<ExportState>({
     isExporting: false,
     error: null,
@@ -36,13 +36,15 @@ export function useExport(endpoint: string) {
    *
    * @param format - Export format (csv, excel, pdf)
    * @param visibleColumns - Array of column field names to export
-   * @param params - Optional query parameters (filters, search, ordering)
+   * @param filters - Optional filters (search, ordering, etc.)
+   * @param pageTitle - Optional custom title for Excel/PDF
    */
   const exportData = useCallback(
     async (
       format: ExportFormat,
       visibleColumns: string[],
-      params?: Record<string, any>
+      filters?: Record<string, any>,
+      pageTitle?: string
     ): Promise<void> => {
       // Validate inputs
       if (!visibleColumns || visibleColumns.length === 0) {
@@ -63,10 +65,11 @@ export function useExport(endpoint: string) {
       try {
         // Call export service
         await exportDataService({
-          endpoint,
+          resource,
           format,
           visibleColumns,
-          params,
+          filters,
+          pageTitle,
         });
 
         // Success - reset state
@@ -87,7 +90,7 @@ export function useExport(endpoint: string) {
         throw error;
       }
     },
-    [endpoint]
+    [resource]
   );
 
   /**

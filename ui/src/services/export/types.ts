@@ -11,8 +11,8 @@ export type ExportFormat = 'csv' | 'excel' | 'pdf';
  * Export options passed to the export service
  */
 export interface ExportOptions {
-  /** API endpoint to export from (e.g., '/consumers/') */
-  endpoint: string;
+  /** Resource name (e.g., 'consumers', 'routes', 'inventory') */
+  resource: string;
 
   /** Export format */
   format: ExportFormat;
@@ -20,8 +20,11 @@ export interface ExportOptions {
   /** List of visible column field names to export */
   visibleColumns: string[];
 
-  /** Optional query parameters (filters, search, ordering) */
-  params?: Record<string, any>;
+  /** Optional filters (search, ordering, kyc_status, etc.) */
+  filters?: Record<string, any>;
+
+  /** Optional custom page title for Excel/PDF exports */
+  pageTitle?: string;
 }
 
 /**

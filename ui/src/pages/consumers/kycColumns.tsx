@@ -22,7 +22,7 @@ export const kycColumns: AppGridColDef[] = [
   {
     field: "consumer_number",
     headerName: "Consumer No",
-    width: 150,
+    width: 100,
     sortable: true,
     filterable: true,
     visibleByDefault: true,
@@ -39,7 +39,7 @@ export const kycColumns: AppGridColDef[] = [
   {
     field: "mobile_number",
     headerName: "Mobile No",
-    width: 140,
+    width: 120,
     sortable: true,
     filterable: true,
     visibleByDefault: true,
@@ -49,9 +49,9 @@ export const kycColumns: AppGridColDef[] = [
     field: "address",
     headerName: "Address",
     flex: 2,
-    minWidth: 250,
+    minWidth: 400,
     sortable: false,
-    visibleByDefault: false,
+    visibleByDefault: true,
     renderCell: (params: any) => (
       <span title={params.value ?? ""}>{params.value}</span>
     ),
@@ -60,7 +60,7 @@ export const kycColumns: AppGridColDef[] = [
     field: "category",
     headerName: "Category",
     flex: 0.8,
-    minWidth: 110,
+    width: 100,
     sortable: true,
     filterable: true,
     visibleByDefault: false,
@@ -68,23 +68,15 @@ export const kycColumns: AppGridColDef[] = [
   {
     field: "consumer_type",
     headerName: "Type",
-    width: 130,
+    width: 100,
     sortable: true,
     filterable: true,
     visibleByDefault: false,
-    valueFormatter: (params: any) => {
-      if (!params?.value) return "";
-      const map: Record<string, string> = {
-        D: "Domestic",
-        C: "Commercial",
-      };
-      return map[params.value] ?? params.value;
-    },
   },
   {
     field: "is_kyc_done",
     headerName: "KYC Status",
-    width: 130,
+    width: 100,
     sortable: true,
     filterable: true,
     visibleByDefault: false,

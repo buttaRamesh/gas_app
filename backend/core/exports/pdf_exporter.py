@@ -54,30 +54,60 @@ class PDFExporter(BaseExporter):
         styles = getSampleStyleSheet()
         title_style = styles['Title']
         title_style.alignment = TA_CENTER
-        title = Paragraph(f"{self.filename_prefix.title()} Export", title_style)
+        title = Paragraph(self.page_title, title_style)
         elements.append(title)
 
-        # Add export date
+        # Add subtitle with total records
         subtitle_style = styles['Normal']
         subtitle_style.alignment = TA_CENTER
-        export_date = datetime.now().strftime('%B %d, %Y at %I:%M %p')
-        subtitle = Paragraph(f"Generated on {export_date}", subtitle_style)
+        total_records = self.queryset.count()
+        subtitle = Paragraph(f"Total Records: {total_records}", subtitle_style)
         elements.append(subtitle)
         elements.append(Spacer(1, 0.3 * inch))
 
-        # Get headers and data
+        # Get headers
         headers = self.get_headers()
-        data_rows = self.get_data_rows()
 
         # Prepare table data
         table_data = [headers]  # First row is headers
 
-        for row_dict in data_rows:
-            row_values = [
-                str(row_dict.get(field, ''))
-                for field in self.visible_fields
-            ]
-            table_data.append(row_values)
+        # Stream data rows efficiently using bulk loader
+        import time
+        if self.serializer_class:
+            # Toggle between ORM and Raw SQL implementations
+            USE_RAW_SQL = True  # ← Set to False to use ORM version
+
+            t_bulk_start = time.time()
+
+            if USE_RAW_SQL:
+                from core.exports.bulk_loaders_raw_sql import bulk_load_consumer_export_data_raw_sql
+                print(f"  📊 PDF: Using RAW SQL bulk loading...")
+                data = bulk_load_consumer_export_data_raw_sql(self.queryset, self.visible_fields)
+            else:
+                from core.exports.bulk_loaders import bulk_load_consumer_export_data
+                print(f"  📊 PDF: Using ORM bulk loading...")
+                data = bulk_load_consumer_export_data(self.queryset, self.visible_fields)
+
+            print(f"  ⏱️  PDF: Bulk load complete: {(time.time() - t_bulk_start):.2f}s")
+
+            t_write_start = time.time()
+            pdf_row_count = 0
+            for row_dict in data:
+                row_values = [
+                    self._format_value(row_dict.get(field, ''))
+                    for field in self.visible_fields
+                ]
+                table_data.append(row_values)
+                pdf_row_count += 1
+            print(f"  ⏱️  PDF: Process {pdf_row_count} rows: {(time.time() - t_write_start):.2f}s")
+        else:
+            # Fast path: Stream values() directly
+            for row_dict in self.queryset.values(*self.visible_fields).iterator(chunk_size=1000):
+                row_values = [
+                    self._format_value(row_dict.get(field, ''))
+                    for field in self.visible_fields
+                ]
+                table_data.append(row_values)
 
         # Calculate column widths based on number of columns
         page_width = landscape(letter)[0] - 60  # Account for margins
@@ -133,3 +163,11 @@ class PDFExporter(BaseExporter):
 
         # Create and return response
         return self.create_response(pdf_data)
+
+    def _format_value(self, value):
+        """Format a value for PDF output."""
+        if value is None:
+            return ''
+        if isinstance(value, bool):
+            return 'Yes' if value else 'No'
+        return str(value)

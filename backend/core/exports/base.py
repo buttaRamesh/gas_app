@@ -30,7 +30,9 @@ class BaseExporter(ABC):
         queryset,
         visible_fields: List[str],
         filename_prefix: str = "export",
-        serializer_class=None
+        serializer_class=None,
+        field_labels: Dict[str, str] = None,
+        page_title: str = None
     ):
         """
         Initialize exporter.
@@ -40,11 +42,15 @@ class BaseExporter(ABC):
             visible_fields: List of field names to include in export
             filename_prefix: Prefix for the generated filename
             serializer_class: Optional serializer to format data
+            field_labels: Optional dict mapping field names to display labels
+            page_title: Optional custom page title for exports (Excel/PDF)
         """
         self.queryset = queryset
         self.visible_fields = visible_fields
         self.filename_prefix = filename_prefix
         self.serializer_class = serializer_class
+        self.field_labels = field_labels or {}
+        self.page_title = page_title or f"{filename_prefix.title()} Export"
 
     def get_filename(self) -> str:
         """
@@ -63,11 +69,11 @@ class BaseExporter(ABC):
         """
         Get human-readable headers from field names.
 
-        Converts snake_case to Title Case.
+        Uses field_labels if provided, otherwise converts snake_case to Title Case.
         Example: consumer_number -> Consumer Number
         """
         return [
-            field.replace('_', ' ').title()
+            self.field_labels.get(field, field.replace('_', ' ').title())
             for field in self.visible_fields
         ]
 

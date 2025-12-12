@@ -20,6 +20,7 @@ from django.urls import path, re_path
 from django.views.generic import TemplateView
 from django.http import JsonResponse
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+from core.exports.views import UniversalExportView
 
 # Health check endpoint
 def health_check(request):
@@ -37,6 +38,9 @@ urlpatterns = [
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+
+    # Universal Export Endpoint
+    path('api/export/', UniversalExportView.as_view(), name='universal-export'),
 
     # API endpoints
     # re_path(r'^.*$', TemplateView.as_view(template_name='index.html')),  # React entry point
