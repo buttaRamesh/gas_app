@@ -26,7 +26,7 @@ export async function exportData(options: ExportOptions): Promise<void> {
         export_format: format,
         visible_fields: visibleColumns,
         filters,
-        page_title: pageTitle, // Pass page title for Excel/PDF
+        page_title: pageTitle,
       },
       {
         responseType: 'blob',

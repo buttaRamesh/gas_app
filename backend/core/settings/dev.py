@@ -33,6 +33,8 @@ else:
     ]
 
 # Required for credentials (cookies, auth headers)
+CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOW_CREDENTIALS = True
 
 # Explicitly allow methods including POST

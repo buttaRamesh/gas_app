@@ -160,12 +160,20 @@ class ConsumerViewSet(
         # Start with base queryset
         qs = self.get_queryset()
 
+        print(f"🔍 KYC List Debug:")
+        print(f"  Query params: {dict(request.query_params)}")
+        print(f"  Initial count: {qs.count()}")
+
         # Apply KYC filter (default: pending)
         kyc_param = request.query_params.get("kyc", "").lower()
         if kyc_param == "on":
             qs = qs.filter(is_kyc_done=True)
+            print(f"  Filtering for KYC Done")
         else:
             qs = qs.filter(is_kyc_done=False)
+            print(f"  Filtering for KYC Pending")
+
+        print(f"  After KYC filter: {qs.count()}")
 
         # Apply additional filters
         cat = request.query_params.get("category")
@@ -177,7 +185,20 @@ class ConsumerViewSet(
             qs = qs.filter(consumer_type_id=ctype)
 
         # Apply search and ordering filters (enables SmartDataGrid compatibility)
+        # BUT exclude is_kyc_done since we handle it manually above
+        from django.http import QueryDict
+        modified_params = request.query_params.copy()
+        if 'is_kyc_done' in modified_params:
+            del modified_params['is_kyc_done']
+
+        # Temporarily replace query_params to exclude is_kyc_done from filterset
+        original_params = request._request.GET
+        request._request.GET = modified_params
         qs = self.filter_queryset(qs)
+        request._request.GET = original_params
+
+        print(f"  After filter_queryset: {qs.count()}")
+        print(f"  Final queryset SQL: {str(qs.query)[:200]}...")
 
         # Handle cylinders sorting (in-memory, same as list method)
         ordering_param = request.query_params.get('ordering', '')

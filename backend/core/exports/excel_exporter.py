@@ -68,24 +68,20 @@ class ExcelExporter(BaseExporter):
         # Write data rows - VALUES ONLY (no formatting during write)
         row_idx = header_row + 1
         if self.serializer_class:
-            # Toggle between ORM and Raw SQL implementations
-            USE_RAW_SQL = True  # ← Set to False to use ORM version
-
+            from core.exports.data_loader import load_export_data
             import time
-            t_bulk_start = time.time()
 
-            if USE_RAW_SQL:
-                from core.exports.bulk_loaders_raw_sql import bulk_load_consumer_export_data_raw_sql
-                print(f"  📊 Excel: Using RAW SQL bulk loading...")
-                data = bulk_load_consumer_export_data_raw_sql(self.queryset, self.visible_fields)
-            else:
-                from core.exports.bulk_loaders import bulk_load_consumer_export_data
-                print(f"  📊 Excel: Using ORM bulk loading...")
-                data = bulk_load_consumer_export_data(self.queryset, self.visible_fields)
+            # Toggle between ORM and Raw SQL (True = Raw SQL, False = ORM)
+            # NOTE: Raw SQL is faster but doesn't respect queryset filters
+            # Use ORM to ensure filters are applied correctly
+            USE_RAW_SQL = False
 
-            print(f"  ⏱️  Excel: Bulk load complete: {(time.time() - t_bulk_start):.2f}s")
+            # Load data using centralized loader
+            data = load_export_data(self.queryset, self.visible_fields, use_raw_sql=USE_RAW_SQL)
 
+            # Write rows
             t_write_start = time.time()
+            data_row_start = row_idx
             for row_dict in data:
                 for col_idx, field in enumerate(self.visible_fields, start=1):
                     value = self._format_value(row_dict.get(field, ''))
@@ -93,7 +89,7 @@ class ExcelExporter(BaseExporter):
                     # Track max width for auto-sizing
                     col_widths[col_idx - 1] = max(col_widths[col_idx - 1], len(str(value)))
                 row_idx += 1
-            print(f"  ⏱️  Excel: Write {row_idx - 2} rows (values only): {(time.time() - t_write_start):.2f}s")
+            print(f"  ⏱️  Excel: Write {row_idx - data_row_start} rows (values only): {(time.time() - t_write_start):.2f}s")
         else:
             # Fast path: Stream values() directly
             for row_dict in self.queryset.values(*self.visible_fields).iterator(chunk_size=1000):

@@ -152,7 +152,7 @@ class ConsumerListSerializer(serializers.ModelSerializer):
 class ConsumerKYCListSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     mobile_number = serializers.SerializerMethodField()
-    address = serializers.SerializerMethodField()
+    address_text = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()
     consumer_type = serializers.SerializerMethodField()
 
@@ -163,7 +163,7 @@ class ConsumerKYCListSerializer(serializers.ModelSerializer):
             "consumer_number",
             "name",
             "mobile_number",
-            'address',
+            'address_text',
             "is_kyc_done",
             "category",
             "consumer_type",
@@ -180,12 +180,23 @@ class ConsumerKYCListSerializer(serializers.ModelSerializer):
         if p and p.contacts.exists():
             return p.contacts.first().mobile_number
         return None
-    def get_address(self, obj) -> str | None:
-        p = obj.person
-        print(p)
-        if p and p.addresses.exists():
-            return p.addresses.first().address_text
-        return None
+    
+     # -----------------------
+    # ADDRESS (first)
+    # -----------------------
+    def _addr(self, obj):
+        """Get first address using prefetched data (no extra query)"""
+        person = obj.person
+        if not person:
+            return None
+        # Use list() to access prefetched data without triggering query
+        addresses = list(person.addresses.all())
+        return addresses[0] if addresses else None
+        
+    def get_address_text(self, obj) -> str | None:
+        a = self._addr(obj)
+        return a.address_text if a else None
+     
 
     def get_category(self, obj) -> str | None:
         return obj.category.name if obj.category else None

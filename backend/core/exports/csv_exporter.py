@@ -49,22 +49,17 @@ class CSVExporter(BaseExporter):
 
             # Yield data rows efficiently
             if self.serializer_class:
-                # Toggle between ORM and Raw SQL implementations
-                USE_RAW_SQL = True  # ← Set to False to use ORM version
+                from core.exports.data_loader import load_export_data
 
-                if USE_RAW_SQL:
-                    from core.exports.bulk_loaders_raw_sql import bulk_load_consumer_export_data_raw_sql
-                    print(f"  📊 Using RAW SQL bulk loading...")
-                    t_bulk_start = time.time()
-                    data = bulk_load_consumer_export_data_raw_sql(self.queryset, self.visible_fields)
-                else:
-                    from core.exports.bulk_loaders import bulk_load_consumer_export_data
-                    print(f"  📊 Using ORM bulk loading...")
-                    t_bulk_start = time.time()
-                    data = bulk_load_consumer_export_data(self.queryset, self.visible_fields)
+                # Toggle between ORM and Raw SQL (True = Raw SQL, False = ORM)
+                # NOTE: Raw SQL is faster but doesn't respect queryset filters
+                # Use ORM to ensure filters are applied correctly
+                USE_RAW_SQL = False
 
-                print(f"  ⏱️  Bulk load complete: {(time.time() - t_bulk_start):.2f}s")
+                # Load data using centralized loader
+                data = load_export_data(self.queryset, self.visible_fields, use_raw_sql=USE_RAW_SQL)
 
+                # Write rows
                 row_count = 0
                 t_write_start = time.time()
                 for row_dict in data:
@@ -74,7 +69,7 @@ class CSVExporter(BaseExporter):
                     ]
                     yield writer.writerow(row_values)
                     row_count += 1
-                print(f"  ⏱️  Write {row_count} rows: {(time.time() - t_write_start):.2f}s")
+                print(f"  ⏱️  CSV: Write {row_count} rows: {(time.time() - t_write_start):.2f}s")
             else:
                 # Fast path: Stream values() directly using iterator for memory efficiency
                 # Use iterator() to fetch rows in chunks instead of all at once

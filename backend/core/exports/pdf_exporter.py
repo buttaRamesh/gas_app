@@ -74,22 +74,17 @@ class PDFExporter(BaseExporter):
         # Stream data rows efficiently using bulk loader
         import time
         if self.serializer_class:
-            # Toggle between ORM and Raw SQL implementations
-            USE_RAW_SQL = True  # ← Set to False to use ORM version
+            from core.exports.data_loader import load_export_data
 
-            t_bulk_start = time.time()
+            # Toggle between ORM and Raw SQL (True = Raw SQL, False = ORM)
+            # NOTE: Raw SQL is faster but doesn't respect queryset filters
+            # Use ORM to ensure filters are applied correctly
+            USE_RAW_SQL = False
 
-            if USE_RAW_SQL:
-                from core.exports.bulk_loaders_raw_sql import bulk_load_consumer_export_data_raw_sql
-                print(f"  📊 PDF: Using RAW SQL bulk loading...")
-                data = bulk_load_consumer_export_data_raw_sql(self.queryset, self.visible_fields)
-            else:
-                from core.exports.bulk_loaders import bulk_load_consumer_export_data
-                print(f"  📊 PDF: Using ORM bulk loading...")
-                data = bulk_load_consumer_export_data(self.queryset, self.visible_fields)
+            # Load data using centralized loader
+            data = load_export_data(self.queryset, self.visible_fields, use_raw_sql=USE_RAW_SQL)
 
-            print(f"  ⏱️  PDF: Bulk load complete: {(time.time() - t_bulk_start):.2f}s")
-
+            # Process rows
             t_write_start = time.time()
             pdf_row_count = 0
             for row_dict in data:
@@ -109,17 +104,9 @@ class PDFExporter(BaseExporter):
                 ]
                 table_data.append(row_values)
 
-        # Calculate column widths based on number of columns
-        page_width = landscape(letter)[0] - 60  # Account for margins
-        num_columns = len(headers)
-        col_width = page_width / num_columns
-
-        # Limit column width for readability
-        col_width = min(col_width, 2 * inch)
-        col_widths = [col_width] * num_columns
-
-        # Create table
-        table = Table(table_data, colWidths=col_widths, repeatRows=1)
+        # Use automatic column width sizing for better fit
+        # ReportLab will calculate optimal widths based on content
+        table = Table(table_data, repeatRows=1)
 
         # Apply table styling
         table_style = TableStyle([

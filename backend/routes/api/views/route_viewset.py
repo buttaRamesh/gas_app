@@ -52,6 +52,56 @@ class RouteViewSet(viewsets.ModelViewSet):
         else:  # create, update, partial_update
             return RouteCreateUpdateSerializer
 
+    def list(self, request, *args, **kwargs):
+        """Override list to include statistics in response"""
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Calculate statistics
+        total_routes = queryset.count()
+        assigned_routes = sum(1 for route in queryset if hasattr(route, 'delivery_assignment'))
+        unassigned_routes = total_routes - assigned_routes
+
+        total_consumers = sum(route.consumer_assignments.count() for route in queryset)
+
+        # Calculate assigned consumers (consumers in routes with delivery person)
+        assigned_consumers = sum(
+            route.consumer_assignments.count()
+            for route in queryset
+            if hasattr(route, 'delivery_assignment')
+        )
+
+        average_consumers_per_route = round(total_consumers / total_routes, 2) if total_routes > 0 else 0
+
+        # Paginate the queryset
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            response = self.get_paginated_response(serializer.data)
+
+            # Add statistics to response
+            response.data['statistics'] = {
+                'total_routes': total_routes,
+                'assigned_routes': assigned_routes,
+                'unassigned_routes': unassigned_routes,
+                'total_consumers': total_consumers,
+                'assigned_consumers': assigned_consumers,
+                'average_consumers_per_route': average_consumers_per_route,
+            }
+            return response
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({
+            'results': serializer.data,
+            'statistics': {
+                'total_routes': total_routes,
+                'assigned_routes': assigned_routes,
+                'unassigned_routes': unassigned_routes,
+                'total_consumers': total_consumers,
+                'assigned_consumers': assigned_consumers,
+                'average_consumers_per_route': average_consumers_per_route,
+            }
+        })
+
     def _get_route_consumers_queryset(self, route):
         """Get optimized queryset of consumers for this route"""
         consumer_ids = route.consumer_assignments.values_list('consumer_id', flat=True)

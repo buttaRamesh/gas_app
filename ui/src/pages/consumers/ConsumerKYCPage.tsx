@@ -15,6 +15,13 @@ export default function ConsumerKYCPage() {
       : '/consumers/kyc/?kyc=on';
   }, [kycStatus]);
 
+  // Pass KYC status as extra params for export filtering
+  const extraParams = useMemo(() => {
+    return {
+      is_kyc_done: kycStatus === 'done',
+    };
+  }, [kycStatus]);
+
   // Get columns with actions for pending status
   const columns = useMemo(() => {
     return getKYCColumns({
@@ -37,6 +44,7 @@ export default function ConsumerKYCPage() {
         key={refreshKey}
         endpoint={endpoint}
         columns={columns}
+        extraParams={extraParams}
         initialPageSize={20}
         pageSizeOptions={[10, 20, 50]}
         toolbarOptions={{
