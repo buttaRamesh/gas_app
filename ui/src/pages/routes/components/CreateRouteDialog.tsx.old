@@ -1,0 +1,238 @@
+import { useState } from "react";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  Box,
+  IconButton,
+  Typography,
+  CircularProgress,
+  Alert,
+} from "@mui/material";
+import { Close, Save, Route as RouteIcon } from "@mui/icons-material";
+import axiosInstance from "@/api/axiosInstance";
+
+interface CreateRouteDialogProps {
+  open: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+}
+
+interface RouteFormData {
+  area_code: string;
+  area_code_description: string;
+  delivery_person_name: string;
+}
+
+export function CreateRouteDialog({ open, onClose, onSuccess }: CreateRouteDialogProps) {
+  const [formData, setFormData] = useState<RouteFormData>({
+    area_code: "",
+    area_code_description: "",
+    delivery_person_name: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleChange = (field: keyof RouteFormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+    setError(null);
+  };
+
+  const handleSubmit = async () => {
+    if (!formData.area_code.trim() || !formData.area_code_description.trim()) {
+      setError("Route code and description are required");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const payload: any = {
+        area_code: formData.area_code.trim(),
+        area_code_description: formData.area_code_description.trim(),
+      };
+
+      if (formData.delivery_person_name.trim()) {
+        payload.delivery_person_name = formData.delivery_person_name.trim();
+      }
+
+      await axiosInstance.post("/routes/", payload);
+      
+      setFormData({
+        area_code: "",
+        area_code_description: "",
+        delivery_person_name: "",
+      });
+      onSuccess();
+      onClose();
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to create route");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleClose = () => {
+    if (!loading) {
+      setFormData({
+        area_code: "",
+        area_code_description: "",
+        delivery_person_name: "",
+      });
+      setError(null);
+      onClose();
+    }
+  };
+
+  return (
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      maxWidth="sm"
+      fullWidth
+      PaperProps={{
+        sx: {
+          borderRadius: 2,
+          boxShadow: "0 8px 32px rgba(0,51,102,0.15)",
+        },
+      }}
+    >
+      <DialogTitle
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          pb: 1,
+          borderBottom: 1,
+          borderColor: "divider",
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+          <Box
+            sx={{
+              p: 1,
+              borderRadius: 2,
+              background: "linear-gradient(135deg, #003366 0%, #1a5a8a 100%)",
+              display: "flex",
+            }}
+          >
+            <RouteIcon sx={{ color: "white", fontSize: 24 }} />
+          </Box>
+          <Typography variant="h6" fontWeight={700} color="primary.main">
+            Create New Route
+          </Typography>
+        </Box>
+        <IconButton onClick={handleClose} disabled={loading} size="small">
+          <Close />
+        </IconButton>
+      </DialogTitle>
+
+      <DialogContent sx={{ pt: 3 }}>
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
+
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
+          <TextField
+            label="Route Code"
+            value={formData.area_code}
+            onChange={handleChange("area_code")}
+            disabled={loading}
+            required
+            fullWidth
+            placeholder="e.g., R001, ZONE-A"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "primary.main" },
+                "&.Mui-focused fieldset": { borderColor: "primary.main" },
+              },
+            }}
+          />
+
+          <TextField
+            label="Route Description"
+            value={formData.area_code_description}
+            onChange={handleChange("area_code_description")}
+            disabled={loading}
+            required
+            fullWidth
+            multiline
+            rows={2}
+            placeholder="Enter route description"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "primary.main" },
+                "&.Mui-focused fieldset": { borderColor: "primary.main" },
+              },
+            }}
+          />
+
+          <TextField
+            label="Delivery Person Name"
+            value={formData.delivery_person_name}
+            onChange={handleChange("delivery_person_name")}
+            disabled={loading}
+            fullWidth
+            placeholder="Optional - Assign delivery person"
+            helperText="Leave empty to assign later"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "&:hover fieldset": { borderColor: "primary.main" },
+                "&.Mui-focused fieldset": { borderColor: "primary.main" },
+              },
+            }}
+          />
+        </Box>
+      </DialogContent>
+
+      <DialogActions
+        sx={{
+          px: 3,
+          py: 2,
+          borderTop: 1,
+          borderColor: "divider",
+          gap: 1.5,
+        }}
+      >
+        <Button
+          onClick={handleClose}
+          disabled={loading}
+          variant="outlined"
+          sx={{
+            fontWeight: 600,
+            borderColor: "grey.300",
+            color: "text.secondary",
+            "&:hover": {
+              borderColor: "grey.400",
+              bgcolor: "grey.50",
+            },
+          }}
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={handleSubmit}
+          disabled={loading}
+          variant="contained"
+          startIcon={loading ? <CircularProgress size={18} color="inherit" /> : <Save />}
+          sx={(theme) => ({
+            fontWeight: 600,
+            px: 3,
+            bgcolor: theme.palette.primary.main,
+            "&:hover": {
+              bgcolor: theme.palette.primary.dark,
+            },
+          })}
+        >
+          {loading ? "Creating..." : "Create Route"}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}

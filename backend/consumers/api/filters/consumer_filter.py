@@ -42,6 +42,7 @@ class ConsumerFilter(filters.FilterSet):
     bpl_type = filters.NumberFilter(field_name='bpl_type__id')
     dct_type = filters.NumberFilter(field_name='dct_type__id')
     scheme = filters.NumberFilter(field_name='scheme__id')
+    route = filters.NumberFilter(field_name='route_assignment__route__id')
 
     # Status filters
     status = filters.ChoiceFilter(choices=Consumer.Status.choices)
@@ -185,6 +186,7 @@ class ConsumerFilter(filters.FilterSet):
             'bpl_type',
             'dct_type',
             'scheme',
+            'route',
             'status',
             'opting_status',
             'is_kyc_done',

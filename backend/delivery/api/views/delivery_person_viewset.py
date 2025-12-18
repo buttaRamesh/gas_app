@@ -53,6 +53,7 @@ class DeliveryPersonViewSet(viewsets.ModelViewSet):
     search_fields = ['id']
     ordering_fields = ['id']
     ordering = ['id']
+    pagination_class = None  # Disable pagination - return all delivery persons
 
     def get_serializer_class(self):
         """Return appropriate serializer based on action"""
@@ -64,6 +65,42 @@ class DeliveryPersonViewSet(viewsets.ModelViewSet):
             return ConsumersListSerializer
         else:  # create, update, partial_update
             return DeliveryPersonCreateUpdateSerializer
+
+    def list(self, request, *args, **kwargs):
+        """Override list to include statistics in response"""
+        from rest_framework.response import Response
+        from django.db.models import Count
+
+        # Calculate statistics
+        base_qs = DeliveryPerson.objects.all()
+        total_delivery_persons = base_qs.count()
+
+        assigned_delivery_persons = base_qs.filter(route_assignments__isnull=False).distinct().count()
+        unassigned_delivery_persons = total_delivery_persons - assigned_delivery_persons
+
+        total_routes = DeliveryRouteAssignment.objects.values('delivery_person').distinct().count()
+
+        # Get all delivery persons
+        delivery_persons_list = list(DeliveryPerson.objects.prefetch_related(
+            Prefetch(
+                'route_assignments',
+                queryset=DeliveryRouteAssignment.objects.select_related('route').prefetch_related('route__areas')
+            )
+        ).all())
+
+        # Serialize
+        serializer = self.get_serializer(delivery_persons_list, many=True)
+
+        return Response({
+            'results': serializer.data,
+            'count': len(serializer.data),
+            'statistics': {
+                'total_delivery_persons': total_delivery_persons,
+                'assigned_delivery_persons': assigned_delivery_persons,
+                'unassigned_delivery_persons': unassigned_delivery_persons,
+                'total_routes': total_routes,
+            }
+        })
 
     def _get_consumers_queryset(self, delivery_person):
         """Get optimized queryset of consumers for delivery person's routes"""
@@ -79,5 +116,35 @@ class DeliveryPersonViewSet(viewsets.ModelViewSet):
         page = paginator.paginate_queryset(queryset, request, view=self)
         serializer = ConsumersListSerializer(delivery_person, context={'consumers': page or queryset})
         return paginator.get_paginated_response(serializer.data)
-        
-     
+
+    def destroy(self, request, *args, **kwargs):
+        """
+        Delete delivery person and handle related records.
+        Deletes route assignments and history before deleting delivery person.
+        """
+        from django.db import transaction
+        from rest_framework.response import Response
+        from rest_framework import status
+        from delivery.models import DeliveryRouteAssignmentHistory
+
+        delivery_person = self.get_object()
+
+        with transaction.atomic():
+            # Delete delivery route assignment history
+            DeliveryRouteAssignmentHistory.objects.filter(delivery_person=delivery_person).delete()
+
+            # Delete current route assignments
+            DeliveryRouteAssignment.objects.filter(delivery_person=delivery_person).delete()
+
+            # Delete the person associated with delivery person if exists
+            if delivery_person.person:
+                delivery_person.person.delete()
+
+            # Finally delete the delivery person
+            delivery_person.delete()
+
+        return Response(
+            {'message': 'Delivery person deleted successfully'},
+            status=status.HTTP_204_NO_CONTENT
+        )
+

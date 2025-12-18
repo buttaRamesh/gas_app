@@ -60,7 +60,11 @@ def apply_filters(queryset, config, filters, request):
     Raises:
         ValueError: If filters are invalid
     """
-    filterset_class = config['filterset_class']
+    filterset_class = config.get('filterset_class')
+    # If no filterset class defined, return queryset as-is
+    if filterset_class is None:
+        return queryset
+
     filterset = filterset_class(filters, queryset=queryset, request=request)
 
     if not filterset.is_valid():

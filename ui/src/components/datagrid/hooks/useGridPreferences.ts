@@ -37,11 +37,27 @@ export function useGridPreferences({
 
   const savedPrefs = useMemo(() => loadPreferences(), [loadPreferences]);
 
+  // Merge saved preferences with initial visibility
+  // This ensures new columns respect their visibleByDefault setting
+  const mergedVisibility = useMemo(() => {
+    if (!savedPrefs?.columnVisibility) {
+      return initialVisibility;
+    }
+
+    // Start with initial visibility (includes all columns with their defaults)
+    const merged = { ...initialVisibility };
+
+    // Override with saved preferences only for columns that exist in saved prefs
+    Object.keys(savedPrefs.columnVisibility).forEach((field) => {
+      merged[field] = savedPrefs.columnVisibility[field];
+    });
+
+    return merged;
+  }, [savedPrefs, initialVisibility]);
+
   // Column visibility state
   const [columnVisibilityModel, setColumnVisibilityModel] =
-    useState<GridColumnVisibilityModel>(
-      savedPrefs?.columnVisibility ?? initialVisibility
-    );
+    useState<GridColumnVisibilityModel>(mergedVisibility);
 
   // Pagination state
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({

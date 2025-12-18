@@ -5,6 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Count
 from authentication.permissions import HasResourcePermission
+from core.exports.mixins import ExportViewMixin
+from core.filters import DataGridFilterBackend
 from routes.models import Route, RouteArea
 from routes.api.serializers import (
     RouteAreaSerializer,
@@ -12,9 +14,10 @@ from routes.api.serializers import (
     RouteAreaCreateUpdateSerializer,
     BulkRouteAreaCreateSerializer,
 )
+from routes.api.filters import RouteAreaFilter, RouteAreaOrderingFilter
 
 
-class RouteAreaViewSet(viewsets.ModelViewSet):
+class RouteAreaViewSet(ExportViewMixin, viewsets.ModelViewSet):
     """
     ViewSet for RouteArea operations.
 
@@ -27,12 +30,16 @@ class RouteAreaViewSet(viewsets.ModelViewSet):
     """
 
     queryset = RouteArea.objects.select_related('route').all()
-    permission_classes = [IsAuthenticated, HasResourcePermission]
+    # permission_classes = [IsAuthenticated, HasResourcePermission]
     resource_name = 'route_areas'
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['route']
+    
+    # Export configuration
+    export_serializer_class = RouteAreaSerializer
+    export_filename_prefix = 'route_areas'
+    filter_backends = [DataGridFilterBackend, DjangoFilterBackend, filters.SearchFilter, RouteAreaOrderingFilter]
+    filterset_class = RouteAreaFilter
     search_fields = ['area_name', 'route__area_code']
-    ordering_fields = ['area_name', 'id']
+    ordering_fields = ['area_name', 'id', 'route_code', 'route_description']
     ordering = ['area_name']
 
     def get_serializer_class(self):

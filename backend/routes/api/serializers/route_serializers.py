@@ -39,12 +39,47 @@ class RouteListSerializer(serializers.ModelSerializer):
             'delivery_person_name',
         ]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Batch-load delivery person names once for all routes
+        if self.instance and hasattr(self.instance, '__iter__'):
+            from delivery.models import DeliveryPerson, DeliveryRouteAssignment
+            from commons.models import Person
+            from django.contrib.contenttypes.models import ContentType
+
+            # Get all route IDs
+            route_ids = [route.id for route in self.instance]
+
+            # Single query to get all delivery_person_ids for these routes
+            assignments = DeliveryRouteAssignment.objects.filter(
+                route_id__in=route_ids
+            ).values_list('delivery_person_id', flat=True)
+            dp_ids = list(assignments)
+
+            # Batch load all delivery persons with their person data
+            if dp_ids:
+                person_ct = ContentType.objects.get_for_model(Person)
+                delivery_persons = DeliveryPerson.objects.filter(id__in=dp_ids)
+                person_ids = [dp.person_object_id for dp in delivery_persons if dp.person_content_type_id == person_ct.id]
+                persons = {p.id: p.full_name for p in Person.objects.filter(id__in=person_ids)}
+
+                # Create lookup dict
+                self._person_names = {}
+                for dp in delivery_persons:
+                    if dp.person_content_type_id == person_ct.id:
+                        self._person_names[dp.id] = persons.get(dp.person_object_id, '')
+            else:
+                self._person_names = {}
+
     def get_area_count(self, obj):
         """Get number of areas in this route"""
-        return obj.areas.count()
+        # Use len() to utilize prefetch cache instead of .count()
+        return len(obj.areas.all())
 
     def get_consumer_count(self, obj):
         """Get number of consumers assigned to this route"""
+        # Use .count() - faster than loading all records
         return obj.consumer_assignments.count()
 
     def get_delivery_person(self, obj):
@@ -55,9 +90,10 @@ class RouteListSerializer(serializers.ModelSerializer):
             return None
 
     def get_delivery_person_name(self, obj):
-        """Get delivery person name if assigned"""
+        """Get delivery person name if assigned (from batch-loaded cache)"""
         try:
-            return obj.delivery_assignment.delivery_person.name
+            dp_id = obj.delivery_assignment.delivery_person_id
+            return self._person_names.get(dp_id, '')
         except:
             return None
 
@@ -71,7 +107,6 @@ class RouteDetailSerializer(serializers.ModelSerializer):
     area_count = serializers.SerializerMethodField()
     consumer_count = serializers.SerializerMethodField()
     delivery_person = serializers.SerializerMethodField()
-    consumers = serializers.SerializerMethodField()
 
     class Meta:
         model = Route
@@ -83,7 +118,6 @@ class RouteDetailSerializer(serializers.ModelSerializer):
             'area_count',
             'consumer_count',
             'delivery_person',
-            'consumers',
         ]
 
     def get_area_count(self, obj):
@@ -98,24 +132,28 @@ class RouteDetailSerializer(serializers.ModelSerializer):
             assignment = obj.delivery_assignment
             dp = assignment.delivery_person
 
-            # Get contact info
-            contact = dp.contacts.first()
+            # Get person info (DeliveryPerson uses GenericForeignKey for person)
+            person = dp.person if dp else None
+            if not person:
+                return None
+
+            # Get contact info from person
+            contact = person.contacts.first() if person else None
 
             return {
                 'id': dp.id,
-                'name': dp.name,
+                'name': person.full_name if person else None,
                 'mobile': contact.mobile_number if contact else None,
                 'email': contact.email if contact else None,
             }
-        except:
+        except Exception as e:
+            print(f"Error getting delivery person: {e}")
             return None
 
     def get_consumers(self, obj):
         """Get basic info of all consumers in this route"""
         assignments = obj.consumer_assignments.select_related(
-            'consumer__person'
-        ).prefetch_related(
-            'consumer__person__contacts'
+            'consumer'
         ).all()
 
         consumers_data = []
@@ -126,7 +164,7 @@ class RouteDetailSerializer(serializers.ModelSerializer):
             consumers_data.append({
                 'id': consumer.id,
                 'consumer_number': consumer.consumer_number,
-                'consumer_name': consumer.person.person_name if consumer.person else 'Unknown',
+                'consumer_name': consumer.person.full_name if consumer.person else 'Unknown',
                 'mobile': contact.mobile_number if contact else None,
                 'is_kyc_done': consumer.is_kyc_done,
             })
@@ -145,10 +183,16 @@ class RouteCreateUpdateSerializer(serializers.ModelSerializer):
         required=False,
         help_text="List of existing RouteArea IDs to assign to this route"
     )
+    delivery_person_id = serializers.IntegerField(
+        write_only=True,
+        required=False,
+        allow_null=True,
+        help_text="ID of delivery person to assign to this route"
+    )
 
     class Meta:
         model = Route
-        fields = ['id', 'area_code', 'area_code_description', 'areas']
+        fields = ['id', 'area_code', 'area_code_description', 'areas', 'delivery_person_id']
 
     def validate_area_code(self, value):
         """Ensure area code is unique"""
@@ -199,6 +243,7 @@ class RouteCreateUpdateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Create route and assign existing areas to it"""
         area_ids = validated_data.pop('areas', [])
+        delivery_person_id = validated_data.pop('delivery_person_id', None)
 
         with transaction.atomic():
             # Create the route
@@ -207,11 +252,21 @@ class RouteCreateUpdateSerializer(serializers.ModelSerializer):
             # Assign existing areas to this route if provided
             if area_ids:
                 RouteArea.objects.filter(id__in=area_ids).update(route=route)
+
+            # Assign delivery person if provided
+            if delivery_person_id:
+                from delivery.models import DeliveryRouteAssignment, DeliveryPerson
+                delivery_person = DeliveryPerson.objects.get(id=delivery_person_id)
+                DeliveryRouteAssignment.objects.create(
+                    route=route,
+                    delivery_person=delivery_person
+                )
         return route
 
     def update(self, instance, validated_data):
         """Update route and optionally reassign areas"""
         area_ids = validated_data.pop('areas', None)
+        delivery_person_id = validated_data.pop('delivery_person_id', None)
 
         with transaction.atomic():
             # Update route fields
@@ -227,5 +282,19 @@ class RouteCreateUpdateSerializer(serializers.ModelSerializer):
                 # Assign the new areas to this route
                 if area_ids:
                     RouteArea.objects.filter(id__in=area_ids).update(route=instance)
+
+            # Handle delivery person assignment
+            from delivery.models import DeliveryRouteAssignment, DeliveryPerson
+
+            # Delete existing assignment if any
+            DeliveryRouteAssignment.objects.filter(route=instance).delete()
+
+            # Create new assignment if delivery_person_id provided
+            if delivery_person_id:
+                delivery_person = DeliveryPerson.objects.get(id=delivery_person_id)
+                DeliveryRouteAssignment.objects.create(
+                    route=instance,
+                    delivery_person=delivery_person
+                )
 
         return instance

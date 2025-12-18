@@ -128,11 +128,19 @@ export const consumerColumns: AppGridColDef[] = [
     visibleByDefault: false,
   },
   {
+    field: "route_code",
+    headerName: "Route",
+    width: 100,  // Fixed - standard number format
+    sortable: true,
+    visibleByDefault: false,
+  },
+  {
     field: "cylinders",
     headerName: "Cylinders",
     width: 110,  // Fixed - small numbers
     sortable: true,
     visibleByDefault: true,
     cellClassName: "monospace-cell",
-  }
+  },
+   
 ];

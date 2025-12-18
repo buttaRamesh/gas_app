@@ -11,6 +11,8 @@ import ThemePreview from "@/pages/theme/ThemePreview"
 import ConsumerListPage from "@/pages/consumers/ConsumerListPage";
 import ConsumerKYCPage from "@/pages/consumers/ConsumerKYCPage";
 import RoutesPage  from "@/pages/routes/RoutesPage"
+import RouteArea  from "@/pages/routes/RouteArea"
+import DeliveryPersonsPage  from "@/pages/delivery-persons/DeliveryPersonsPage"
 
 function App() {
   useEffect(() => {
@@ -26,6 +28,8 @@ function App() {
           <Route path="/consumers/list" element={<ConsumerListPage />} />
           <Route path="/consumers/kyc" element={<ConsumerKYCPage />} />
           <Route path="/routes/" element={<RoutesPage />} />
+          <Route path="/areas/" element={<RouteArea />} />
+          <Route path="/delivery-persons/" element={<DeliveryPersonsPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
         </Route>
       </Route>

@@ -22,6 +22,7 @@ import ListAltIcon from "@mui/icons-material/ListAlt";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import InfoIcon from "@mui/icons-material/Info";
 import RouteIcon from "@mui/icons-material/AltRoute";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import SettingsIcon from "@mui/icons-material/Settings";
 
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
@@ -78,9 +79,16 @@ const NAV: NavGroup[] = [
     to: "/routes",
     children: [
       { key: "routes-list", label: "List All", to: "/routes/", icon: <ListAltIcon /> },
+      { key: "areas-list", label: "Areas", to: "/areas/", icon: <ListAltIcon /> },
       { key: "routes-active", label: "Active Routes", to: "/routes/active", icon: <ListAltIcon /> },
       { key: "routes-mapping", label: "Route Mapping", to: "/routes/mapping", icon: <InfoIcon /> },
     ],
+  },
+  {
+    key: "delivery",
+    label: "Delivery Persons",
+    icon: <LocalShippingIcon />,
+    to: "/delivery-persons",
   },
   {
     key: "settings",

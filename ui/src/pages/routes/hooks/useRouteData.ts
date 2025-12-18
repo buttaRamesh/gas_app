@@ -23,10 +23,14 @@ export function useRouteData(): UseRouteDataReturn {
       setLoading(true);
       setError(null);
 
+      console.log("🟢 Client initiating request at:", new Date().toISOString());
+
       // Fetch routes with statistics included in response
       const response = await axiosInstance.get<RouteResponse>("/routes/", {
         params: { page: 1, page_size: 1000 }, // Fetch all routes for client-side filtering
       });
+
+      console.log("🟢 Client received response at:", new Date().toISOString());
 
       setRoutes(response.data.results);
       setTotalCount(response.data.count);

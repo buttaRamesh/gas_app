@@ -3,6 +3,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from authentication.permissions import HasResourcePermission
+from django_filters.rest_framework import DjangoFilterBackend
+from core.filters import DataGridFilterBackend
+from routes.api.filters import RouteFilter, RouteOrderingFilter
 from routes.models import Route, RouteArea
 from routes.api.serializers import (
     RouteListSerializer,
@@ -33,12 +36,14 @@ class RouteViewSet(viewsets.ModelViewSet):
     - statistics: Get route statistics
     """
 
-    queryset = Route.objects.prefetch_related('areas', 'consumer_assignments').all()
+    queryset = Route.objects.all()
     # permission_classes = [IsAuthenticated, HasResourcePermission]
     resource_name = 'routes'
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    pagination_class = None  # Disable pagination - return all routes
+    filterset_class = RouteFilter
+    filter_backends = [DataGridFilterBackend, DjangoFilterBackend, filters.SearchFilter, RouteOrderingFilter]
     search_fields = ['area_code', 'area_code_description']
-    ordering_fields = ['area_code', 'area_code_description']
+    ordering_fields = ['area_code', 'area_code_description', 'delivery_person_name', 'area_count', 'consumer_count']
     ordering = ['area_code']
 
     def get_serializer_class(self):
@@ -54,44 +59,38 @@ class RouteViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         """Override list to include statistics in response"""
-        queryset = self.filter_queryset(self.get_queryset())
+        from django.db.models import Count
+        from datetime import datetime
 
-        # Calculate statistics
-        total_routes = queryset.count()
-        assigned_routes = sum(1 for route in queryset if hasattr(route, 'delivery_assignment'))
+        print(f"🔵 Backend received request at: {datetime.now().isoformat()}")
+
+        # Calculate statistics using clean base queryset
+        base_qs = Route.objects.all()
+        total_routes = base_qs.count()
+        assigned_routes = base_qs.filter(delivery_assignment__isnull=False).count()
         unassigned_routes = total_routes - assigned_routes
 
-        total_consumers = sum(route.consumer_assignments.count() for route in queryset)
+        total_consumers = base_qs.aggregate(
+            total=Count('consumer_assignments', distinct=True)
+        )['total'] or 0
 
-        # Calculate assigned consumers (consumers in routes with delivery person)
-        assigned_consumers = sum(
-            route.consumer_assignments.count()
-            for route in queryset
-            if hasattr(route, 'delivery_assignment')
-        )
+        assigned_consumers = base_qs.filter(
+            delivery_assignment__isnull=False
+        ).aggregate(
+            total=Count('consumer_assignments', distinct=True)
+        )['total'] or 0
 
         average_consumers_per_route = round(total_consumers / total_routes, 2) if total_routes > 0 else 0
 
-        # Paginate the queryset
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            response = self.get_paginated_response(serializer.data)
+        # Get all routes (frontend does client-side filtering/sorting)
+        routes_list = list(Route.objects.all())
 
-            # Add statistics to response
-            response.data['statistics'] = {
-                'total_routes': total_routes,
-                'assigned_routes': assigned_routes,
-                'unassigned_routes': unassigned_routes,
-                'total_consumers': total_consumers,
-                'assigned_consumers': assigned_consumers,
-                'average_consumers_per_route': average_consumers_per_route,
-            }
-            return response
+        # Serialize
+        serializer = self.get_serializer(routes_list, many=True)
 
-        serializer = self.get_serializer(queryset, many=True)
         return Response({
             'results': serializer.data,
+            'count': len(serializer.data),
             'statistics': {
                 'total_routes': total_routes,
                 'assigned_routes': assigned_routes,
@@ -250,3 +249,35 @@ class RouteViewSet(viewsets.ModelViewSet):
             'count': len(routes),
             'routes': routes
         })
+
+    def destroy(self, request, *args, **kwargs):
+        """
+        Delete route and handle related records.
+        Deletes delivery assignment history and current assignment before deleting route.
+        """
+        from django.db import transaction
+
+        route = self.get_object()
+
+        with transaction.atomic():
+            # Delete delivery route assignment history
+            from delivery.models import DeliveryRouteAssignmentHistory
+            DeliveryRouteAssignmentHistory.objects.filter(route=route).delete()
+
+            # Delete current delivery assignment if exists
+            from delivery.models import DeliveryRouteAssignment
+            DeliveryRouteAssignment.objects.filter(route=route).delete()
+
+            # Unassign all areas (make them available for other routes)
+            route.areas.all().update(route=None)
+
+            # Unassign all consumers
+            route.consumer_assignments.all().delete()
+
+            # Finally delete the route
+            route.delete()
+
+        return Response(
+            {'message': 'Route deleted successfully'},
+            status=status.HTTP_204_NO_CONTENT
+        )

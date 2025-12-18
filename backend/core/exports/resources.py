@@ -11,6 +11,9 @@ from consumers.api.filters import ConsumerFilter
 from consumers.api.serializers import ConsumerListSerializer
 from commons.models import Address, Contact, Person
 from connections.models import ConnectionDetails
+from routes.models import RouteArea
+from routes.api.serializers import RouteAreaSerializer
+from routes.api.filters import RouteAreaFilter
 
 
 def get_consumer_export_queryset(request):
@@ -88,6 +91,31 @@ EXPORT_RESOURCES = {
 
         'permission_classes': [IsAuthenticated],
         'ordering': ['id'],
+        'use_raw_values': False,  # Use serializer
+    },
+    'route-areas': {
+        'queryset': lambda request: RouteArea.objects.select_related('route').all(),
+        'filterset_class': RouteAreaFilter,
+        'serializer_class': RouteAreaSerializer,
+
+        'allowed_fields': [
+            'id',
+            'area_name',
+            'route',
+            'route_code',
+            'route_description',
+        ],
+
+        'field_labels': {
+            'id': 'ID',
+            'area_name': 'Area Name',
+            'route': 'Route ID',
+            'route_code': 'Route Code',
+            'route_description': 'Route Description',
+        },
+
+        'permission_classes': [IsAuthenticated],
+        'ordering': ['area_name'],
         'use_raw_values': False,  # Use serializer
     },
 }

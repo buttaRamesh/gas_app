@@ -6,6 +6,7 @@ from collections import defaultdict
 from django.contrib.contenttypes.models import ContentType
 from commons.models import Person, Address, Contact
 from connections.models import ConnectionDetails
+from routes.models import Route, RouteArea
 
 
 def bulk_load_consumer_export_data(queryset, visible_fields):
@@ -138,4 +139,84 @@ def bulk_load_consumer_export_data(queryset, visible_fields):
 
     print(f"  ⏱️  Assembled {len(result)} rows: {(time.time() - t2):.2f}s")
 
+    return result
+
+
+def bulk_load_route_export_data(queryset, visible_fields):
+    """
+    Load route export data with optimized queries.
+    
+    Returns list of dicts with requested fields only.
+    """
+    import time
+    
+    print(f"  🔄 Processing {len(visible_fields)} fields for routes...")
+    
+    t1 = time.time()
+    routes = list(queryset)
+    print(f"  ⏱️  Evaluated queryset ({len(routes)} routes): {(time.time() - t1):.2f}s")
+    
+    if not routes:
+        return []
+    
+    # Assemble data
+    t2 = time.time()
+    result = []
+    for route in routes:
+        # Build complete field map
+        field_map = {
+            'id': route.id,
+            'area_code': route.area_code,
+            'area_code_description': route.area_code_description,
+            'delivery_person_name': route.delivery_person.person.full_name if route.delivery_person else None,
+            'delivery_person_id': route.delivery_person_id,
+            'area_count': route.area_count if hasattr(route, 'area_count') else 0,
+            'consumer_count': route.consumer_count if hasattr(route, 'consumer_count') else 0,
+        }
+        
+        # Build row with only requested fields
+        row = {field: field_map.get(field) for field in visible_fields if field in field_map}
+        result.append(row)
+    
+    print(f"  ⏱️  Assembled {len(result)} rows: {(time.time() - t2):.2f}s")
+    
+    return result
+
+
+def bulk_load_route_area_export_data(queryset, visible_fields):
+    """
+    Load route area export data with optimized queries.
+    
+    Returns list of dicts with requested fields only.
+    """
+    import time
+    
+    print(f"  🔄 Processing {len(visible_fields)} fields for route areas...")
+    
+    t1 = time.time()
+    route_areas = list(queryset)
+    print(f"  ⏱️  Evaluated queryset ({len(route_areas)} route areas): {(time.time() - t1):.2f}s")
+    
+    if not route_areas:
+        return []
+    
+    # Assemble data
+    t2 = time.time()
+    result = []
+    for area in route_areas:
+        # Build complete field map
+        field_map = {
+            'id': area.id,
+            'area_name': area.area_name,
+            'route': area.route_id,
+            'route_code': area.route.area_code if area.route else None,
+            'route_description': area.route.area_code_description if area.route else None,
+        }
+        
+        # Build row with only requested fields
+        row = {field: field_map.get(field) for field in visible_fields if field in field_map}
+        result.append(row)
+    
+    print(f"  ⏱️  Assembled {len(result)} rows: {(time.time() - t2):.2f}s")
+    
     return result

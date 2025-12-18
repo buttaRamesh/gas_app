@@ -64,15 +64,34 @@ export function useGridState() {
     [sortModel]
   );
 
-  // Handle filter model changes
-  const handleFilterModelChange = useCallback(
-    (model: GridFilterModel, setPaginationModel: (updater: (prev: GridPaginationModel) => GridPaginationModel) => void) => {
-      setFilterModel(model);
-      // Reset to first page when filters change
-      setPaginationModel((p) => ({ ...p, page: 0 }));
-    },
-    []
-  );
+  // // Handle filter model changes
+  // const handleFilterModelChange = useCallback(
+  //   (model: GridFilterModel, setPaginationModel: (updater: (prev: GridPaginationModel) => GridPaginationModel) => void) => {
+  //     setFilterModel(model);
+  //     // Reset to first page when filters change
+  //     setPaginationModel((p) => ({ ...p, page: 0 }));
+  //   },
+  //   []
+  // );
+
+   // Handle filter model changes
+    const handleFilterModelChange = useCallback(
+      (model: GridFilterModel, setPaginationModel: (updater: (prev: GridPaginationModel) => GridPaginationModel) => void) => {
+        setFilterModel(model);
+
+        // Only reset pagination if there are complete valid filters
+        const hasValidFilters = model.items?.some((filter) => {
+          if (!filter.field || !filter.operator) return false;
+          if (filter.operator === 'isEmpty' || filter.operator === 'isNotEmpty') return true;
+          return filter.value !== undefined && filter.value !== null && filter.value !== '';
+        });
+
+        if (hasValidFilters || model.quickFilterValues?.[0]) {
+          setPaginationModel((p) => ({ ...p, page: 0 }));
+        }
+      },
+      []
+    );
 
   return {
     sortModel,

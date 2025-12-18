@@ -58,7 +58,8 @@ class ConsumerViewSet(
                 "consumer_type",
                 "bpl_type",
                 "dct_type",
-                "scheme"
+                "scheme",
+                "route_assignment__route"
             )
             .prefetch_related(   # GFK RELATED MODELS MUST BE PREFETCHED
                 Prefetch("person__addresses", to_attr="prefetched_addresses"),

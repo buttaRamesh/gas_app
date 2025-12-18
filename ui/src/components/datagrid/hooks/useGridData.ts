@@ -3,7 +3,7 @@
  *
  * Handles API calls to fetch data with proper error handling and loading states
  */
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import axiosInstance from '@/api/axiosInstance';
 import type { GridSortModel, GridFilterModel, GridPaginationModel } from '@mui/x-data-grid';
 
@@ -31,6 +31,36 @@ export function useGridData({
 
   // Clean endpoint
   const cleanedEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
+
+  // Calculate valid filters (memoized to prevent unnecessary re-fetches)
+  const validFilters = useMemo(() => {
+    if (!filterModel.items || filterModel.items.length === 0) {
+      return [];
+    }
+
+    return filterModel.items.filter((filter) => {
+      // Must have field and operator
+      if (!filter.field || !filter.operator) return false;
+
+      // isEmpty and isNotEmpty don't need a value
+      if (filter.operator === 'isEmpty' || filter.operator === 'isNotEmpty') {
+        return true;
+      }
+
+      // Other operators need a non-empty value
+      if (filter.value === undefined || filter.value === null || filter.value === '') {
+        return false;
+      }
+
+      return true;
+    });
+  }, [filterModel.items]);
+
+  // Serialize valid filters for dependency tracking
+  const validFiltersKey = useMemo(
+    () => JSON.stringify(validFilters),
+    [validFilters]
+  );
 
   // Clear data immediately when endpoint changes
   useEffect(() => {
@@ -64,60 +94,12 @@ export function useGridData({
         params.search = filterModel.quickFilterValues[0];
       }
 
-      // Apply column filters
-      if (filterModel.items && filterModel.items.length > 0) {
-        filterModel.items.forEach((filter) => {
-          if (!filter.field || filter.value === undefined || filter.value === null) {
-            return;
-          }
-
-          const { field, operator, value } = filter;
-
-          switch (operator) {
-            case 'contains':
-            case 'startsWith':
-            case 'endsWith':
-              params[field] = value;
-              break;
-            case 'equals':
-            case '=':
-            case 'is':
-              params[field] = value;
-              break;
-            case '>':
-            case 'after':
-              params[`${field}__gt`] = value;
-              break;
-            case '>=':
-            case 'onOrAfter':
-              params[`${field}__gte`] = value;
-              break;
-            case '<':
-            case 'before':
-              params[`${field}__lt`] = value;
-              break;
-            case '<=':
-            case 'onOrBefore':
-              params[`${field}__lte`] = value;
-              break;
-            case '!=':
-            case 'not':
-              params[`${field}__ne`] = value;
-              break;
-            case 'isEmpty':
-              params[`${field}__isnull`] = 'true';
-              break;
-            case 'isNotEmpty':
-              params[`${field}__isnull`] = 'false';
-              break;
-            case 'isAnyOf':
-              if (Array.isArray(value) && value.length > 0) {
-                params[`${field}__in`] = value.join(',');
-              }
-              break;
-            default:
-              params[field] = value;
-          }
+      // Apply column filters using filter_model for DataGridFilterBackend
+      // Use the pre-calculated validFilters from useMemo
+      if (validFilters.length > 0) {
+        params.filter_model = JSON.stringify({
+          items: validFilters,
+          logicOperator: filterModel.logicOperator || 'and',
         });
       }
 
@@ -154,7 +136,8 @@ export function useGridData({
     paginationModel.page,
     paginationModel.pageSize,
     filterModel.quickFilterValues,
-    filterModel.items,
+    filterModel.logicOperator,
+    validFiltersKey,
     sortModel,
   ]);
 

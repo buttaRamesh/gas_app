@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { useNavigate } from "react-router";
 import {
   Box,
   Typography,
@@ -18,49 +17,44 @@ import {
 } from "@mui/material";
 import {
   Add,
-  Route as RouteIcon,
+  LocalShipping,
   SearchOff,
   Visibility,
   Edit,
   Delete,
   Warning,
 } from "@mui/icons-material";
-import { useRouteData } from "./hooks/useRouteData";
-import { RouteStats } from "./components/RouteStats";
-import { RouteFilters } from "./components/RouteFilters";
-import { RouteCard } from "./components/RouteCard";
-import { CreateRouteDialog } from "./components/CreateRouteDialog";
+import { useDeliveryPersonData } from "./hooks/useDeliveryPersonData";
+import { DeliveryPersonStats } from "./components/DeliveryPersonStats";
+import { DeliveryPersonFilters } from "./components/DeliveryPersonFilters";
+// import { DeliveryPersonCard } from "./components/DeliveryPersonCard";
+import { DeliveryPersonCard } from "./components/DeliveryPersonCard2";
 import axiosInstance from "@/api/axiosInstance";
 import type { SortField, SortDirection, AssignmentFilter } from "./types";
 
-export default function RoutesPage() {
-  const navigate = useNavigate();
-  const { routes, stats, loading, error, refetch } = useRouteData();
+export default function DeliveryPersonsPage() {
+  const { deliveryPersons, stats, loading, error, refetch } = useDeliveryPersonData();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [assignmentFilter, setAssignmentFilter] = useState<AssignmentFilter>("all");
-  const [sortField, setSortField] = useState<SortField>("area_code");
+  const [sortField, setSortField] = useState<SortField>("person_name");
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const [actionAnchorEl, setActionAnchorEl] = useState<null | HTMLElement>(null);
-  const [selectedRouteId, setSelectedRouteId] = useState<number | null>(null);
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [editRouteId, setEditRouteId] = useState<number | null>(null);
+  const [selectedDeliveryPersonId, setSelectedDeliveryPersonId] = useState<number | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const [viewMode, setViewMode] = useState(false);
 
-  const filteredAndSortedRoutes = useMemo(() => {
-    let filtered = routes.filter((route) => {
+  const filteredAndSortedDeliveryPersons = useMemo(() => {
+    let filtered = deliveryPersons.filter((dp) => {
       const matchesSearch =
         searchQuery === "" ||
-        route.area_code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        route.area_code_description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        route.delivery_person_name?.toLowerCase().includes(searchQuery.toLowerCase());
+        dp.person.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        dp.person.contacts?.[0]?.mobile_number?.includes(searchQuery);
 
       const matchesAssignment =
         assignmentFilter === "all" ||
-        (assignmentFilter === "assigned" && route.delivery_person_name) ||
-        (assignmentFilter === "unassigned" && !route.delivery_person_name);
+        (assignmentFilter === "assigned" && dp.assigned_routes_count > 0) ||
+        (assignmentFilter === "unassigned" && dp.assigned_routes_count === 0);
 
       return matchesSearch && matchesAssignment;
     });
@@ -69,17 +63,14 @@ export default function RoutesPage() {
       filtered.sort((a, b) => {
         let comparison = 0;
         switch (sortField) {
-          case "area_code":
-            comparison = a.area_code.localeCompare(b.area_code);
+          case "person_name":
+            comparison = a.person.full_name.localeCompare(b.person.full_name);
             break;
-          case "delivery_person_name":
-            comparison = (a.delivery_person_name || "").localeCompare(b.delivery_person_name || "");
+          case "assigned_routes_count":
+            comparison = a.assigned_routes_count - b.assigned_routes_count;
             break;
-          case "consumer_count":
-            comparison = a.consumer_count - b.consumer_count;
-            break;
-          case "area_count":
-            comparison = a.area_count - b.area_count;
+          case "total_consumers":
+            comparison = a.total_consumers - b.total_consumers;
             break;
         }
         return sortDirection === "desc" ? -comparison : comparison;
@@ -87,7 +78,7 @@ export default function RoutesPage() {
     }
 
     return filtered;
-  }, [routes, searchQuery, assignmentFilter, sortField, sortDirection]);
+  }, [deliveryPersons, searchQuery, assignmentFilter, sortField, sortDirection]);
 
   const handleSortClick = (field: SortField) => {
     if (sortField !== field) {
@@ -100,52 +91,46 @@ export default function RoutesPage() {
     }
   };
 
-  const handleActionClick = (event: React.MouseEvent<HTMLElement>, routeId: number) => {
+  const handleActionClick = (event: React.MouseEvent<HTMLElement>, deliveryPersonId: number) => {
     event.stopPropagation();
-    setSelectedRouteId(routeId);
+    setSelectedDeliveryPersonId(deliveryPersonId);
     setActionAnchorEl(event.currentTarget);
   };
 
   const handleActionClose = () => {
     setActionAnchorEl(null);
-    setSelectedRouteId(null);
+    setSelectedDeliveryPersonId(null);
   };
 
   const handleView = () => {
-    if (selectedRouteId) {
-      setEditRouteId(selectedRouteId);
-      setViewMode(true);
-      setCreateDialogOpen(true);
-    }
+    // TODO: Implement view details
+    console.log("View delivery person:", selectedDeliveryPersonId);
     handleActionClose();
   };
 
   const handleEdit = () => {
-    if (selectedRouteId) {
-      setEditRouteId(selectedRouteId);
-      setViewMode(false);
-      setCreateDialogOpen(true);
-    }
+    // TODO: Implement edit
+    console.log("Edit delivery person:", selectedDeliveryPersonId);
     handleActionClose();
   };
 
   const handleDeleteClick = () => {
     setDeleteDialogOpen(true);
-    setActionAnchorEl(null); // Just close the menu, keep selectedRouteId
+    setActionAnchorEl(null);
   };
 
   const handleDeleteConfirm = async () => {
-    if (!selectedRouteId) return;
+    if (!selectedDeliveryPersonId) return;
 
     setDeleteLoading(true);
     try {
-      await axiosInstance.delete(`/routes/${selectedRouteId}/`);
+      await axiosInstance.delete(`/delivery-persons/${selectedDeliveryPersonId}/`);
       refetch();
       setDeleteDialogOpen(false);
-      setSelectedRouteId(null);
+      setSelectedDeliveryPersonId(null);
     } catch (err: any) {
-      console.error("Failed to delete route:", err);
-      alert(err.response?.data?.detail || "Failed to delete route");
+      console.error("Failed to delete delivery person:", err);
+      alert(err.response?.data?.detail || "Failed to delete delivery person");
     } finally {
       setDeleteLoading(false);
     }
@@ -153,63 +138,45 @@ export default function RoutesPage() {
 
   const handleDeleteCancel = () => {
     setDeleteDialogOpen(false);
-    setSelectedRouteId(null);
+    setSelectedDeliveryPersonId(null);
   };
 
   const handleCreateSuccess = () => {
     refetch();
   };
 
-  if (!loading && routes.length === 0) {
+  if (!loading && deliveryPersons.length === 0) {
     return (
       <Box sx={{ p: 2, height: "calc(100vh - 90px)" }}>
         <Typography variant="h5" fontWeight={700} color="primary.main" mb={3}>
-          Routes Management
+          Delivery Persons Management
         </Typography>
         <Box sx={{ textAlign: "center", py: 12 }}>
-          <RouteIcon sx={{ fontSize: 120, color: "text.disabled", opacity: 0.3 }} />
-          <Typography variant="h5" color="text.secondary" sx={{ mt: 3 }}>No routes configured</Typography>
+          <LocalShipping sx={{ fontSize: 120, color: "text.disabled", opacity: 0.3 }} />
+          <Typography variant="h5" color="text.secondary" sx={{ mt: 3 }}>No delivery persons configured</Typography>
           <Typography variant="body2" color="text.disabled" sx={{ mt: 1, mb: 3 }}>
-            Create your first delivery route to get started
+            Add your first delivery person to get started
           </Typography>
-          <Button variant="contained" startIcon={<Add />} onClick={() => {
-            setViewMode(false);
-            setEditRouteId(null);
-            setCreateDialogOpen(true);
-          }}>
-            Create Route
+          <Button variant="contained" startIcon={<Add />}>
+            Add Delivery Person
           </Button>
         </Box>
-        <CreateRouteDialog
-          open={createDialogOpen}
-          onClose={() => {
-            setCreateDialogOpen(false);
-            setEditRouteId(null);
-          }}
-          onSuccess={handleCreateSuccess}
-          editRouteId={editRouteId}
-        />
       </Box>
     );
   }
 
-  const noSearchResults = !loading && filteredAndSortedRoutes.length === 0 && searchQuery;
+  const noSearchResults = !loading && filteredAndSortedDeliveryPersons.length === 0 && searchQuery;
 
   return (
     <Box sx={{ p: 2, height: "calc(100vh - 90px)", display: "flex", flexDirection: "column", overflow: "hidden" }}>
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
         <Typography variant="h5" fontWeight={700} color="primary.main">
-          Routes Management
+          Delivery Persons Management
         </Typography>
         <Button
           variant="contained"
           color="secondary"
           startIcon={<Add />}
-          onClick={() => {
-            setViewMode(false);
-            setEditRouteId(null);
-            setCreateDialogOpen(true);
-          }}
           sx={(theme) => ({
             fontWeight: 600,
             px: 3,
@@ -221,7 +188,7 @@ export default function RoutesPage() {
             }
           })}
         >
-          New Route
+          New Delivery Person
         </Button>
       </Box>
 
@@ -231,9 +198,9 @@ export default function RoutesPage() {
         </Alert>
       )}
 
-      <RouteStats stats={stats} loading={loading} />
+      <DeliveryPersonStats stats={stats} loading={loading} />
 
-      <RouteFilters
+      <DeliveryPersonFilters
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         sortField={sortField}
@@ -253,15 +220,15 @@ export default function RoutesPage() {
           <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: 200 }}>
             <SearchOff sx={{ fontSize: 120, color: "text.disabled" }} />
             <Typography variant="h5" color="text.secondary" sx={{ mt: 3 }}>
-              No routes match "{searchQuery}"
+              No delivery persons match "{searchQuery}"
             </Typography>
             <Button onClick={() => setSearchQuery("")} sx={{ mt: 2 }}>Clear Search</Button>
           </Box>
         ) : (
           <Grid container spacing={2} sx={{ pt: 1 }}>
-            {filteredAndSortedRoutes.map((route) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={route.id}>
-                <RouteCard route={route} onActionClick={handleActionClick} />
+            {filteredAndSortedDeliveryPersons.map((dp) => (
+              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={dp.id}>
+                <DeliveryPersonCard deliveryPerson={dp} onActionClick={handleActionClick} />
               </Grid>
             ))}
           </Grid>
@@ -286,7 +253,7 @@ export default function RoutesPage() {
         </MenuItem>
         <MenuItem onClick={handleEdit} sx={{ gap: 1.5 }}>
           <Edit fontSize="small" sx={{ color: "warning.main" }} />
-          <Typography variant="body2">Edit Route</Typography>
+          <Typography variant="body2">Edit Person</Typography>
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleDeleteClick} sx={{ gap: 1.5, color: "error.main" }}>
@@ -294,17 +261,6 @@ export default function RoutesPage() {
           <Typography variant="body2">Delete</Typography>
         </MenuItem>
       </Menu>
-      <CreateRouteDialog
-        open={createDialogOpen}
-        onClose={() => {
-          setCreateDialogOpen(false);
-          setEditRouteId(null);
-          setViewMode(false);
-        }}
-        onSuccess={handleCreateSuccess}
-        editRouteId={editRouteId}
-        viewMode={viewMode}
-      />
 
       {/* Delete Confirmation Dialog */}
       <Dialog
@@ -321,13 +277,13 @@ export default function RoutesPage() {
         <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1, color: "error.main" }}>
           <Warning />
           <Typography variant="h6" fontWeight={700}>
-            Delete Route
+            Delete Delivery Person
           </Typography>
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this route? This action cannot be undone.
-            All assigned areas will become unassigned.
+            Are you sure you want to delete this delivery person? This action cannot be undone.
+            All route assignments and history will be removed.
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2 }}>

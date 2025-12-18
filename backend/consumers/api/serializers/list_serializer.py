@@ -20,6 +20,7 @@ class ConsumerListSerializer(serializers.ModelSerializer):
     consumer_type = serializers.SerializerMethodField()
 
     cylinders = serializers.SerializerMethodField()
+    route_code = serializers.SerializerMethodField()
 
     class Meta:
         model = Consumer
@@ -47,6 +48,7 @@ class ConsumerListSerializer(serializers.ModelSerializer):
             "blue_book",
 
             "cylinders",
+            "route_code",
         ]
 
     # -----------------------
@@ -147,6 +149,16 @@ class ConsumerListSerializer(serializers.ModelSerializer):
         """Get cylinder count using prefetched data (no extra query)"""
         # Use len() on list to access prefetched data without triggering query
         return len(list(obj.connections.all()))
+
+    # -----------------------
+    # ROUTE CODE
+    # -----------------------
+    def get_route_code(self, obj) -> str | None:
+        """Get route code from route assignment"""
+        try:
+            return obj.route_assignment.route.area_code
+        except:
+            return None
 
 
 class ConsumerKYCListSerializer(serializers.ModelSerializer):
