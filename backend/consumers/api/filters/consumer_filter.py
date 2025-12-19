@@ -43,6 +43,7 @@ class ConsumerFilter(filters.FilterSet):
     dct_type = filters.NumberFilter(field_name='dct_type__id')
     scheme = filters.NumberFilter(field_name='scheme__id')
     route = filters.NumberFilter(field_name='route_assignment__route__id')
+    delivery_person = filters.NumberFilter(field_name='route_assignment__route__delivery_assignment__delivery_person__id')
 
     # Status filters
     status = filters.ChoiceFilter(choices=Consumer.Status.choices)

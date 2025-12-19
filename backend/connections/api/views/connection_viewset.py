@@ -34,16 +34,19 @@ class ConnectionDetailsViewSet(viewsets.ModelViewSet):
 
     queryset = ConnectionDetails.objects.select_related(
         'consumer',
-        'consumer__person',
         'consumer__category',
         'consumer__consumer_type',
         'connection_type',
         'product',
         'product__category',
         'product__unit'
+    ).prefetch_related(
+        'consumer__person',
+        'consumer__person__contacts',
+        'consumer__person__addresses'
     ).all()
 
-    permission_classes = [IsAuthenticated, HasResourcePermission]
+    # permission_classes = [IsAuthenticated, HasResourcePermission]
     resource_name = 'connections'
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['consumer', 'connection_type', 'product']

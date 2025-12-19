@@ -20,78 +20,41 @@ export function useGridState() {
     quickFilterValues: [],
   });
 
-  // Handle sort model changes with multi-column support
+  // Handle sort model changes
   const handleSortModelChange = useCallback(
     (newModel: GridSortModel, setPaginationModel: (updater: (prev: GridPaginationModel) => GridPaginationModel) => void) => {
+      const isSame = JSON.stringify(newModel) === JSON.stringify(sortModel);
+      if (isSame) return;
+
+      setSortModel(newModel);
       // Reset to first page when sorting changes
       setPaginationModel((p) => ({ ...p, page: 0 }));
-
-      // Multi-column sorting logic:
-      // - If user clicks a new column, add it as secondary sort
-      // - If user clicks an existing sorted column, cycle through: asc -> desc -> remove
-      if (newModel.length === 0) {
-        setSortModel([]);
-        return;
-      }
-
-      const newSort = newModel[0];
-      const existingIndex = sortModel.findIndex((s) => s.field === newSort.field);
-
-      if (existingIndex === -1) {
-        // New column: Add to existing sorts
-        setSortModel([...sortModel, newSort]);
-      } else {
-        // Existing column: Update or remove
-        const existingSort = sortModel[existingIndex];
-
-        if (existingSort.sort === 'asc' && newSort.sort === 'desc') {
-          // asc -> desc
-          const updatedModel = [...sortModel];
-          updatedModel[existingIndex] = newSort;
-          setSortModel(updatedModel);
-        } else if (existingSort.sort === 'desc' && newSort.sort === 'asc') {
-          // desc -> remove
-          const updatedModel = sortModel.filter((_, i) => i !== existingIndex);
-          setSortModel(updatedModel);
-        } else {
-          // Update the sort direction
-          const updatedModel = [...sortModel];
-          updatedModel[existingIndex] = newSort;
-          setSortModel(updatedModel);
-        }
-      }
     },
     [sortModel]
   );
 
-  // // Handle filter model changes
-  // const handleFilterModelChange = useCallback(
-  //   (model: GridFilterModel, setPaginationModel: (updater: (prev: GridPaginationModel) => GridPaginationModel) => void) => {
-  //     setFilterModel(model);
-  //     // Reset to first page when filters change
-  //     setPaginationModel((p) => ({ ...p, page: 0 }));
-  //   },
-  //   []
-  // );
+  // Handle filter model changes
+  const handleFilterModelChange = useCallback(
+    (model: GridFilterModel, setPaginationModel: (updater: (prev: GridPaginationModel) => GridPaginationModel) => void) => {
+      const isSame = JSON.stringify(model) === JSON.stringify(filterModel);
+      if (isSame) return;
 
-   // Handle filter model changes
-    const handleFilterModelChange = useCallback(
-      (model: GridFilterModel, setPaginationModel: (updater: (prev: GridPaginationModel) => GridPaginationModel) => void) => {
-        setFilterModel(model);
+      setFilterModel(model);
 
-        // Only reset pagination if there are complete valid filters
-        const hasValidFilters = model.items?.some((filter) => {
+      // Only reset pagination if there are complete valid filters or quick filter
+      const hasValidFilters =
+        model.items?.some((filter) => {
           if (!filter.field || !filter.operator) return false;
           if (filter.operator === 'isEmpty' || filter.operator === 'isNotEmpty') return true;
           return filter.value !== undefined && filter.value !== null && filter.value !== '';
-        });
+        }) || (model.quickFilterValues && model.quickFilterValues.length > 0);
 
-        if (hasValidFilters || model.quickFilterValues?.[0]) {
-          setPaginationModel((p) => ({ ...p, page: 0 }));
-        }
-      },
-      []
-    );
+      if (hasValidFilters) {
+        setPaginationModel((p) => ({ ...p, page: 0 }));
+      }
+    },
+    [filterModel]
+  );
 
   return {
     sortModel,

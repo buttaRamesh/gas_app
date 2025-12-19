@@ -43,6 +43,8 @@ export interface SmartDataGridProps {
     showColumns?: boolean;
     showFilters?: boolean;
     showExport?: boolean;
+    showNew?: boolean;
+    onNew?: () => void;
     kycStatus?: "pending" | "done";
     onKycStatusChange?: (status: "pending" | "done") => void;
   };
@@ -203,6 +205,8 @@ export default function SmartDataGrid({
             showColumns: toolbarOptions?.showColumns ?? true,
             showFilters: toolbarOptions?.showFilters ?? true,
             showExport: toolbarOptions?.showExport ?? true,
+            showNew: toolbarOptions?.showNew ?? false,
+            onNew: toolbarOptions?.onNew,
             filterCount: filterModel.items.length,
             kycStatus: toolbarOptions?.kycStatus,
             onKycStatusChange: toolbarOptions?.onKycStatusChange,

@@ -13,6 +13,8 @@ class ConnectionListCreateSerializer(serializers.ModelSerializer):
     consumer_number = serializers.CharField(source='consumer.consumer_number', read_only=True)
     consumer_name = serializers.SerializerMethodField(read_only=True)
     connection_type_name = serializers.CharField(source='connection_type.name', read_only=True)
+    product_code = serializers.CharField(source='product.product_code', read_only=True)
+    product_name = serializers.CharField(source='product.name', read_only=True)
     product_display = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -27,6 +29,8 @@ class ConnectionListCreateSerializer(serializers.ModelSerializer):
             'connection_type',
             'connection_type_name',
             'product',
+            'product_code',
+            'product_name',
             'product_display',
             'num_of_regulators',
             'hist_code_description',
@@ -39,10 +43,12 @@ class ConnectionListCreateSerializer(serializers.ModelSerializer):
         return None
 
     def get_product_display(self, obj):
-        """Get product formatted string"""
+        """Get product formatted string with code - name (handles null codes)"""
         if not obj.product:
             return None
-        return f'{obj.product.product_code} {obj.product.name}'
+        if obj.product.product_code:
+            return f'{obj.product.product_code} - {obj.product.name}'
+        return obj.product.name
 
     def validate(self, data):
         """
@@ -110,7 +116,9 @@ class ConnectionDetailSerializer(serializers.ModelSerializer):
         return None
 
     def get_product_display(self, obj):
-        """Get product formatted string"""
+        """Get product formatted string with code - name (handles null codes)"""
         if not obj.product:
             return None
-        return f'{obj.product.product_code} {obj.product.name}'
+        if obj.product.product_code:
+            return f'{obj.product.product_code} - {obj.product.name}'
+        return obj.product.name

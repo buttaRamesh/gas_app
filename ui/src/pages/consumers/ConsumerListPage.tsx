@@ -7,8 +7,12 @@ import { consumerColumns } from "./consumerColumns";
 export default function ConsumerListPage() {
   const [searchParams] = useSearchParams();
   const routeId = searchParams.get("route");
+  const deliveryPersonId = searchParams.get("delivery_person");
 
-  const extraParams = routeId ? { route: routeId } : undefined;
+  const extraParams = {
+    ...(routeId && { route: routeId }),
+    ...(deliveryPersonId && { delivery_person: deliveryPersonId }),
+  };
 
   return (
     <Box

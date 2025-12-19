@@ -7,6 +7,7 @@ export interface Route {
   area_count: number;
   consumer_count: number;
   delivery_person_name: string | null;
+  delivery_person: number | null;
 }
 
 export interface RouteResponse {

@@ -8,7 +8,7 @@ class Person(models.Model):
     """
     first_name = models.CharField("First Name", max_length=200)
     last_name = models.CharField("Last Name", max_length=200)
-    full_name = models.CharField("Person Name", max_length=200)
+    full_name = models.CharField("Person Name", max_length=200, blank=True, null=True)
     dob = models.DateField("Date of Birth", blank=True, null=True)
 
     # Foreign Key relations to models that are person-specific
@@ -43,8 +43,14 @@ class Person(models.Model):
         related_query_name='person'
     )
 
+    def save(self, *args, **kwargs):
+        """Auto-generate full_name from first_name and last_name if not provided"""
+        # Always update full_name from first_name + last_name
+        self.full_name = f"{self.first_name or ''} {self.last_name or ''}".strip()
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return self.full_name
+        return self.full_name or f"{self.first_name} {self.last_name}"
 
     class Meta:
         verbose_name = "Person"

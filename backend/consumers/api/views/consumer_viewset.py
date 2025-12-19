@@ -240,3 +240,52 @@ class ConsumerViewSet(
         consumer.save(update_fields=["is_kyc_done"])
 
         return Response({"message": "KYC enabled", "id": consumer.id})
+
+    # ---------------------------------------------------------
+    # /api/consumers/<id or CNnum>/assign-route/
+    # Assign or change route for a consumer
+    # ---------------------------------------------------------
+    @action(detail=True, methods=["post"], url_path="assign-route")
+    def assign_route(self, request, lookup_value=None):
+        from consumers.models import ConsumerRouteAssignment
+        from routes.models import Route
+
+        consumer = self.get_object()
+        route_id = request.data.get("route_id")
+
+        if not route_id:
+            return Response(
+                {"detail": "route_id is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Validate route exists
+        try:
+            route = Route.objects.get(id=route_id)
+        except Route.DoesNotExist:
+            return Response(
+                {"detail": "Route not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # Check if consumer already has a route assignment
+        try:
+            assignment = ConsumerRouteAssignment.objects.get(consumer=consumer)
+            old_route = assignment.route
+            assignment.route = route
+            assignment.save()
+            message = f"Route changed from {old_route.area_code} to {route.area_code}"
+        except ConsumerRouteAssignment.DoesNotExist:
+            # Create new assignment
+            assignment = ConsumerRouteAssignment.objects.create(
+                consumer=consumer,
+                route=route
+            )
+            message = f"Route {route.area_code} assigned successfully"
+
+        return Response({
+            "message": message,
+            "consumer_id": consumer.id,
+            "route_id": route.id,
+            "route_area_code": route.area_code
+        }, status=status.HTTP_200_OK)

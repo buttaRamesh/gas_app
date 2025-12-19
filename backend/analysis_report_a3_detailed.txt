@@ -1,0 +1,42 @@
+WARNING: Authentication is DISABLED! All endpoints are publicly accessible.
+msg...  Hello Developmet
+--- Detailed Analysis Report for Route: A3 (A3) ---
+Route Areas: CHINTACHETTU CENTRE, INAKUDURUPET, NURUDDINPET, RAJUPET, VARREGUDEM
+Total Consumers Assigned: 2008
+--------------------------------------------------
+
+--- Route Area Wise Statistics ---
+
+ROUTE AREA: CHINTACHETTU CENTRE
+  housing_complex_building  : 1 matches
+  street_road_name          : 2 matches
+
+ROUTE AREA: INAKUDURUPET
+  house_name_flat_number    : 2 matches
+  housing_complex_building  : 5 matches
+  street_road_name          : 16 matches
+
+ROUTE AREA: NURUDDINPET
+  house_name_flat_number    : 1 matches
+  housing_complex_building  : 8 matches
+  street_road_name          : 19 matches
+
+ROUTE AREA: RAJUPET
+  house_name_flat_number    : 7 matches
+  housing_complex_building  : 112 matches
+  street_road_name          : 357 matches
+
+ROUTE AREA: VARREGUDEM
+  house_name_flat_number    : 2 matches
+  housing_complex_building  : 19 matches
+  street_road_name          : 43 matches
+
+==================================================
+--- Overall Statistics ---
+Total Consumers Checked: 2008
+Total matched via 'house_name_flat_number': 12
+Total matched via 'housing_complex_building': 145
+Total matched via 'street_road_name': 437
+Total matched via 'address_text': 0
+Total Consumers with at least one match: 594
+Match Rate: 29.58%

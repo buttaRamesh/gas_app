@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import {
   Box,
   Typography,
@@ -37,6 +37,10 @@ export default function RoutesPage() {
   const navigate = useNavigate();
   const { routes, stats, loading, error, refetch } = useRouteData();
 
+  const [searchParams] = useSearchParams();
+  const deliveryPersonId = searchParams.get("delivery_person");
+
+  // Keep existing state
   const [searchQuery, setSearchQuery] = useState("");
   const [assignmentFilter, setAssignmentFilter] = useState<AssignmentFilter>("all");
   const [sortField, setSortField] = useState<SortField>("area_code");
@@ -49,8 +53,16 @@ export default function RoutesPage() {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [viewMode, setViewMode] = useState(false);
 
+  // If filtered by delivery person, show a chip or alert (optional, but good for UX)
+  // For now, just filter
+
   const filteredAndSortedRoutes = useMemo(() => {
     let filtered = routes.filter((route) => {
+      // 1. Delivery Person Filter (from URL)
+      if (deliveryPersonId && route.delivery_person !== parseInt(deliveryPersonId)) {
+        return false;
+      }
+
       const matchesSearch =
         searchQuery === "" ||
         route.area_code.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -314,24 +326,63 @@ export default function RoutesPage() {
         fullWidth
         PaperProps={{
           sx: {
-            borderRadius: 2,
+            borderRadius: 3,
+            overflow: 'hidden',
           },
         }}
       >
-        <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1, color: "error.main" }}>
-          <Warning />
-          <Typography variant="h6" fontWeight={700}>
-            Delete Route
-          </Typography>
+        <DialogTitle
+          sx={(theme) => ({
+            background: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.secondary.dark} 100%)`,
+            color: theme.palette.secondary.contrastText,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            py: 1,
+            px: 2,
+          })}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Box
+              sx={(theme) => ({
+                width: 32,
+                height: 32,
+                borderRadius: 1,
+                bgcolor: theme.palette.error.main,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              })}
+            >
+              <Warning sx={{ color: 'white', fontSize: 18 }} />
+            </Box>
+            <Typography variant="subtitle1" fontWeight={600} sx={{ fontSize: '0.95rem' }}>
+              Delete Route
+            </Typography>
+          </Box>
         </DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ pt: 3 }}>
           <DialogContentText>
             Are you sure you want to delete this route? This action cannot be undone.
             All assigned areas will become unassigned.
           </DialogContentText>
         </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={handleDeleteCancel} disabled={deleteLoading}>
+        <DialogActions sx={{ px: 3, pb: 2, gap: 1.5 }}>
+          <Button
+            onClick={handleDeleteCancel}
+            disabled={deleteLoading}
+            variant="outlined"
+            sx={(theme) => ({
+              borderRadius: 2,
+              px: 3,
+              borderColor: theme.palette.divider,
+              color: theme.palette.text.secondary,
+              '&:hover': {
+                borderColor: theme.palette.text.secondary,
+                bgcolor: 'transparent',
+              },
+            })}
+          >
             Cancel
           </Button>
           <Button
@@ -340,6 +391,10 @@ export default function RoutesPage() {
             color="error"
             disabled={deleteLoading}
             startIcon={deleteLoading ? <CircularProgress size={18} color="inherit" /> : <Delete />}
+            sx={{
+              borderRadius: 2,
+              px: 3,
+            }}
           >
             {deleteLoading ? "Deleting..." : "Delete"}
           </Button>

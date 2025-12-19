@@ -148,17 +148,41 @@ class PersonCreateUpdateSerializer(serializers.ModelSerializer):
                 family_details = FamilyDetails.objects.create(**family_details_data)
                 instance.family_details = family_details
 
-        # Update addresses (replace all)
+        # Update addresses (update existing, create new, delete removed)
         if addresses_data is not None:
-            instance.addresses.all().delete()
-            for address_data in addresses_data:
-                Address.objects.create(related_object=instance, **address_data)
+            # Get IDs of addresses being sent
+            provided_ids = [addr.get('id') for addr in addresses_data if addr.get('id')]
 
-        # Update contacts (replace all)
+            # Delete addresses not in the provided list
+            instance.addresses.exclude(id__in=provided_ids).delete()
+
+            # Update or create each address
+            for address_data in addresses_data:
+                address_id = address_data.pop('id', None)
+                if address_id:
+                    # Update existing address
+                    Address.objects.filter(id=address_id, object_id=instance.id).update(**address_data)
+                else:
+                    # Create new address
+                    Address.objects.create(related_object=instance, **address_data)
+
+        # Update contacts (update existing, create new, delete removed)
         if contacts_data is not None:
-            instance.contacts.all().delete()
+            # Get IDs of contacts being sent
+            provided_ids = [contact.get('id') for contact in contacts_data if contact.get('id')]
+
+            # Delete contacts not in the provided list
+            instance.contacts.exclude(id__in=provided_ids).delete()
+
+            # Update or create each contact
             for contact_data in contacts_data:
-                Contact.objects.create(related_object=instance, **contact_data)
+                contact_id = contact_data.pop('id', None)
+                if contact_id:
+                    # Update existing contact
+                    Contact.objects.filter(id=contact_id, object_id=instance.id).update(**contact_data)
+                else:
+                    # Create new contact
+                    Contact.objects.create(related_object=instance, **contact_data)
 
         # Update person fields
         for key, value in validated_data.items():

@@ -43,7 +43,7 @@ export const kycColumns: AppGridColDef[] = [
     sortable: true,
     filterable: true,
     visibleByDefault: true,
-    valueGetter: (params: any) => params ?? "",
+    valueGetter: (value: any) => value ?? "",
   },
   {
     field: "address_text",

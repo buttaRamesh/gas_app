@@ -260,40 +260,41 @@ export function CreateRouteDialog({ open, onClose, onSuccess, editRouteId, viewM
     >
       <DialogTitle
         sx={(theme) => ({
-          background: theme.custom.gradients.blue,
-          color: "white",
-          py: 0.5,
-          px: 2.5,
+          background: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.secondary.dark} 100%)`,
+          color: theme.palette.secondary.contrastText,
+          py: 1,
+          px: 2,
         })}
       >
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
             <Box
-              sx={{
-                p: 0.75,
-                borderRadius: 1.5,
-                bgcolor: "rgba(255,255,255,0.15)",
-                backdropFilter: "blur(10px)",
+              sx={(theme) => ({
+                width: 32,
+                height: 32,
+                borderRadius: 1,
+                bgcolor: theme.palette.primary.main,
                 display: "flex",
-              }}
+                alignItems: "center",
+                justifyContent: "center",
+              })}
             >
-              <RouteIcon sx={{ color: "white", fontSize: 20 }} />
+              <RouteIcon sx={(theme) => ({ color: theme.palette.primary.contrastText, fontSize: 18 })} />
             </Box>
-              <Typography variant="subtitle1" fontWeight={700}>
-                {viewMode ? "Route Details" : (isEditMode ? "Edit Route" : "Create New Route")}
-              </Typography>
+            <Typography variant="subtitle1" fontWeight={600} sx={{ fontSize: '0.95rem' }}>
+              {viewMode ? "Route Details" : (isEditMode ? "Edit Route" : "Create New Route")}
+            </Typography>
           </Box>
           <IconButton
             onClick={handleClose}
             disabled={loading}
             size="small"
-            sx={{
-              color: "white",
-              bgcolor: "rgba(255,255,255,0.1)",
-              "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
-            }}
+            sx={(theme) => ({
+              color: theme.palette.secondary.contrastText,
+              "&:hover": { bgcolor: alpha(theme.palette.common.white, 0.15) },
+            })}
           >
-            <Close />
+            <Close fontSize="small" />
           </IconButton>
         </Box>
       </DialogTitle>
@@ -715,21 +716,27 @@ export function CreateRouteDialog({ open, onClose, onSuccess, editRouteId, viewM
               onClick={handleSubmit}
               disabled={loading || dataLoading}
               variant="contained"
+              color="secondary"
               size="medium"
               startIcon={loading ? <CircularProgress size={18} color="inherit" /> : <Save />}
               sx={(theme) => ({
                 fontWeight: 700,
                 px: 4,
-                background: theme.custom.gradients.blue,
-                boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.35)}`,
+                backgroundColor: theme.palette.secondary.main,
+                color: theme.palette.secondary.contrastText,
+                boxShadow: `0 4px 12px ${alpha(theme.palette.secondary.main, 0.3)}`,
                 transition: "all 0.2s ease",
                 "&:hover": {
-                  background: `linear-gradient(90deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
-                  boxShadow: `0 6px 16px ${alpha(theme.palette.primary.main, 0.45)}`,
+                  backgroundColor: theme.palette.secondary.dark,
+                  boxShadow: `0 6px 16px ${alpha(theme.palette.secondary.main, 0.4)}`,
                   transform: "translateY(-1px)",
                 },
                 "&:active": {
                   transform: "translateY(0px)",
+                },
+                "&.Mui-disabled": {
+                  backgroundColor: alpha(theme.palette.secondary.main, 0.3),
+                  color: alpha(theme.palette.secondary.contrastText, 0.5),
                 },
               })}
             >
@@ -745,18 +752,49 @@ export function CreateRouteDialog({ open, onClose, onSuccess, editRouteId, viewM
         onClose={() => setDeliveryPersonDialogOpen(false)}
         maxWidth="sm"
         fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            overflow: 'hidden',
+          },
+        }}
       >
-        <DialogTitle sx={{ bgcolor: "success.main", color: "white", py: 1.5 }}>
+        <DialogTitle
+          sx={(theme) => ({
+            background: `linear-gradient(135deg, ${theme.palette.secondary.main} 0%, ${theme.palette.secondary.dark} 100%)`,
+            color: theme.palette.secondary.contrastText,
+            py: 1,
+            px: 2,
+          })}
+        >
           <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <Typography variant="h6" fontWeight={600}>
-              Select Delivery Person
-            </Typography>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+              <Box
+                sx={(theme) => ({
+                  width: 32,
+                  height: 32,
+                  borderRadius: 1,
+                  bgcolor: theme.palette.primary.main,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                })}
+              >
+                <Person sx={(theme) => ({ color: theme.palette.primary.contrastText, fontSize: 18 })} />
+              </Box>
+              <Typography variant="subtitle1" fontWeight={600} sx={{ fontSize: '0.95rem' }}>
+                Select Delivery Person
+              </Typography>
+            </Box>
             <IconButton
               onClick={() => setDeliveryPersonDialogOpen(false)}
               size="small"
-              sx={{ color: "white" }}
+              sx={(theme) => ({
+                color: theme.palette.secondary.contrastText,
+                '&:hover': { bgcolor: alpha(theme.palette.common.white, 0.15) },
+              })}
             >
-              <Close />
+              <Close fontSize="small" />
             </IconButton>
           </Box>
         </DialogTitle>

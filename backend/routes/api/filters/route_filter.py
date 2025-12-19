@@ -31,6 +31,7 @@ class RouteFilter(filters.FilterSet):
 
     # Has delivery person filter
     has_delivery_assignment = filters.BooleanFilter(method='filter_has_delivery_assignment')
+    delivery_person = filters.NumberFilter(field_name='delivery_assignment__delivery_person__id')
 
     def filter_min_area_count(self, queryset, name, value):
         """Filter routes with at least N areas"""

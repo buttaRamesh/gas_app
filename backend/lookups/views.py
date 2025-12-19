@@ -20,7 +20,7 @@ class DCTTypeViewSet(viewsets.ModelViewSet):
     """
     queryset = DCTType.objects.all()
     serializer_class = DCTTypeSerializer
-    permission_classes = [IsAuthenticated, HasResourcePermission]
+    # permission_classes = [IsAuthenticated, HasResourcePermission]
     resource_name = 'lookups'
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name', 'description']
@@ -35,7 +35,7 @@ class MarketTypeViewSet(viewsets.ModelViewSet):
     """
     queryset = MarketType.objects.all()
     serializer_class = MarketTypeSerializer
-    permission_classes = [IsAuthenticated, HasResourcePermission]
+    # permission_classes = [IsAuthenticated, HasResourcePermission]
     resource_name = 'lookups'
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name']
@@ -50,7 +50,7 @@ class ConnectionTypeViewSet(viewsets.ModelViewSet):
     """
     queryset = ConnectionType.objects.all()
     serializer_class = ConnectionTypeSerializer
-    permission_classes = [IsAuthenticated, HasResourcePermission]
+    # permission_classes = [IsAuthenticated, HasResourcePermission]
     resource_name = 'lookups'
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name']
@@ -65,7 +65,7 @@ class ConsumerCategoryViewSet(viewsets.ModelViewSet):
     """
     queryset = ConsumerCategory.objects.all()
     serializer_class = ConsumerCategorySerializer
-    permission_classes = [IsAuthenticated, HasResourcePermission]
+    # permission_classes = [IsAuthenticated, HasResourcePermission]
     resource_name = 'lookups'
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name', 'description']
@@ -80,7 +80,7 @@ class ConsumerTypeViewSet(viewsets.ModelViewSet):
     """
     queryset = ConsumerType.objects.all()
     serializer_class = ConsumerTypeSerializer
-    permission_classes = [IsAuthenticated, HasResourcePermission]
+    # permission_classes = [IsAuthenticated, HasResourcePermission]
     resource_name = 'lookups'
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name', 'description']
@@ -95,7 +95,7 @@ class BPLTypeViewSet(viewsets.ModelViewSet):
     """
     queryset = BPLType.objects.all()
     serializer_class = BPLTypeSerializer
-    permission_classes = [IsAuthenticated, HasResourcePermission]
+    # permission_classes = [IsAuthenticated, HasResourcePermission]
     resource_name = 'lookups'
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name', 'description']

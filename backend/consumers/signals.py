@@ -8,7 +8,7 @@ def populate_consumer_route_history_fields(sender, instance, **kwargs):
     """Populate denormalized fields before saving history record"""
     if instance.consumer:
         instance.consumer_number = instance.consumer.consumer_number
-        instance.consumer_name = instance.consumer.person.person_name if instance.consumer.person else instance.consumer.consumer_number
+        instance.consumer_name = instance.consumer.person.full_name if instance.consumer.person else instance.consumer.consumer_number
 
     if instance.route:
         instance.route_code = instance.route.area_code
@@ -23,7 +23,7 @@ def log_consumer_route_assignment_create_update(sender, instance, created, **kwa
     ConsumerRouteAssignmentHistory.objects.create(
         consumer=instance.consumer,
         consumer_number=instance.consumer.consumer_number,
-        consumer_name=instance.consumer.person.person_name if instance.consumer.person else instance.consumer.consumer_number,
+        consumer_name=instance.consumer.person.full_name if instance.consumer.person else instance.consumer.consumer_number,
         route=instance.route,
         route_code=instance.route.area_code,
         route_description=instance.route.area_code_description,
@@ -38,7 +38,7 @@ def log_consumer_route_assignment_delete(sender, instance, **kwargs):
     ConsumerRouteAssignmentHistory.objects.create(
         consumer=instance.consumer,
         consumer_number=instance.consumer.consumer_number,
-        consumer_name=instance.consumer.person.person_name if instance.consumer.person else instance.consumer.consumer_number,
+        consumer_name=instance.consumer.person.full_name if instance.consumer.person else instance.consumer.consumer_number,
         route=instance.route,
         route_code=instance.route.area_code,
         route_description=instance.route.area_code_description,

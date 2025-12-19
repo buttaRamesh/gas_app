@@ -29,7 +29,8 @@ import { DeliveryPersonStats } from "./components/DeliveryPersonStats";
 import { DeliveryPersonFilters } from "./components/DeliveryPersonFilters";
 // import { DeliveryPersonCard } from "./components/DeliveryPersonCard";
 import { DeliveryPersonCard } from "./components/DeliveryPersonCard2";
-import axiosInstance from "@/api/axiosInstance";
+import DeliveryPersonDialog from "./components/DeliveryPersonDialog";
+import axiosInstance from "../../api/axiosInstance";
 import type { SortField, SortDirection, AssignmentFilter } from "./types";
 
 export default function DeliveryPersonsPage() {
@@ -44,6 +45,59 @@ export default function DeliveryPersonsPage() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
+  // Dialog State
+  const [dialogOpen, setDialogOpen] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [selectedPerson, setSelectedPerson] = useState<any | null>(null);
+  const [dialogMode, setDialogMode] = useState<'add' | 'edit' | 'view'>('add');
+  const [loadingDetails, setLoadingDetails] = useState(false);
+
+  const fetchPersonDetails = async (id: number) => {
+    setLoadingDetails(true);
+    try {
+      const res = await axiosInstance.get(`/delivery-persons/${id}/`);
+      setSelectedPerson(res.data);
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    } finally {
+      setLoadingDetails(false);
+    }
+  };
+
+  const handleCreate = () => {
+    setSelectedPerson(null);
+    setDialogMode('add');
+    setDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+    setSelectedPerson(null);
+  };
+
+  const handleView = async () => {
+    if (selectedDeliveryPersonId) {
+      const success = await fetchPersonDetails(selectedDeliveryPersonId);
+      if (success) {
+        setDialogMode('view');
+        setDialogOpen(true);
+        handleActionClose();
+      }
+    }
+  };
+
+  const handleEdit = async () => {
+    if (selectedDeliveryPersonId) {
+      const success = await fetchPersonDetails(selectedDeliveryPersonId);
+      if (success) {
+        setDialogMode('edit');
+        setDialogOpen(true);
+        handleActionClose();
+      }
+    }
+  };
   const filteredAndSortedDeliveryPersons = useMemo(() => {
     let filtered = deliveryPersons.filter((dp) => {
       const matchesSearch =
@@ -102,17 +156,7 @@ export default function DeliveryPersonsPage() {
     setSelectedDeliveryPersonId(null);
   };
 
-  const handleView = () => {
-    // TODO: Implement view details
-    console.log("View delivery person:", selectedDeliveryPersonId);
-    handleActionClose();
-  };
 
-  const handleEdit = () => {
-    // TODO: Implement edit
-    console.log("Edit delivery person:", selectedDeliveryPersonId);
-    handleActionClose();
-  };
 
   const handleDeleteClick = () => {
     setDeleteDialogOpen(true);
@@ -177,6 +221,7 @@ export default function DeliveryPersonsPage() {
           variant="contained"
           color="secondary"
           startIcon={<Add />}
+          onClick={handleCreate} // Updated onClick
           sx={(theme) => ({
             fontWeight: 600,
             px: 3,
@@ -262,6 +307,18 @@ export default function DeliveryPersonsPage() {
         </MenuItem>
       </Menu>
 
+      {/* Create/Edit/View Dialog */}
+      <DeliveryPersonDialog
+        open={dialogOpen}
+        onClose={handleCloseDialog}
+        mode={dialogMode}
+        person={selectedPerson}
+        onModeChange={(newMode) => setDialogMode(newMode)}
+        onSuccess={() => {
+          if (refetch) refetch(); // guard check
+          handleCloseDialog();
+        }} // closing bracket for onSuccess
+      />
       {/* Delete Confirmation Dialog */}
       <Dialog
         open={deleteDialogOpen}

@@ -1,0 +1,612 @@
+WARNING: Authentication is DISABLED! All endpoints are publicly accessible.
+msg...  Hello Developmet
+--- Analysis Report for Route: A3 (A3) ---
+Route Areas: CHINTACHETTU CENTRE, INAKUDURUPET, NURUDDINPET, RAJUPET, VARREGUDEM
+Total Consumers Assigned: 2008
+--------------------------------------------------
+Consumer                       | Field                     | Value                     | Matched Area
+----------------------------------------------------------------------------------------------------
+NAZAFALI MD                    | street_road_name          | INAGUDURUPETA             | INAKUDURUPET
+IMRAN BASHI                    | street_road_name          | RAJU PET                  | RAJUPET
+Mrs CHANDANA  JAYALAKSHMI KAVI | street_road_name          | RAJUPETA                  | RAJUPET
+MR. VEANNA SURESH              | street_road_name          | RAJU PETA                 | RAJUPET
+MR. RATHNA MANIKYAM  MIDDE     | street_road_name          | RAJUPETA                  | RAJUPET
+MS. KUNCHE RAJINI              | street_road_name          | RAJUPETA                  | RAJUPET
+MS. FATHEEMA                   | street_road_name          | NURUDDINPET               | NURUDDINPET
+MS. BATTINA KAMALA             | street_road_name          | RAJUPET                   | RAJUPET
+G MANGAYYA                     | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mrs PEETA  VEERA PERANTALAMMA  | street_road_name          | VARREGUDEM                | VARREGUDEM
+MR. MAHAMMED ANIF              | street_road_name          | RAJUPETA                  | RAJUPET
+M JHANSILAKSHMI                | street_road_name          | RAJUPETA                  | RAJUPET
+MS. DHANALAKSHMI  ALURI        | street_road_name          | RAJUPETA                  | RAJUPET
+K PADMANABHAM                  | street_road_name          | RAJUPETA                  | RAJUPET
+MS. KHAHIJUL KUBRA  AHMAD      | street_road_name          | RAJU PETA                 | RAJUPET
+MR. SAYYAD ISMAIAL             | house_name_flat_number    | NOORUDDINPET              | NURUDDINPET
+MS. NALLANAGU JAYADEVI         | street_road_name          | RAJUPETA                  | RAJUPET
+Y VARALAKSHMI                  | street_road_name          | RAJU PETA                 | RAJUPET
+G SUBRAMANYAM                  | housing_complex_building  | RAJUPETA                  | RAJUPET
+MR. NARAHARASETTI RAMAJYOTHI   | street_road_name          | RAJUPETA                  | RAJUPET
+K NAGESWARA RAO                | street_road_name          | RAJUPETA                  | RAJUPET
+MS. KOTHAPALLI NAGAMANI        | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs PATAN  GULJAR BEGAM        | street_road_name          | RAJUPETA                  | RAJUPET
+MR. MOHAMMAD GAFOOR BAIG       | street_road_name          | VARREGUDEM                | VARREGUDEM
+MR. TADEPALLI DURGA NAGA SHANK | street_road_name          | INGUDURUPETA              | INAKUDURUPET
+MR. KHAJA ZIAUDDIN             | street_road_name          | RAJUPET                   | RAJUPET
+J BABU RAO                     | street_road_name          | RAJUPETA                  | RAJUPET
+MS. YETUKURI NAGAMANI          | street_road_name          | RAJUPET                   | RAJUPET
+MR. SAYYED KARIMULLA           | street_road_name          | INGUDURUPETA              | INAKUDURUPET
+G PARDHASARADHI                | street_road_name          | RAJUPET                   | RAJUPET
+Mr. MATURI PURNA V RAMA MOHANR | housing_complex_building  | RAJUPETA                  | RAJUPET
+MR. V SESHAGIRI RAO  MOPIDEVI  | street_road_name          | NURUDDINPETA              | NURUDDINPET
+MR. GAGRE AVINASH              | street_road_name          | RAJUPETA                  | RAJUPET
+MS. ANJANI DEVI  PILLA         | street_road_name          | RAJUPETA                  | RAJUPET
+MR. MENDU VENKATESH            | street_road_name          | RAJUPETA                  | RAJUPET
+MR. SAYYAD DAVOOD              | street_road_name          | RAJUPET                   | RAJUPET
+MS. KRISHNAVENI  SRAVANAM      | street_road_name          | RAJUPETA                  | RAJUPET
+MS. TALLURI  LAKSHMI KUMARI    | street_road_name          | RAJUPETA                  | RAJUPET
+MS. TIRAPATAMMA  TATIKONDA     | street_road_name          | RAJUPETA                  | RAJUPET
+MS. PADMAVATHI  THOTA          | street_road_name          | RAJUPETA                  | RAJUPET
+MS. TALLURI  RUKMINI           | street_road_name          | RAJUPETA                  | RAJUPET
+CH ANJANEYULU                  | street_road_name          | RAJU PET                  | RAJUPET
+Y OMKAR                        | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. LAKSHMI MANGAMMA  MATHI    | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs MURALA  ANITHA             | street_road_name          | RAJUPETA                  | RAJUPET
+P RAGAVA RAO                   | street_road_name          | RAJUPETA                  | RAJUPET
+MR. DAKOJU V V SUBBARAO        | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. MOHAMMAD  MAHABOOBI        | street_road_name          | RAJUPET                   | RAJUPET
+MR. SATYA VENKATA DURGAPRASAD  | street_road_name          | VARREGUDEM                | VARREGUDEM
+MS. MOLAVANTI VENKATARAMANA    | street_road_name          | RAJUPETA                  | RAJUPET
+MS. SHAKEELA  MAHAMMAD         | street_road_name          | NURUDDINPETA              | NURUDDINPET
+T SIVA PRASAD                  | housing_complex_building  | RAJUPETA                  | RAJUPET
+HASEENA BEGAM                  | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. NAZEERUNNIS  A             | housing_complex_building  | VARRE GUDEM               | VARREGUDEM
+MR. ABDUL KAREEMBAKSH          | street_road_name          | INGUDURUPETA              | INAKUDURUPET
+MR. LAKSHMANA RAO  MAHAMKALI   | street_road_name          | RAJUPETA                  | RAJUPET
+M SUBBA LAKSHMI                | housing_complex_building  | RAJUPETA                  | RAJUPET
+MR. ERUNALI PRAHALAD           | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. BANDARU M KUMA             | street_road_name          | RAJUPETA                  | RAJUPET
+MS. KANTHAMMA  SANNALA         | street_road_name          | RAJUPETA                  | RAJUPET
+MR. ABDUL KHAJA                | street_road_name          | RAJUPETA                  | RAJUPET
+MR. VENKATESWARA RAO  CHITTIBO | street_road_name          | RAJU PETA                 | RAJUPET
+MS. LAKSHMI  GOGU              | street_road_name          | RAJUPETA                  | RAJUPET
+MR. THIRUPATI SREE MANNARAYANA | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs RAJANI  VEMULA             | street_road_name          | RAJUPETA                  | RAJUPET
+MR. PAIDIPATI HARI PRASAD      | street_road_name          | VARREGUDEM                | VARREGUDEM
+Mr. CHIMMA  SRINIVAS           | housing_complex_building  | RAJUPETA                  | RAJUPET
+MR. MAHAMMED MUSTAFA           | house_name_flat_number    | INAGUDURUPET              | INAKUDURUPET
+Mr. GUMMADI  RAMA LAKSHMI      | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. PUPPALA  SRINIVAS          | street_road_name          | VARRE GUDEM               | VARREGUDEM
+MS. JAINABEE                   | street_road_name          | NURUDDIN PETA             | NURUDDINPET
+Ms. THOTA  KANAKA DURGA BHAVAN | housing_complex_building  | VARREGUDEM                | VARREGUDEM
+MR. JONNALAGADDA SRINIVASARAO  | street_road_name          | RAJUPET                   | RAJUPET
+J VENKATESWARA RAO             | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. SAYYAD  SALEEMA            | house_name_flat_number    | VARRE GUDEM               | VARREGUDEM
+MS. SHIMA BEGUM                | street_road_name          | RAJU PETA                 | RAJUPET
+T VEERARAGHAVAIAH              | street_road_name          | RAJUPET                   | RAJUPET
+Mr. RAGHU SYAM  MUDRAGADDA     | housing_complex_building  | VARREGUDEM                | VARREGUDEM
+MS. BYTHA SUBBULU              | street_road_name          | RAJU PETA                 | RAJUPET
+ABDUL HAYUB                    | street_road_name          | RAJUPETA                  | RAJUPET
+MS. RATNAKUMARI  BATHINA       | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. VANKAYALA  PADMAVATHI      | housing_complex_building  | NURIDDINPETA              | NURUDDINPET
+Mrs GANNAVARAPU  SUJATHA       | street_road_name          | INAGUDURUPETA             | INAKUDURUPET
+MR. ABDUL AMEER PASHA          | street_road_name          | RAJUPETA                  | RAJUPET
+Ms. KOSURI   HARITHA           | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. MANNAVA PADMASRI           | street_road_name          | RAJUPETA                  | RAJUPET
+B HANUMANTHARAO                | street_road_name          | RAJU PETA                 | RAJUPET
+MS. LATHEEFUNNISA              | street_road_name          | RAJUPETA                  | RAJUPET
+MD.MAHABOOB                    | street_road_name          | NURUDDINPETA              | NURUDDINPET
+Mrs MOHAMMAD   AFRIN           | street_road_name          | NURUDIN PETA              | NURUDDINPET
+MS. KASTURI  ULLI              | street_road_name          | RAJUPETA                  | RAJUPET
+MS. MOHAMMED  RAJIYA BEGUM     | street_road_name          | RAJUPETA                  | RAJUPET
+HYED KHAN                      | street_road_name          | RAJUPET                   | RAJUPET
+MS. KANAKA DURGA  BALLARI      | street_road_name          | RAJUPETA                  | RAJUPET
+MR. CHANDRASEKHAR  KOTTI       | street_road_name          | RAJUPETA                  | RAJUPET
+MR. JAFAR ALI                  | street_road_name          | VARREGUDEM                | VARREGUDEM
+MR. SRI KRISHNAIAH  KAMMELA    | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. SANNALA   KRISHNA KUMARI   | street_road_name          | VARRI GUDEM               | VARREGUDEM
+MS. TAMMANA SUJATA             | street_road_name          | RAJUPET                   | RAJUPET
+MS. SWARNA PADMAKUMARI         | street_road_name          | RAJUPETA                  | RAJUPET
+MR. MUCHERLA SESHUBABU         | street_road_name          | VAREEGUDEM                | VARREGUDEM
+Mr. PAMARTHI  PAVAN KUMAR      | housing_complex_building  | RAJUPETA                  | RAJUPET
+KAVULURI KUMAR BABU            | street_road_name          | RAJUPETA                  | RAJUPET
+LINGAM NAGA MALLESWRA RAO      | housing_complex_building  | RAJUPETA                  | RAJUPET
+MR. MOHAMMAD KARIMULLA         | street_road_name          | VARREGUDEM                | VARREGUDEM
+Mr. CH  MADHAVI VENKATA LAKSHM | housing_complex_building  | RAJUPETA                  | RAJUPET
+Ms. TAHEERA  KHATUN            | housing_complex_building  | RAJUPETA                  | RAJUPET
+MR. MAHAMMED SULTHAN           | house_name_flat_number    | INAGUDURUPET              | INAKUDURUPET
+MR. SATISH  YEDURUWADA         | street_road_name          | RAJUPETA                  | RAJUPET
+MS. SHARIFUNNISA   BEGUM       | street_road_name          | VARREGUDEM                | VARREGUDEM
+MR. SIDDABATHULA RAVI          | street_road_name          | RAJUPETA                  | RAJUPET
+MR. HAKEEM  ABDUL              | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. NAMPALLY  SAIKUMAR         | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. ABDUL  AJIJUNNISA          | housing_complex_building  | RAJU PETA                 | RAJUPET
+MR. SIVA RAMA BRAHMACHARY  SRU | street_road_name          | NURUDDIN PETA             | NURUDDINPET
+MR. KONDA  KONA                | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. RAPURI   SHEKAR            | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs BHUPATI  PRAMILA           | housing_complex_building  | VARREGUDEM                | VARREGUDEM
+MS. MOHAMMAD   NASREEN FATIMA  | street_road_name          | INAGUDURUPETA             | INAKUDURUPET
+Ms. YATHIRAJAM  VENKATA RAMANA | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mrs BYTHA  SUBBA LAKSHMI       | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. ANUMA KONDA  GOPI          | street_road_name          | RAJUPET                   | RAJUPET
+MR. GANGADHARARAO  MATTA       | street_road_name          | RAJUPETA                  | RAJUPET
+MS. CHADALAVADA LAKSHMI        | street_road_name          | RAJUPETA                  | RAJUPET
+MR. BANDI SUBBARAO             | street_road_name          | RAJUPETA                  | RAJUPET
+SK.CHAN                        | street_road_name          | NURUDDINPETA              | NURUDDINPET
+MS. NOORJAHAN  MOHAMMAD        | street_road_name          | RAJU PETA                 | RAJUPET
+Mrs KOMOZU  JAYALAKSHMI        | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. KODURU VARALAKSHMI         | street_road_name          | RAJUPET                   | RAJUPET
+MD.IBRAHIM                     | street_road_name          | RAJUPET                   | RAJUPET
+MS. GANTA INDIRA               | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. BHAGYALAKSHMI  NUSETTI     | street_road_name          | RAJUPETA                  | RAJUPET
+MS. LEELA VASANTHA  TAKKELLA   | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. MIRZA   YAAVAR ALI         | housing_complex_building  | VARREGUDEM                | VARREGUDEM
+MR. VEERA BABU  DEVANURI       | street_road_name          | RAJUPETA                  | RAJUPET
+CHALLA KOTESWARA RAO           | street_road_name          | RAJUPET                   | RAJUPET
+MS. POSINA SUGUNA              | street_road_name          | RAJUPETA                  | RAJUPET
+MOHASAN ALI                    | housing_complex_building  | VARREGUDEM                | VARREGUDEM
+MD.KARIMULLA                   | street_road_name          | RAJUPET                   | RAJUPET
+MS. VENKATESWARAMMA  NANGEDDA  | street_road_name          | RAJUPETA                  | RAJUPET
+MS. ABDUL SABEERUNNISA         | street_road_name          | RAJUPETA                  | RAJUPET
+MS. DUBA KUMARI                | street_road_name          | RAJUPETA                  | RAJUPET
+MS. SANTHI KUMARI  GOWRI       | street_road_name          | RAJUPETA                  | RAJUPET
+SHOVKATH HUSSAIN               | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. MAHAMMAD   HUSSAIN         | housing_complex_building  | NURDIN PETA               | NURUDDINPET
+FATHIMA                        | housing_complex_building  | INUKUDURUPETA             | INAKUDURUPET
+Mr. AHMAD  JAANI KHAN          | street_road_name          | RAJU PETA                 | RAJUPET
+MR. SHAIK AZEES                | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs MUNTHA   GIRI KUMARI       | street_road_name          | RAJUPETA                  | RAJUPET
+MS. LAKSHMI KANTHAM  MOLAVANTI | street_road_name          | RAJUPETA                  | RAJUPET
+VUKKURTHI KANAKARAO            | street_road_name          | RAJUPET                   | RAJUPET
+MS. MIRIYALA VENKATALAKSHMI    | street_road_name          | RAJUPETA                  | RAJUPET
+MR. MOHAMMAD YUNUS             | street_road_name          | RAJUPETA                  | RAJUPET
+MR. P RAJENDRA PRASAD  KUTTUBO | street_road_name          | RAJUPETA                  | RAJUPET
+KANDULA SREENU                 | street_road_name          | RAJUPET                   | RAJUPET
+Mr. SHAIK  IMRAN               | street_road_name          | NURUDDIN PETA             | NURUDDINPET
+Mr. VAKA  ANKINEEDU            | housing_complex_building  | RAJU PETA                 | RAJUPET
+MR. EDUKONDALU  YADAVALLI      | street_road_name          | RAJUPETA                  | RAJUPET
+MR. SAGINALA RAMESH            | street_road_name          | RAJUPETA                  | RAJUPET
+JANNU VENKATESWARA RAO         | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. ADI  MADHUSUDHANAMMA       | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. MOHAMMED  GALIB            | house_name_flat_number    | VARREGUDEM                | VARREGUDEM
+SHAIK ANNA                     | street_road_name          | RAJUPETA                  | RAJUPET
+MS. BIBI                       | street_road_name          | VARREGUDEM                | VARREGUDEM
+MR. MOHAMMAD ANWAR PASHA       | street_road_name          | INGUDURUPETA              | INAKUDURUPET
+MR. SHEK ABDUL KAREEM          | street_road_name          | VARREGUDEM                | VARREGUDEM
+MS. KOLLI SAILAJA              | street_road_name          | RAJUPETA                  | RAJUPET
+MR. ANNAM POTHURAJU            | street_road_name          | RAJUPETA                  | RAJUPET
+MR. SHAIK SUBHANI              | street_road_name          | RAJUPET                   | RAJUPET
+MS. ABDUL NASIMUNNISA          | street_road_name          | RAJUPETA                  | RAJUPET
+MR. GANGADHARAM  GARUGU        | street_road_name          | RAJUPETA                  | RAJUPET
+MR. JAGADEESH  DARANGULA       | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. HANUMANTHU  VENKATA NAGAKA | street_road_name          | VARREGUDEM                | VARREGUDEM
+MS. MAHA LAKSHMI  MARUPAKA     | street_road_name          | RAJUPETA                  | RAJUPET
+MS. JAYALAKSHMI  NANDURI       | street_road_name          | NURUDDINPETA              | NURUDDINPET
+MS. KORATANI BUJJI             | street_road_name          | RAJUPETA                  | RAJUPET
+MR. VENU  THENALI              | street_road_name          | RAJUPETA                  | RAJUPET
+MS. ALLABHI  SHAIK             | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. MOHAMMAD   VAJIT           | housing_complex_building  | RAJUPETA                  | RAJUPET
+KANDULA SIVA                   | street_road_name          | RAJUPETA                  | RAJUPET
+MS. RASAPUTRA RAMANA           | street_road_name          | RAJUPET                   | RAJUPET
+MR. SAYYAD GANESHAEED          | street_road_name          | RAJUPET                   | RAJUPET
+Mr. VANNEMREDDY  NAGESHWARAMMA | housing_complex_building  | VAREEGUDEM                | VARREGUDEM
+Mrs PINISETTY  RAMANAMMA       | housing_complex_building  | RAJUPET                   | RAJUPET
+MS. KARIMUNNISA   BEGUM        | street_road_name          | VARREGUDEM                | VARREGUDEM
+MS. DURGA  BATHINA             | street_road_name          | RAJUPETA                  | RAJUPET
+MS. SHAKEERA BEGUM  SHAIK      | street_road_name          | RAJUPETA                  | RAJUPET
+MS. KRISHNAVENI  BALE          | street_road_name          | RAJUPETA                  | RAJUPET
+MR. SHEK SHAREEF               | street_road_name          | RAJUPETA                  | RAJUPET
+MR. DAMMU KESAVARAO            | street_road_name          | RAJUPETA                  | RAJUPET
+MS. SHEHANAZ BEGUM             | street_road_name          | VARREGUDEM                | VARREGUDEM
+MR. VIRANJANEYULU  CHALAMALASE | street_road_name          | RAJUPETA                  | RAJUPET
+MS. FATHIMA JAN                | street_road_name          | INGUDURUPETA              | INAKUDURUPET
+KOLAPALLI NAGARAJU             | street_road_name          | RAJU PETA                 | RAJUPET
+MD ZULFIKAR ALI                | street_road_name          | RAJUPETA                  | RAJUPET
+MS. CHADALAVADA  JAYALAKSHMI   | street_road_name          | RAJUPETA                  | RAJUPET
+BHUPATHI RAMBABU               | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. MANEPALLI  NARENDRAKUMAR   | street_road_name          | RAJUPETA                  | RAJUPET
+Ms. SABERA  PARVEEN            | housing_complex_building  | RAJUPETA                  | RAJUPET
+ABDUL LATHEEF                  | street_road_name          | NOORUDDINPET              | NURUDDINPET
+SHABERABEGUM                   | street_road_name          | CHINTHACHETTU CENTER      | CHINTACHETTU CENTRE
+SK.DILSHAWAD                   | street_road_name          | RAJUPETA                  | RAJUPET
+V.VENKATESWARAMMA              | street_road_name          | RAJUPET                   | RAJUPET
+Y.VENKATESWARAMMA              | street_road_name          | RAJUPET                   | RAJUPET
+PALLI DEVUDAMMA                | street_road_name          | RAJUPETA                  | RAJUPET
+GUNTALA ESWARAMMA              | street_road_name          | RAJUPET                   | RAJUPET
+FATHIMA BEGUM                  | street_road_name          | RAJUPET                   | RAJUPET
+ANAKAPALLI KRISHNA VENI        | street_road_name          | RAJUPETA                  | RAJUPET
+BHALIREDDY NUKARATHAM          | street_road_name          | RAJUPETA                  | RAJUPET
+SURISEETY APPLAKONDA           | street_road_name          | RAJUPETA                  | RAJUPET
+CHINTAPATLA VENKATESWARAMMA    | street_road_name          | RAJUPETA                  | RAJUPET
+PARASE LAKSHMI                 | street_road_name          | RAJUPETA                  | RAJUPET
+KOSURI NAGESWARAMMA            | street_road_name          | RAJUPETA                  | RAJUPET
+KOSURI KRUPAVARAM              | street_road_name          | RAJUPET                   | RAJUPET
+JUJJUVARAPU SAMBRAJYAM         | street_road_name          | RAJUPETA                  | RAJUPET
+JUJJUVARAPU KUSUMAKUMARI       | street_road_name          | RAJUPETA                  | RAJUPET
+KOMMU SAMADHANAM               | street_road_name          | RAJUPETA                  | RAJUPET
+VAEELA LAKSHMI                 | street_road_name          | RAJUPET                   | RAJUPET
+MD.JAREENA BEGUM               | street_road_name          | RAJUPETA                  | RAJUPET
+GOLLAPALLI BHARATHI            | housing_complex_building  | RAJUPETA                  | RAJUPET
+KALAPALA RAJANI                | street_road_name          | RAJUPETA                  | RAJUPET
+SALA SITAMAHALAKSHMI           | housing_complex_building  | RAJUPETA                  | RAJUPET
+UPPATALA APPAYAMMA             | housing_complex_building  | RAJUPETA                  | RAJUPET
+MOTHUPALLI ESWARAMMA           | street_road_name          | RAJUPET                   | RAJUPET
+KOMMUKURI MANI                 | street_road_name          | RAJUPETA                  | RAJUPET
+MATTA VASANTAMMA               | street_road_name          | RAJUPETA                  | RAJUPET
+MD KHAMAR JHA                  | street_road_name          | VARREGUDEM                | VARREGUDEM
+A RAJANI                       | street_road_name          | RAJUPETA                  | RAJUPET
+MR. NASREENM                   | street_road_name          | VAREEGUDEM                | VARREGUDEM
+MR. SRINIVASARAO  DANDASI      | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. KAGITHA  PAVAN TEJA        | street_road_name          | RAJUPETA                  | RAJUPET
+MR. MOHAMMAD MEERA             | street_road_name          | RAJU PET                  | RAJUPET
+MS. SYED HALEEMA BEE           | street_road_name          | NURUDDINPETA              | NURUDDINPET
+MS. NAZIMUNNISA  MAHAMMED      | street_road_name          | RAJUPEA                   | RAJUPET
+MS. MIR SHUKAINA BEGUM         | street_road_name          | VARREGUDEM                | VARREGUDEM
+MS. NAGA LAKSHMI  PONNURI      | street_road_name          | RAJUPETA                  | RAJUPET
+MS. MANDA DURGA                | street_road_name          | RAJUPET                   | RAJUPET
+MR. TATARAO  MACHAVARAPU       | street_road_name          | RAJUPETA                  | RAJUPET
+MR. SUBRAHMANYAM  MACHAVARAPU  | street_road_name          | RAJUPETA                  | RAJUPET
+MS. ASHARA FUNNISA             | street_road_name          | RAJU PETA                 | RAJUPET
+MS. NAGISETTI  NAGAMANI        | street_road_name          | RAJU PETA                 | RAJUPET
+MR. KANDULA SYAMELU            | street_road_name          | NURRIDDINPET              | NURUDDINPET
+MS. NAGAMANI  PENTAKOTA        | street_road_name          | RAJUPETA                  | RAJUPET
+MR. ISMAIL  MOHAMMAD           | street_road_name          | RAJUPETA                  | RAJUPET
+MR. PEERA  SHAIK               | street_road_name          | RAJUPETA                  | RAJUPET
+MR. SRIDHAR  PETETI            | street_road_name          | RAJUPETA                  | RAJUPET
+MR. NAGARJUNA  NARAHARASETTY   | street_road_name          | RAJUPETA                  | RAJUPET
+MS. PARVEEN  MAJAR ALI         | street_road_name          | VARREGUDEM                | VARREGUDEM
+MR. BABAR  ABDUL               | street_road_name          | RAJUPETA                  | RAJUPET
+MR. VENKANNA  PITTALA          | street_road_name          | RAJUOETA                  | RAJUPET
+MR. SALEHA  SHAIK              | street_road_name          | RAJUPETA                  | RAJUPET
+MR. MURALIKRISHNA  GUGGILLA    | street_road_name          | RAJUPETA                  | RAJUPET
+MS. VENKATESWARAMMA  ODUGU     | street_road_name          | RAJUPETA                  | RAJUPET
+MR. HADI  ABDUL                | street_road_name          | RAJUPETA                  | RAJUPET
+MR. V BHADRAMANOJ  DAMU        | street_road_name          | RAJUPETA                  | RAJUPET
+MR. SUBBARAYUDU  KOMMU         | street_road_name          | RAJUPETA                  | RAJUPET
+MS. ZAREENA  MOHAMMAD          | street_road_name          | RAJUPETA                  | RAJUPET
+MS. VIJAYASANTHI  PATNALA      | street_road_name          | NURUDDINPETA              | NURUDDINPET
+MS. HALIMABEE  ESUBKHAN        | street_road_name          | RAJUPETA                  | RAJUPET
+MS. M DURGALAKSHMI  THATAVARTI | street_road_name          | RAJUPETA                  | RAJUPET
+MS. ZINATH  MOHAMMAD           | street_road_name          | INAKUDURUPETA             | INAKUDURUPET
+MISS MOHAMMAD GULNAZ BEGUM  M  | street_road_name          | NURUDDINPETA              | NURUDDINPET
+MS. TIRAPATHAMMA  ANUMULASETTY | street_road_name          | RAJUPETA                  | RAJUPET
+MS. MEERJABI  SHAIK            | street_road_name          | RAJUPETA                  | RAJUPET
+MR. VIJAYAKUMAR  DERANGULA     | street_road_name          | RAJUPETA                  | RAJUPET
+MR. POORNA CHAND  NUSETTI      | street_road_name          | RAJUPETA                  | RAJUPET
+MR. NETAJI  GAGRE              | street_road_name          | RAJUPETA                  | RAJUPET
+MS. MOHAMMAD  AMMANI           | street_road_name          | VARREGUDEM                | VARREGUDEM
+MS. LAKSHMI  CHIRUKURI         | street_road_name          | RAJUPETA                  | RAJUPET
+MS. TAHARUNNISA  ABDUL         | street_road_name          | VARREGUDEM                | VARREGUDEM
+MR. SUBHANI  SHAIK             | street_road_name          | RAJUPETA                  | RAJUPET
+MS. SIVA NAGA LAKSHMI  CHITTIB | street_road_name          | RAJUPETA                  | RAJUPET
+MS. BASHEERUNNISA  KHAN        | street_road_name          | RAJUPETA                  | RAJUPET
+MR. LAKSHMANA RAO  DASARI      | street_road_name          | RAJUPETA                  | RAJUPET
+MS. AZIJUNNISA  MOHAMMAD       | street_road_name          | RAJUPETA                  | RAJUPET
+MS. BALA MANI  MAMIDIBATTULA   | street_road_name          | RAJUPETA                  | RAJUPET
+MS. PUSHPAVATHY  SAMMETA       | street_road_name          | RAJUPETA                  | RAJUPET
+MS. PRAVEENA JYOTHI  RAYAVARAP | street_road_name          | RAJUPETA                  | RAJUPET
+MR. APPA RAO  MAMIDI           | street_road_name          | RAJUPETA                  | RAJUPET
+MR. MEERA  NAGUL               | street_road_name          | RAJUPETA                  | RAJUPET
+MR. CHANDRA SEKHAR  MAHAMKALI  | street_road_name          | RAJU PETA                 | RAJUPET
+Mrs GANJALA  BHAVANI           | street_road_name          | RAJUPETA                  | RAJUPET
+MS. CHINNA KOTAMMA  BATTULA    | street_road_name          | RAJUPETA                  | RAJUPET
+MS. SHAIK  MEHABUBI            | street_road_name          | VARREGUDEM                | VARREGUDEM
+MR. SAYYAD  RAFI               | street_road_name          | RAJUPETA                  | RAJUPET
+MR. SIVA PRASAD  KANCHERLAPALL | street_road_name          | RAJUPETA                  | RAJUPET
+MS. ZAHEEDA   BEGUM            | street_road_name          | INAGUDURUPETA             | INAKUDURUPET
+MS. RAJAYABHI  MD              | street_road_name          | RAJUPETA                  | RAJUPET
+MS. MEER  PASHABEGUM           | street_road_name          | VARREGUDEM                | VARREGUDEM
+MS. KOUSALYA  SEELAM           | street_road_name          | RAJUPETA                  | RAJUPET
+MRS NAKKA BABY  ASWINI         | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. M S ADILAKSHMI  DEVARAM    | street_road_name          | RAJUPETA                  | RAJUPET
+MS. NAGEENA  FATHEEMA          | street_road_name          | VARREGUDEM                | VARREGUDEM
+MS. SHAIK   RAJIYA             | street_road_name          | RAJUPETA                  | RAJUPET
+MS. DURGA BHAVANI  PALAPARTHI  | street_road_name          | RAJUPETA                  | RAJUPET
+MR. S. SRINIVASA RAO  BANDARU  | street_road_name          | RAJUPETA                  | RAJUPET
+MS. SRILAKSHMI  TATIKONDA      | street_road_name          | RAJUPETA                  | RAJUPET
+MS. SATI SAVITRI  GOPISETTY    | street_road_name          | RAJUPETA                  | RAJUPET
+MR. HUSSIAN  SHAIK             | street_road_name          | VARREGUDEM                | VARREGUDEM
+MRS MOHARUNNISA  MOHAMMED      | street_road_name          | RAJUPET                   | RAJUPET
+MRS MAHAMMAD  REHAMUNISA       | street_road_name          | VARREGUDEM                | VARREGUDEM
+MRS MAKINENI  MAHALAXMI        | street_road_name          | RAJUPETA                  | RAJUPET
+MR. MAHAMAD  AMEER             | street_road_name          | RAJUPETA                  | RAJUPET
+MR. PAPARAO  VEMULA            | street_road_name          | RAJUPETA                  | RAJUPET
+MS. SUNITHA  GUDISEVA          | street_road_name          | RAJUPETA                  | RAJUPET
+MRS HANUMAYAMMA  BATTULA       | street_road_name          | RAJUPETA                  | RAJUPET
+MR. VENKATARAMESH  DASARI      | street_road_name          | RAJUPETA                  | RAJUPET
+MR. SIDDAIAH  CHADALAVADA      | street_road_name          | RAJUPETA                  | RAJUPET
+MR. ABED HUSSAIN  MOHAMMAD     | street_road_name          | VARREGUDEM                | VARREGUDEM
+MRS K  MALATHI RAMA DEVI       | street_road_name          | RAJU PET                  | RAJUPET
+MS. NAJMA  BEGUM               | street_road_name          | INAKUDURUPET              | INAKUDURUPET
+MR. RAHATUNNISA  SHAIK         | street_road_name          | RAJUPETA                  | RAJUPET
+MR. MAHABOOB  KHAN             | street_road_name          | RAJUPETA                  | RAJUPET
+MR. PRASAD  UAPPATALA          | street_road_name          | RAJUPETA                  | RAJUPET
+MRS SHAIK  ARSHATHUNNISA       | street_road_name          | RAJU PET                  | RAJUPET
+MS. RATNAGIRI  BANDIKATLA      | street_road_name          | RAJUPETA                  | RAJUPET
+MR. RAMESH  JUJJAVARAPU        | street_road_name          | RAJUPETA                  | RAJUPET
+MS. RAHIMUNNISA  BEGUM         | street_road_name          | RAJUPETA                  | RAJUPET
+MRS NAGA ANILA DEVI  AVADARI   | street_road_name          | VARREGUDEM                | VARREGUDEM
+MRS SAHEERA  MOHAMMED          | street_road_name          | RAJUPET                   | RAJUPET
+MS. NAGALAKSHMI  NAYUDU        | street_road_name          | RAJUPETA                  | RAJUPET
+MS. AMNEE  SHAIK               | street_road_name          | RAJUPETA                  | RAJUPET
+MRS APARANJI KUMARI  ADDANKI   | street_road_name          | RAJUPETA                  | RAJUPET
+MRS SUJATHA   NANDAM           | street_road_name          | VARREGUDEM                | VARREGUDEM
+MRS ESWARI  KOTARI             | street_road_name          | VARREGUDEM                | VARREGUDEM
+MRS NAGA DURGA ZARINA  PEETA   | street_road_name          | VARREGUDEM                | VARREGUDEM
+MR. RAVI KUMAR  DHRLA          | street_road_name          | RAJUPETA                  | RAJUPET
+MS. BYTHA  PARVATHI            | street_road_name          | RAJUPETA                  | RAJUPET
+MR. SHAIK  ZAINULABEDIN        | street_road_name          | RAJUPETA                  | RAJUPET
+MS. SHAHIMSHA  FARIDA BEGUM    | street_road_name          | RAJU PETA                 | RAJUPET
+MR. MOHAMMED  AKBAR ALI        | street_road_name          | RAJU PETA                 | RAJUPET
+MRS MALEEN  SHAIK              | street_road_name          | RAJU PETA                 | RAJUPET
+MS. DARLA  SAI RAM             | street_road_name          | RAJU PETA                 | RAJUPET
+MR. VADDI  KRISHNA             | street_road_name          | RAJU PETA                 | RAJUPET
+MS. KODALI  LAKSHMI KUMARI     | street_road_name          | RAJU PETA                 | RAJUPET
+MR. MAZEED  KHAN               | street_road_name          | RAJU PETA                 | RAJUPET
+MS. SHAIK  KHERUNISA           | street_road_name          | RAJUPETA                  | RAJUPET
+MR. MAHAMMED  ALTHAF           | street_road_name          | RAJU PETA                 | RAJUPET
+MS. JUJJUVARAPU  VEERAMMA      | street_road_name          | RAJU PETA                 | RAJUPET
+MS. VARADA  DURGAMMA           | street_road_name          | RAJUPETA                  | RAJUPET
+MS. SHAIK  MAHAMMEDI BEGUM     | street_road_name          | RAJU PETA                 | RAJUPET
+MS. INAM  RAMANAMMA            | street_road_name          | RAJU PETA                 | RAJUPET
+MR. AKULA  ESWARA RAO          | street_road_name          | RAJU PETA                 | RAJUPET
+MR. KUMAR  PARISE              | street_road_name          | RAJUPETA                  | RAJUPET
+MR. IQBAL KHAN  MOHAMMAD       | street_road_name          | RAJUPETA                  | RAJUPET
+MR. PODUGU  MAHESH BABU        | street_road_name          | RAJU PETA                 | RAJUPET
+MRS BUJJI  GANJALA             | street_road_name          | RAJUPETA                  | RAJUPET
+MRS MANI  GANJALA              | street_road_name          | RAJUPETA                  | RAJUPET
+MR. MATHE  KISHORE             | street_road_name          | RAJUPETA                  | RAJUPET
+MRS KUMARI   KARANAM           | street_road_name          | RAJUPETA                  | RAJUPET
+MR. SAI KUMAR  GUDAPATI        | street_road_name          | RAJUPETA                  | RAJUPET
+MR. JUJJUVARAPU  RAVI BABU     | street_road_name          | RAJU PETA                 | RAJUPET
+MRS LAKSHMI  KATTA             | street_road_name          | RAJUPETA                  | RAJUPET
+MRS SHAIK  NOORJAHAN BEGUM     | street_road_name          | RAJUPET                   | RAJUPET
+Mr. SUBHRAMANYAM  RAYAVARUPU   | housing_complex_building  | RAJUPETA                  | RAJUPET
+Ms. NAGAMANI  JANYAVULA        | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. DURGA BHAVANI  SIDDABHATHU | street_road_name          | RAJUPETA                  | RAJUPET
+MRS HASEENA BEGUM  MOHAMMAD    | street_road_name          | INAGUDURUPETA             | INAKUDURUPET
+MR. HUSSAIN  KHADEM            | housing_complex_building  | VARREGUDEM                | VARREGUDEM
+MS. VENKATA SEETHA RAVAMMA  NA | street_road_name          | RAJUPETA                  | RAJUPET
+Ms. JHANSI RANI  ANISETTTY     | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs SWARAJYALAKSHMI  BANDARU   | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. MOHAMMAD  JABIBULLA        | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mrs SUDHA RANI  MAKARLA        | street_road_name          | RAJU PET                  | RAJUPET
+Mrs MOHAMMED AYESHA  SIDDIKA   | street_road_name          | INGUDURU PET              | INAKUDURUPET
+Mrs KALYANI  ANDALURI          | street_road_name          | RAJUPETA                  | RAJUPET
+MS. MRS CHINTHAPATLA NARAYANAM | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. JAKEER HUSSAIN  MOHAMMAD   | housing_complex_building  | NOORUDDINPET              | NURUDDINPET
+Mr. NAGARJUNA  PALLI           | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. AHMAD BASHA  MOHAMMAD      | housing_complex_building  | RAJU PETA                 | RAJUPET
+Mr. MAHAMMAD  RUHULLAH SHARIF  | street_road_name          | INAGUDURUPETA             | INAKUDURUPET
+Mr. CHINTAPATLA B PRAKASH      | street_road_name          | RAJUPET                   | RAJUPET
+Ms. CHALLAMMA  PINISETTI       | housing_complex_building  | VARREGUDEM                | VARREGUDEM
+Ms. RAJANALA  LAKSHMI KAMALA   | housing_complex_building  | RAJU PETA                 | RAJUPET
+Mr. VENKATA NAVEEN KUMAR  KOLL | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs SHAIK  ASHA                | street_road_name          | INKUDURUPETA              | INAKUDURUPET
+Mr. ASHOK  KUMAR  RAYAVARAPU   | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. NAGIRI  DURGA PRASAD       | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. ODUGU   VIJAY              | housing_complex_building  | RAJU PETA                 | RAJUPET
+Ms. RADHA  KASINIKOTA          | housing_complex_building  | RAJUPETA                  | RAJUPET
+Ms. KALYANI  CHEEDEPUDI        | housing_complex_building  | VARREGUDEM                | VARREGUDEM
+Mrs VAYALA  SANTHI             | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. SYAM PRASAD  NARAHARASETTY | housing_complex_building  | RAJUPETA                  | RAJUPET
+Ms. PADMA  VULLI               | housing_complex_building  | VARREGUDEM                | VARREGUDEM
+Mrs ANTHATY  SRAVANI           | street_road_name          | RAJUPETA                  | RAJUPET
+Ms. SWARNA KAMALA  THAMARAADA  | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. RAJU  KOMMUKURI            | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. DURGA PRASAD  PANDEY       | housing_complex_building  | RAJUPETA                  | RAJUPET
+MRS MANTHINA  MADHAVI          | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. ANNA   MANIRATHNAM         | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. MARISHETTI  SRIKANTH       | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. DUBA  MOUNIKA              | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. NUKALA  DEVI GIRISHA       | house_name_flat_number    | RAJUPETA                  | RAJUPET
+MS. METHUKUMILLI  SUJATHA      | housing_complex_building  | RAJUPETA                  | RAJUPET
+MRS CHALAPTI  DURGA            | street_road_name          | RAJUPETA                  | RAJUPET
+MRS YADALI   DURGA             | street_road_name          | RAJU PETA                 | RAJUPET
+MS. BOPPANA   SANTHA KUMARI    | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. BADUGU   MADHAVI           | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. BHOGIREDDY  ANAND          | street_road_name          | RAJUPETA                  | RAJUPET
+Ms. CHILUKURI  SIVA KUMARI     | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. ANUMAKONDA  SAI CHANDRIKA  | street_road_name          | RAJUPETA                  | RAJUPET
+MS. BUSA  RAJYALAKSHMI         | street_road_name          | RAJUPETA                  | RAJUPET
+MS. KENISETTI   BABY           | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. BANDARI  TRIVENI           | housing_complex_building  | RAJUPETA                  | RAJUPET
+Ms. THOTE  NANCHARAMMA         | street_road_name          | RAJUPETA                  | RAJUPET
+MS. SAJIDA   BEGUM             | housing_complex_building  | INUKUDURUPETA             | INAKUDURUPET
+Mr. GUNDALA  RAMESH BABU       | street_road_name          | RAJUPETA                  | RAJUPET
+MS. PASUPULETI  SIVA PARVATHI  | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. JAVISETTY  LAKSHMI DURGA   | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. VEMULA  SARIKA             | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. SHAIK  MASTANI             | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. ANAKAPALLI  SURYA KALA     | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. CHALLA  SATYAVATHI         | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. MOHAMMAD  SHAHEDA          | street_road_name          | RAJUPETA                  | RAJUPET
+MS. MUSANGI  DURGA             | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. MEER   HASAN ALI           | housing_complex_building  | INUKUDURUPETA             | INAKUDURUPET
+Ms. PITTALA   CHITTEMMA        | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. MOHAMMA  KAMAL PASHA       | housing_complex_building  | RAJUPETA                  | RAJUPET
+Ms. GUDAPATI  GANGABAI         | street_road_name          | RAJUPETA                  | RAJUPET
+Ms. GOLLAPUDI  N V RAJYA LAKSH | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. MIRZA   AKBAR ALI          | street_road_name          | VARREGUDEM                | VARREGUDEM
+MRS MAHAMMAD G BEGAM           | street_road_name          | VARREGUDEM                | VARREGUDEM
+MRS SAYYAD  KARIMUNNISA        | street_road_name          | RAJUPETA                  | RAJUPET
+MRS FATHIMA  BEGAM             | street_road_name          | VARREGUDEM                | VARREGUDEM
+MRS SHAIK  RAHIMUNNISA         | street_road_name          | VARREGUDEM                | VARREGUDEM
+MRS ABDUL  FATHIMUNNISA        | street_road_name          | VARRE GUDEM               | VARREGUDEM
+MS. SHAIK  BASHEERA            | housing_complex_building  | INUKUDURUPETA             | INAKUDURUPET
+Ms. ABDUL  FAREEDA BEGUM       | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. SANAKA   RAMYA SRI KRISHNA | housing_complex_building  | RAJUPETA                  | RAJUPET
+Ms. DASARI  KALYANI            | street_road_name          | RAJUPETA                  | RAJUPET
+MS. NANDURI  BHAGYALAKSHMI     | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. SHAIK  SUHANA              | street_road_name          | RAJUPETA                  | RAJUPET
+MS. VANNEMREDDY  REVATHI       | housing_complex_building  | VARREGUDEM                | VARREGUDEM
+Mr. MOHAMMAD  ASMATHULLA       | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. BANDI   NAGESWARAMMA       | street_road_name          | RAJUPETA                  | RAJUPET
+MS. KALAKALURI  INDIRA         | street_road_name          | RAJUPETA                  | RAJUPET
+MRS H  ASEENA                  | street_road_name          | RAJUPET                   | RAJUPET
+MRS GOKARAKONDA  VEERANJANEYUL | housing_complex_building  | VARREGUDEM                | VARREGUDEM
+MS. GARIKIPATI  KANAKA DURGA   | housing_complex_building  | RAJUPETA                  | RAJUPET
+Ms. KOLLU  LAKSHMIKANTHAM      | housing_complex_building  | RAJUPETA                  | RAJUPET
+Ms. ABEDA  BEGUM               | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. GHANTA  TRIVENI            | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs THOTA  VENKATESHWAI        | street_road_name          | INAGUDURUPETA             | INAKUDURUPET
+Mrs TASLEEM  FATIMA            | street_road_name          | VARRIGUDEM                | VARREGUDEM
+Mr. VENNAVALLI  KIRAN KUMAR    | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. PADMANABHUNI S SATYA       | street_road_name          | RAJUPETA                  | RAJUPET
+Ms. MODUGUMUDI  NAGESWARAMMA   | street_road_name          | RAJU PETA                 | RAJUPET
+Mr. GANJALA  SAKKUBAI          | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs MULLAPUDI  NAGAMANAMMA     | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. POTHULA  DILEEP KUMAR      | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs BAITHA  RAJINI             | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. ITIKALA  TIRAPATHAMMA      | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. MAHAMKALI  RAMESH          | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. MAHMED  KARIMULLA          | street_road_name          | RAJUPETA                  | RAJUPET
+Ms. NIMMAGADDA G BHAGYALAKSHMI | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. PAAMU  NAGAMALLESWARA RAO  | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. BHATRAJU  RAMANA           | street_road_name          | NURUDDIN PETA             | NURUDDINPET
+Mr. AKISETTI  LAKSHMI          | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. PARISE  RAMULAMMA          | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. SIDDAMSETTY  NAVEEN        | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs PANUPILLI  NARASIMHA RAO   | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. MENDU  KRISHNA             | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. MASTAN  BAIG               | street_road_name          | CHINTA CHETTU CENTER      | CHINTACHETTU CENTRE
+Mr. MOGUDUM PURAM  MADAN MOHAN | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. SAYYAD  VAAHEDH            | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mrs BHUPATHI  NAGA LAKSHMI     | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mrs DAVULURI  USHA RANI        | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs SHAREEF  BARKATUNNISA      | housing_complex_building  | VARREGUDEM                | VARREGUDEM
+Mrs BUSI  JYOTHI               | housing_complex_building  | RAJU PETA                 | RAJUPET
+Ms. KANDRU  MARY LOKAS         | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs BANDI  MARIYAMMA           | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mrs KOPPULA  AMMAJI            | housing_complex_building  | VARREGUDEM                | VARREGUDEM
+Mr. VEMURI PALL  JENNY JOSPER  | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mrs VADAPALLI  RAMANA          | housing_complex_building  | RAJUEPTA                  | RAJUPET
+Mrs BADUGU  DEENA KUMARI       | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs SHAIK  MUNWARBEIGUN        | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mrs UPPATHALA  PAPA            | housing_complex_building  | RAJU PETA                 | RAJUPET
+Mrs SADARLA  SPANDANA          | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. BANDARU  SUBRAHMANYAM      | street_road_name          | RAJUPET                   | RAJUPET
+Mrs GUNJA  NAGESWARAMMA        | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mrs GANIREDDI  LAKSHMI         | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. ATHMURI  SURYA RAJU        | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mrs JARINA  BEGUM              | housing_complex_building  | VARREGUDEM                | VARREGUDEM
+Ms. SHAIK  PARVEEN             | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs SHABANA  SHABANA           | housing_complex_building  | VARREGUDEM                | VARREGUDEM
+Mrs VADDI  KARUNA DEVI         | housing_complex_building  | RAJU PETA                 | RAJUPET
+Mrs ABDUL  RESHMA BEGUM        | street_road_name          | RAJUPET                   | RAJUPET
+Mrs AYESHA  FAREED             | street_road_name          | VARREGUDEM                | VARREGUDEM
+Mr. CHALAMALASETTI  NAGA SEKHA | housing_complex_building  | NURUDDINPETA              | NURUDDINPET
+Mrs SHAIK  REHANA              | street_road_name          | RAJU PET                  | RAJUPET
+Mrs MOHAMMAD  MEERABHI         | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs MAHAMMED  JABEEN           | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. SHAIK  MEHABOOB AHMED      | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs TALABATTULA  SWATHI        | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs PANCHAKARLA  BINDU MOUNIKA | street_road_name          | RAJUPET                   | RAJUPET
+Mrs NAZMA  BEGUM               | street_road_name          | RAJUPET                   | RAJUPET
+Mrs KADAVAKOLLU  NAGAMANI      | street_road_name          | RAJUPET                   | RAJUPET
+Mrs SANKULA  LAKSHMI           | street_road_name          | RAJUPET                   | RAJUPET
+Mrs KONETY  BHAVANI            | street_road_name          | VARREGUDEM                | VARREGUDEM
+Mrs KOSURI  VENKATA LAKSHMI    | street_road_name          | RAJUPET                   | RAJUPET
+Mrs SHAKEELA  KHAN             | street_road_name          | RAJUPET                   | RAJUPET
+Ms. KATTA  SRI RAMYA           | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs BONDA  ANJALI DEVI         | street_road_name          | RAJUPET                   | RAJUPET
+Ms. MOHAMMAD   FIODOSUNNISA    | street_road_name          | RAJUPETA                  | RAJUPET
+Ms. PARISE  LEELAVATHI         | street_road_name          | NURUDDINPETA              | NURUDDINPET
+Mr. KHADIJA  BEGUM             | street_road_name          | NURUDDINPETA              | NURUDDINPET
+Mrs DERANGULA  VENKATA RAMANA  | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs BOJJA  RAMACHANDRARAO      | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. MEER  BARKAT ALI           | street_road_name          | VARREGUDAM                | VARREGUDEM
+Mrs KONDAVEETI  GANGA LAKSHMI  | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. TASNEEM  FATHIMA           | street_road_name          | NURUDDIN PET              | NURUDDINPET
+Mr. MIDDE  SREE LAKSHMI        | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. NIZAMPATNAM S GANGADHARA R | street_road_name          | RAJU PETA                 | RAJUPET
+Ms. K  HABIBUNNISA             | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs YARAGARLLA  JYOTHI         | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs RAAVI  VENKATA NIRMALA DEV | street_road_name          | RRAJUPETA                 | RAJUPET
+Ms. THADIKONDA  RANGANAYAKAMMA | street_road_name          | RAJU PETA                 | RAJUPET
+Mr. MOHAMMAD SHARE BEGUM       | street_road_name          | RAJUPETA                  | RAJUPET
+Ms. ANASETTI  VENKATA LAKSHMI  | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs DEVANABOYINA  SUGUNA       | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. SHEERI  N                  | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. THOTA  SUBRAHMANYAM        | housing_complex_building  | NURUDDIN PETA             | NURUDDINPET
+Mr. JAHEERA  KHAN              | housing_complex_building  | VARRE GUDEM               | VARREGUDEM
+Mr. ARIGELA  ANIL KUMAR        | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. KANCHUMARTHI P RANI        | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. SHAIK  FAREEDA             | street_road_name          | RAJU PETA                 | RAJUPET
+Mr. SHAIK  REHANA SULTANA      | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. MD  SAMEERUNNISA           | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. ABDULLA  KHAN              | housing_complex_building  | VARE GUDEM                | VARREGUDEM
+Mr. IYYANKI  NAVYA             | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. EERAGANI  BALA             | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. TIRUMALASETTI  HIMAKAR     | street_road_name          | RAJU PETA                 | RAJUPET
+Mr. YEDURUWADA  NAGAMANI       | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. MOPATHI  NAGARAJU          | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. DIL   SHAD HUSSAIN         | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. SATHI  LAKSHMIDURGA        | house_name_flat_number    | RAJUPETA                  | RAJUPET
+Mr. MOHAMED  JABIR             | house_name_flat_number    | RAJUPETA                  | RAJUPET
+Mr. AHMED  ALI KHAN            | house_name_flat_number    | RAJU PETA                 | RAJUPET
+Mr. BADIGA  USHA RANI          | house_name_flat_number    | RAJUPETA                  | RAJUPET
+Mr. BONELA  JYOTHI VENKATARAMA | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. SHAIK  SHAHANAZ            | housing_complex_building  | RAJUPETA                  | RAJUPET
+MS. AAKE  JAYA KAMALANJALI     | street_road_name          | RAJUPETA                  | RAJUPET
+MISS ENNETI LAKSHMI DURGA      | housing_complex_building  | NURUDDIN PETA             | NURUDDINPET
+MS. MOHAMMAD  NASFEESA         | street_road_name          | RAJUPETA                  | RAJUPET
+MS. KAKUMURI  DIVYA KALYANI    | street_road_name          | RAJUPETA                  | RAJUPET
+MS. CHEVURI  SWETHA            | street_road_name          | RAJUPETA                  | RAJUPET
+MS. JAMPANA   BHAVANI          | street_road_name          | RAJUPETA                  | RAJUPET
+MS. MAHMAD  GOWSIA             | street_road_name          | VARREGUDEM                | VARREGUDEM
+MS. CHEVURI  LAKSHMI           | street_road_name          | RAJUPETA                  | RAJUPET
+MS. MOHAMMAD  JOHAR  UNNISA    | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs ABDUL  HASMATHUNNISA       | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. CHIMATA  DUNDI             | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. SHAIK  GOWSIYA BEGUM       | house_name_flat_number    | RAJUPETA                  | RAJUPET
+Mr. KOSURI  SRIVANI            | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. P  PHATHIMA                | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. KAMMALA  SARASWATHI        | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. VEMULA  BHAGYA RAJU        | housing_complex_building  | RAJU PETA                 | RAJUPET
+Ms. SRI LAKSHMI  MEDIBOYINA    | housing_complex_building  | RAJU PETA                 | RAJUPET
+Mr. SHAIK  SHAKEELA            | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. POTANA UMAMAHESWARA SARMA  | housing_complex_building  | RAJU PETA                 | RAJUPET
+Mr. KALLU  PRASANNA KUMAR      | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. MIRZA  PARVEZ ALI          | housing_complex_building  | NURUDDIN PETA             | NURUDDINPET
+Mr. SHAIK  IMRAN               | housing_complex_building  | NURUDDIN PETA             | NURUDDINPET
+Mr. MANNAVA  SATYANAND         | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. KAKUNURI  SUNEETHA         | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. BURAGADDA  AUNA KUMARI     | housing_complex_building  | RRAJUPETA                 | RAJUPET
+Mr. SREEPERAMBUDURI  MURALI KR | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. KATTA SRINU                | housing_complex_building  | RRAJUPETA                 | RAJUPET
+Mrs PANCHAKARLA  SYMALA BHAVAN | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs CHINTADA  MAHA LAKSHMI SAI | housing_complex_building  | RAJU PETA                 | RAJUPET
+Mr. JAVISETTI  YELAMMA         | street_road_name          | RAJUEPTA                  | RAJUPET
+Mr. MUNN  I                    | street_road_name          | VARREGUDEM                | VARREGUDEM
+Mr. SHAHINA  PARVEEN           | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mrs YADAVALLI  LAKSHMI         | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs CHINTALA  NIRMALA JYOTHI   | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. NIMMAKAYALA  GAYATHRI      | housing_complex_building  | CHINTHACHETTU CENTER      | CHINTACHETTU CENTRE
+Ms. MEKALA POOJITHA            | house_name_flat_number    | RAJUPETA                  | RAJUPET
+Ms. UPPATHALA DURGA BHAVANI    | street_road_name          | RAJUPETA                  | RAJUPET
+Ms. MACHAAVARAPU VASUKI        | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. RAPARTHI SATYANARAYANA     | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mrs GOWRI NAVEENAKUMARI        | housing_complex_building  | RAJUPETA                  | RAJUPET
+Ms. POTLURI JAHNAVI            | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. BATTULA PRAKASH            | housing_complex_building  | RAJUPETA                  | RAJUPET
+Ms. MOTHUKURI JAYALAKSHMI      | housing_complex_building  | RAJUPETA                  | RAJUPET
+Ms. SUDAGANI CHAYA JHANSI      | street_road_name          | RAJUPETA                  | RAJUPET
+Mr. BALLIPATI BHASKAR          | street_road_name          | RAJUPETA                  | RAJUPET
+Mrs RYALI SWATHI               | housing_complex_building  | RAJUPETA                  | RAJUPET
+Ms. NOUSHEEN                   | street_road_name          | RAJUPETA                  | RAJUPET
+Ms. SHAIK FATHIMA BEGUM        | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. MIRJA ABBAS HUSSAIN        | street_road_name          | VARREGUDEM                | VARREGUDEM
+Ms. JIJJUVARAPU MYDHILI        | housing_complex_building  | RAJUPETA                  | RAJUPET
+Ms. ALLADISETTI SIVA RAJYA LAK | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. MOHAMMAD WAJAD ALI         | housing_complex_building  | RAJUPETA                  | RAJUPET
+Mr. MOHAMMAD KHAJA             | housing_complex_building  | INAKADURUPETA             | INAKUDURUPET
+----------------------------------------------------------------------------------------------------
+
+--- Final Statistics ---
+Total Consumers Checked: 2008
+Matched via 'house_name_flat_number': 12
+Matched via 'housing_complex_building': 145
+Matched via 'street_road_name': 437
+Total Consumers with at least one match: 594
+Total Consumers with NO match: 1414
+Match Rate: 29.58%

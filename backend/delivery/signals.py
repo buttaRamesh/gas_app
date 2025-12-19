@@ -18,13 +18,13 @@ def populate_delivery_route_history_fields(sender, instance, **kwargs):
 def log_delivery_route_assignment_create_update(sender, instance, created, **kwargs):
     """Automatically create history record when assignment is created or updated"""
     action_type = DeliveryRouteAssignmentHistory.ActionType.CREATED if created else DeliveryRouteAssignmentHistory.ActionType.UPDATED
-    
+
     DeliveryRouteAssignmentHistory.objects.create(
         delivery_person=instance.delivery_person,
-        delivery_person_name=instance.delivery_person.name,
+        delivery_person_name=instance.delivery_person.name or '',
         route=instance.route,
-        route_code=instance.route.area_code,
-        route_description=instance.route.area_code_description,
+        route_code=instance.route.area_code if instance.route else '',
+        route_description=instance.route.area_code_description if instance.route else '',
         action_type=action_type,
         # changed_by=<get from request context if available>
     )
@@ -35,10 +35,10 @@ def log_delivery_route_assignment_delete(sender, instance, **kwargs):
     """Automatically create history record when assignment is deleted"""
     DeliveryRouteAssignmentHistory.objects.create(
         delivery_person=instance.delivery_person,
-        delivery_person_name=instance.delivery_person.name,
+        delivery_person_name=instance.delivery_person.name or '',
         route=instance.route,
-        route_code=instance.route.area_code,
-        route_description=instance.route.area_code_description,
+        route_code=instance.route.area_code if instance.route else '',
+        route_description=instance.route.area_code_description if instance.route else '',
         action_type=DeliveryRouteAssignmentHistory.ActionType.DELETED,
         # changed_by=<get from request context if available>
     )

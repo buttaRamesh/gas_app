@@ -51,16 +51,16 @@ const NAV: NavGroup[] = [
     icon: <DashboardIcon />,
     to: "/dashboard",
   },
-  {
-    key: "inventory",
-    label: "Inventory",
-    icon: <InventoryIcon />,
-    to: "/inventory",
-    children: [
-      { key: "inv-list", label: "List All", to: "/inventory", icon: <ListAltIcon /> },
-      { key: "inv-details", label: "Inventory Details", to: "/inventory/details", icon: <InfoIcon /> },
-    ],
-  },
+  // {
+  //   key: "inventory",
+  //   label: "Inventory",
+  //   icon: <InventoryIcon />,
+  //   to: "/inventory",
+  //   children: [
+  //     { key: "inv-list", label: "List All", to: "/inventory", icon: <ListAltIcon /> },
+  //     { key: "inv-details", label: "Inventory Details", to: "/inventory/details", icon: <InfoIcon /> },
+  //   ],
+  // },
   {
     key: "consumers",
     label: "Consumers",
@@ -89,6 +89,17 @@ const NAV: NavGroup[] = [
     label: "Delivery Persons",
     icon: <LocalShippingIcon />,
     to: "/delivery-persons",
+  },
+  {
+    key: "inventory",
+    label: "Inventory",
+    icon: <RouteIcon />,
+    // to: "/routes",
+    children: [
+      { key: "category", label: "Category", to: "/category", icon: <ListAltIcon /> },
+      { key: "products", label: "Products", to: "/products/", icon: <ListAltIcon /> },
+      { key: "units", label: "Units", to: "/units/", icon: <ListAltIcon /> },
+    ],
   },
   {
     key: "settings",

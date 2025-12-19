@@ -21,7 +21,7 @@ import { ThemeProvider, CssBaseline } from "@mui/material";
 // ------------------------------
 //  YOUR THEME
 // ------------------------------
-import theme from "@/theme"; 
+import theme from "@/theme";
 // Ensure theme/index.ts exports `default theme`
 
 // ------------------------------
@@ -40,20 +40,31 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 
 // ------------------------------
+//  REACT QUERY & SONNER
+// ------------------------------
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from 'sonner';
+
+const queryClient = new QueryClient();
+
+// ------------------------------
 //  RENDER ROOT
 // ------------------------------
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      {/* Apply MUI global resets (modern, consistent UI) */}
-      <CssBaseline />
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        {/* Apply MUI global resets (modern, consistent UI) */}
+        <CssBaseline />
+        <Toaster position="top-center" richColors />
 
-      <SnackbarProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </SnackbarProvider>
+        <SnackbarProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </SnackbarProvider>
 
-    </ThemeProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   </React.StrictMode>
 );

@@ -16,6 +16,7 @@ import ViewColumnIcon from "@mui/icons-material/ViewColumn";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Cancel";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 import {
   Toolbar,                 // ⭐ MUST RECEIVE {...props}
@@ -36,6 +37,8 @@ export default function SmartDataGridToolbar(
     showColumns?: boolean;
     showFilters?: boolean;
     showExport?: boolean;
+    showNew?: boolean;
+    onNew?: () => void;
     filterCount?: number;
     kycStatus?: "pending" | "done";
     onKycStatusChange?: (status: "pending" | "done") => void;
@@ -58,6 +61,8 @@ export default function SmartDataGridToolbar(
     showColumns = true,
     showFilters = true,
     showExport = true,
+    showNew = false,
+    onNew,
     filterCount = 0,
     kycStatus,
     onKycStatusChange,
@@ -292,6 +297,27 @@ export default function SmartDataGridToolbar(
                 Export as PDF
               </MenuItem>
             </Menu>
+          </>
+        )}
+
+        {/* New Button */}
+        {showNew && onNew && (
+          <>
+            <Divider orientation="vertical" flexItem sx={{ borderColor: "rgba(255, 255, 255, 0.3)" }} />
+            <Tooltip title="Add New">
+              <IconButton
+                onClick={onNew}
+                sx={{
+                  color: "secondary.main",
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  '&:hover': {
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  }
+                }}
+              >
+                <AddCircleOutlineIcon sx={{ fontSize: 32 }} />
+              </IconButton>
+            </Tooltip>
           </>
         )}
       </Box>

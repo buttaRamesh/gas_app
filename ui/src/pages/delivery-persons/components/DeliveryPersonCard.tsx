@@ -52,7 +52,7 @@ export function DeliveryPersonCard({ deliveryPerson, onActionClick }: DeliveryPe
                   whiteSpace: "nowrap",
                 }}
               >
-                {deliveryPerson.person.full_name}
+                {`${deliveryPerson.person.first_name} ${deliveryPerson.person.last_name}`.trim() || deliveryPerson.person.full_name}
               </Typography>
               {mobileNumber && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mt: 0.25 }}>

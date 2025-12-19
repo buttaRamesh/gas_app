@@ -35,7 +35,7 @@ export const consumerColumns: AppGridColDef[] = [
     width: 140,  // Fixed - always 10 digits
     sortable: true,
     visibleByDefault: true,
-    valueGetter: (params: any) => params ?? "",
+    valueGetter: (value: any) => value ?? "",
     cellClassName: "monospace-cell",
   },
   {
@@ -61,7 +61,7 @@ export const consumerColumns: AppGridColDef[] = [
     width: 140,  // Fixed - standard phone format
     sortable: true,
     visibleByDefault: false,
-    valueGetter: (params: any) => params.value ?? "",
+    valueGetter: (value: any) => value ?? "",
     cellClassName: "monospace-cell",
   },
   {
@@ -71,7 +71,7 @@ export const consumerColumns: AppGridColDef[] = [
     minWidth: 180,
     sortable: true,
     visibleByDefault: false,
-    valueGetter: (params: any) => params.value ?? "",
+    valueGetter: (value: any) => value ?? "",
   },
   {
     field: "consumer_type",
@@ -142,5 +142,5 @@ export const consumerColumns: AppGridColDef[] = [
     visibleByDefault: true,
     cellClassName: "monospace-cell",
   },
-   
+
 ];

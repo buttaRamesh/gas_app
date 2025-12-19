@@ -101,7 +101,16 @@ class DeliveryPerson(models.Model):
     def name(self):
         """Get delivery person's name from person"""
         if self.person:
-            return self.person.full_name
+            # Try full_name first, fallback to first_name + last_name
+            if self.person.full_name:
+                return self.person.full_name
+            # Construct from first_name and last_name
+            name_parts = []
+            if self.person.first_name:
+                name_parts.append(self.person.first_name)
+            if self.person.last_name:
+                name_parts.append(self.person.last_name)
+            return ' '.join(name_parts) if name_parts else ""
         return ""
 
     class Meta:
